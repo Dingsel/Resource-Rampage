@@ -1,17 +1,17 @@
 import { world, DynamicPropertiesDefinition, MinecraftEntityTypes, system } from "@minecraft/server"
 import "./extensions/import.js"
 
-world.events.worldInitialize.subscribe((data) => {
+world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
     const propertyDefinitions = new DynamicPropertiesDefinition()
     propertyDefinitions.defineNumber("coins")
-    data.propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinitions, MinecraftEntityTypes.player)
+    propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinitions, MinecraftEntityTypes.player)
 })
 
 world.events.beforeChat.subscribe((data) => {
     if (!data.message.startsWith("-")) return
+    let { sender: player, message } = data
     data.cancel = true
-    const player = data.sender
-    const args = data.message.slice(1).trimEnd().split(/\s+/g)
+    const args = message.slice(1).trimEnd().split(/\s+/g)
     const commandName = args.shift()
     switch (commandName) {
         case "coins":
@@ -23,7 +23,7 @@ world.events.beforeChat.subscribe((data) => {
             player.coins = (player.coins || 0) + amount
             break
         default:
-            player.tell("Invalid command!")
+            player.sendMessage("Invalid command!")
             break
     }
 })

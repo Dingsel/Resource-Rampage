@@ -12,6 +12,13 @@ declare module "@minecraft/server" {
         readonly mainhand: mc.ContainerSlot;
         coins: number;
     }
+    interface World{
+        readonly overword: mc.Dimension;
+        readonly nether: mc.Dimension;
+        readonly theEnd: mc.Dimension;
+        time: number;
+        find(entity: mc.Entity, query: mc.EntityQueryOptions): mc.Entity | false;
+    }
 }
 
 declare global{
