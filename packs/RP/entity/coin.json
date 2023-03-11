@@ -12,9 +12,12 @@
             "geometry": {
                 "default": "geometry.coin"
             },
+            "animations": {
+                "coin": "animation.coin.move"
+            },
             "scripts": {
                 "animate": [
-                    "animation.coin.move"
+                    "coin"
                 ]
             },
             "render_controllers": [

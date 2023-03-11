@@ -13,7 +13,7 @@
 			"default": {
 				"export": {
 					"readOnly": false,
-					"target": "development"
+					"target": "preview"
 				},
 				"filters": []
 			}

@@ -5,7 +5,8 @@
 			"loop": true,
 			"bones": {
 				"main": {
-					"position": [0, "math.sin(query.life_time * 180) * 2", 0]
+					"rotation": [0, "query.life_time * 60", 0],
+					"position": [0, "math.sin(query.life_time * 140) * 2", 0]
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 import { world, DynamicPropertiesDefinition, MinecraftEntityTypes, system } from "@minecraft/server"
-import "./player.js"
+import "./extensions/import.js"
 
 world.events.worldInitialize.subscribe((data) => {
     const propertyDefinitions = new DynamicPropertiesDefinition()
@@ -28,7 +28,7 @@ world.events.beforeChat.subscribe((data) => {
     }
 })
 
-system.runSchedule(() => {
+system.runInterval(() => {
     for (const player of world.getPlayers()) {
         player.onScreenDisplay.setActionBar(`Coins: ${player.coins}`)
     }
