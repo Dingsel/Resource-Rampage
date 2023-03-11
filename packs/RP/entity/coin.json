@@ -1,0 +1,29 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "dest:coin",
+            "materials": {
+                "default": "spider"
+            },
+            "textures": {
+                "default": "textures/entity/coin"
+            },
+            "geometry": {
+                "default": "geometry.coin"
+            },
+            "scripts": {
+                "animate": [
+                    "animation.coin.move"
+                ]
+            },
+            "render_controllers": [
+                "controller.render.default"
+            ],
+            "spawn_egg": {
+                "base_color": "#2d2d2d",
+                "overlay_color": "#d0ff00"
+            }
+        }
+    }
+}

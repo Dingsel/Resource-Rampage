@@ -1,5 +1,7 @@
 {
-	"resource_pack_name": "Ressource Rampage",
+	"resource_pack_name": "Resource Rampage",
 	"texture_name": "atlas.items",
-	"texture_data": {}
+	"texture_data": {
+		
+	}
 }

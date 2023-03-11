@@ -1,0 +1,9 @@
+-Resource management:
+    -Coins
+    -Maybe Oil?
+    -Storages for Resources 
+
+
+-Tower Deffence:
+    Upgradabale Base
+    Defence
