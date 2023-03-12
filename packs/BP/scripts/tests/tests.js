@@ -35,10 +35,10 @@ export const tests = {
     add_enchantment(data) {
         const { sourceEntity } = data,
             item = sourceEntity.mainhand.getItem(),
-            { enchantments: ench } = item
-        ench.addEnchantment(x_enchantments['mending'][10])
-        item.enchantments = ench
-        sourceEntity.mainhand = item
-        return true;
+            { enchantments: ench } = item,
+            added = ench.addEnchantment(x_enchantments['mending'][10]);
+        item.enchantments = ench;
+        sourceEntity.mainhand = item;
+        return added;
     }
 }

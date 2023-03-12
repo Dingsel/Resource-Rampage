@@ -7,10 +7,10 @@ system.events.scriptEventReceive.subscribe(async (any)=>{
         try {
             var a = await tests[test](any);
         } catch (error) {
-            console.error(`§4Test "${any.id}" faild.\n${error}\n${error.stack}`);
+            console.error(`§cTest "${any.id}" failed.\n${error}\n${error.stack}`);
         }
         if(a) console.warn(`§2Test "${any.id}" was susccessfully executed.`)
-        else console.error(`§4Test "${any.id}" failed.`);
+        else console.error(`§cTest "${any.id}" failed.`);
     }
-    else console.error("Test cant be found, available tests: §l§2\n" + Object.keys(tests).map(n=>`tests:${n}`).join('\n'));
+    else console.error("Test can't be found, available tests: §l§2\n" + Object.keys(tests).map(n=>`tests:${n}`).join('\n'));
 },{namespaces:["tests"]});
