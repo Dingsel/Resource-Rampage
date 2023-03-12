@@ -1,7 +1,5 @@
 import { Entity, Player } from '@minecraft/server';
 
-const maxChars = 10; //Move into global pls there are like 3 different files for it and idk which one to choose
-
 Object.defineProperties(Entity.prototype, {
     toString    : { value() { return `[Entity: ${this.typeId}]`; } },
     inventory   : { get() { return this.getComponent('minecraft:inventory') } },
