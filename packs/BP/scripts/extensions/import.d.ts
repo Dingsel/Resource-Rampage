@@ -15,7 +15,7 @@ declare module "@minecraft/server" {
         coins: number;
     }
     interface World {
-        readonly overword: mc.Dimension;
+        readonly overworld: mc.Dimension;
         readonly nether: mc.Dimension;
         readonly theEnd: mc.Dimension;
         time: number;
