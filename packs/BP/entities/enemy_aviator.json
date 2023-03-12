@@ -50,7 +50,7 @@
 				"height": 1.0
 			},
 			"minecraft:health": {
-				"value": 100
+				"value": 20
 			},
 			"minecraft:movement": {
 				"value": 0.25
