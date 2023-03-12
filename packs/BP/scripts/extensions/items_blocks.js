@@ -8,5 +8,6 @@ Object.defineProperties(ItemStack.prototype,{
 });
 Object.defineProperties(Block.prototype,{
     canBeWaterlogged:{get(){return this.type.canBeWaterlogged}},
+    inventory   : { get() { return this.getComponent('minecraft:inventory') } },
     container:{ get(){return this.getComponent('minecraft:inventory')?.container;} }
 });

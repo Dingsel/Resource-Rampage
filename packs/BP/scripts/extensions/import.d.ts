@@ -2,8 +2,8 @@ import * as mc from '@minecraft/server';
 
 declare module "@minecraft/server" {
     interface Entity {
-        readonly inventory: mc.EntityInventoryComponent;
-        readonly container: mc.Container;
+        readonly inventory?: mc.EntityInventoryComponent;
+        readonly container?: mc.Container;
         health: number;
         readonly viewBlock?: mc.Block;
         readonly viewEntities: mc.Entity[];
@@ -14,7 +14,7 @@ declare module "@minecraft/server" {
         coins: number;
     }
     interface World {
-        readonly overword: mc.Dimension;
+        readonly overworld: mc.Dimension;
         readonly nether: mc.Dimension;
         readonly theEnd: mc.Dimension;
         time: number;
@@ -28,6 +28,7 @@ declare module "@minecraft/server" {
     }
     interface Block {
         readonly canBeWaterlogged: boolean
+        readonly inventory?: mc.BlockInventoryComponent;
         readonly container?: mc.BlockInventoryComponentContainer
     }
     interface ItemStack {
