@@ -12,7 +12,6 @@ declare module "@minecraft/server" {
     }
     interface Player {
         readonly mainhand: mc.ContainerSlot;
-        coins: number;
     }
     interface World {
         readonly overworld: mc.Dimension;
@@ -45,6 +44,7 @@ declare global {
     var nextTick: Promise;
     var currentTick: number;
     var run: PromiseConstructor['prototype']['then']
+    var coins: number
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
         // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
         next(...args: [] | [TNext]): IteratorResult<T, TReturn>;
@@ -208,4 +208,5 @@ declare global {
     interface Array<T> {
         readonly randomElement: T
     }
+    function runCommand(command: string): Promise<mc.CommandResult>;
 }

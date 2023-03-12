@@ -5,7 +5,6 @@ export const GeneratorFunctionConstructor = GeneratorFunction.constructor;
 /** @type {Generator} */
 export const Generator = GeneratorFunction.prototype;
 
-
 /** @type {AsyncGeneratorFunction} */
 export const AsyncGeneratorFunction = Object.getPrototypeOf(async function*(){});
 /** @type {AsyncGeneratorFunctionConstructor} */
@@ -16,7 +15,7 @@ export const AsyncGenerator = AsyncGeneratorFunction.prototype;
 /** @type {FunctionConstructor} */
 export const AsyncFunctionConstructor = Object.getPrototypeOf(async function(){}).constructor;
 
-import { system } from '@minecraft/server';
+import { system, world } from '@minecraft/server';
 //@ts-ignore
 const {
     assign, create,
@@ -57,13 +56,15 @@ assign(globalThis,{
     setTimeout: system.runTimeout.bind(system),
     clearInterval: system.clearRun.bind(system),
     clearTimeout: system.clearRun.bind(system),
-    run: function(callBack) { return Promise.resolve().then(callBack) }
+    run: function(callBack) { return Promise.resolve().then(callBack) },
+    runCommand: world.getDimension("overworld").runCommandAsync.bind(world.getDimension("overworld"))
 });
 console.logLike = console.log;
 console.log = console.warn;
 setProperties(globalThis,{
     nextTick:{get(){return new Promise(res=>setTimeout(()=>res(system.currentTick + 1)));}},
-    currentTick:{get(){return system.currentTick;}}
+    currentTick:{get(){return system.currentTick;}},
+    coins:{get(){return world.getDynamicProperty("coins");},set(v){world.setDynamicProperty("coins",v);}}
 })
 
 assign(Date.prototype,{

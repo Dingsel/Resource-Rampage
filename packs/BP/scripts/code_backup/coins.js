@@ -1,5 +1,4 @@
 import { world } from "@minecraft/server"
-global.coinId
 
 //chatgpt moment
 function getRandomFloat(min, max) {
@@ -9,7 +8,7 @@ function getRandomFloat(min, max) {
 setInterval(() => {
     for (const player of world.getPlayers()) {
         const { location, dimension } = player
-        for (const entity of dimension.getEntities({ type: coinId, location, maxDistance: 2 })) {
+        for (const entity of dimension.getEntities({ type: global.coinId, location, maxDistance: 2 })) {
             player.runCommandAsync(`playsound random.orb @s ~~~ 1 ${getRandomFloat(1.3, 1.7)}`)
             entity.triggerEvent(`despawn`)
             player.coins++
