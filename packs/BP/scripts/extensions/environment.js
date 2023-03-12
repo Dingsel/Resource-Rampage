@@ -16,7 +16,7 @@ export const AsyncGenerator = AsyncGeneratorFunction.prototype;
 /** @type {FunctionConstructor} */
 export const AsyncFunctionConstructor = Object.getPrototypeOf(async function(){}).constructor;
 
-import { system, world } from '@minecraft/server';
+import { system } from '@minecraft/server';
 //@ts-ignore
 const {
     assign, create,
@@ -24,9 +24,7 @@ const {
     getPrototypeOf: getProto, 
     getOwnPropertyDescriptors: getProperties, 
     defineProperties: setProperties,
-} = Object,{
-    overword,nether,theEnd
-} = world;
+} = Object;
 
 assign(Object,{
     clone(object, newObject = create(getProto(object))){return setProperties(newObject, getProperties(object));},
@@ -54,13 +52,11 @@ assign(globalThis,{
     AsyncGeneratorFunction,
     AsyncGeneratorFunctionConstructor,
     AsyncFunctionConstructor,
-    overword,nether,theEnd,
     print: console.warn,
     setInterval: system.runInterval.bind(system),
     setTimeout: system.runTimeout.bind(system),
     clearInterval: system.clearRun.bind(system),
     clearTimeout: system.clearRun.bind(system),
-    runCommand: overword.runCommand.bind(overword),
     run: function(callBack) { return Promise.resolve().then(callBack) }
 });
 console.logLike = console.log;
