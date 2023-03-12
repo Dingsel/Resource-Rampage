@@ -8,3 +8,9 @@ function updateName(entity) {
     const nameStr = "§2|".repeat(fullChars) + "§c|".repeat(emptyChars)
     entity.nameTag = nameStr
 }
+
+system.runInterval(() => {
+    for (const entity of world.overworld.getEntities({ families: ["enemy"] })) {
+        updateName(entity)
+    }
+})
