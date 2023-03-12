@@ -32,9 +32,11 @@ export const tests = {
         }
         return true;
     },
-    add_enchantment(item){
-        const {enchantments} = item
-        const enchant = x_enchantments['fireAspect'][10]
+    add_enchantment(data) {
+        const { sourceEntity } = data,
+            item = sourceEntity.mainhand.getItem(),
+            { enchantments } = item,
+            enchant = x_enchantments['fireAspect'][10]
         enchantments.add_enchantment(enchant)
         item.enchantments = enchant
     }
