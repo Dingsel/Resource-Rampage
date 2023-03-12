@@ -10,7 +10,7 @@ system.events.scriptEventReceive.subscribe(async (any)=>{
             console.error(`§4Test "${any.id}" faild.\n${error}\n${error.stack}`);
         }
         if(a) console.warn(`§2Test "${any.id}" was susccessfully executed.`)
-        else console.error(`§4Test "${any.id}" faild.`);
+        else console.error(`§4Test "${any.id}" failed.`);
     }
     else console.error("Test cant be found, available tests: §l§2\n" + Object.keys(tests).map(n=>`tests:${n}`).join('\n'));
 },{namespaces:["tests"]});
