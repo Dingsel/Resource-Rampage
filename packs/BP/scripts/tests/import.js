@@ -7,7 +7,7 @@ system.events.scriptEventReceive.subscribe(async (any)=>{
         try {
             var a = await tests[test](any);
         } catch (error) {
-            console.error(`§4Test "${any.id}" faild.\n${error}`);
+            console.error(`§4Test "${any.id}" faild.\n${error}\n${error.stack}`);
         }
         if(a) console.warn(`§2Test "${any.id}" was susccessfully executed.`)
         else console.error(`§4Test "${any.id}" faild.`);
