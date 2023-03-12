@@ -68,10 +68,11 @@ setProperties(globalThis,{
 
 assign(Date.prototype,{
     toHHMMSS(){return this.toTimeString().split(' ')[0];}
+    //HH:MM:SS  23:15:23
 })
 assign(Math,{
-    deg(number){return (number * 180)*this.PI},
-    rad(number){return (number * this.PI)/180},
+    deg(number){return (number * 180)*this.PI}, //degresses
+    rad(number){return (number * this.PI)/180}, //radians
     randomBetween(max, min = 0){
         const [n,x] = max > min?[max,min]:[min,max]
         return this.random() * (x - n) + n;
@@ -79,6 +80,7 @@ assign(Math,{
 });
 
 Number.unitTypes = ['', 'k', 'M', 'G', 'T', 'E'];
+// 56,485 -> 56.4k
 assign(Number.prototype,{
     unitFormat: function (place = 1, space = "", exponent = 3, component = 1) {
         for (let i = 0, n = this, c = 10**(exponent + component), e = 10**exponent; true; i++) {

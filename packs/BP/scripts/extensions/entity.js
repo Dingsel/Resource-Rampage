@@ -8,17 +8,17 @@ Object.defineProperties(Entity.prototype, {
     viewEntities:{get(){return this.getEntitiesFromViewDirection({maxDisatnce:10});}},
     scores: {
         get() {
-            const player = this
+            const entity = this
             return new Proxy({}, {
                 get(_, property) {
                     try {
-                        return world.scoreboard.getObjective(property).getScore(player.scoreboard)
+                        return world.scoreboard.getObjective(property).getScore(entity.scoreboard)
                     } catch {
                         return NaN
                     }
                 },
                 set(_, property, value) {
-                    player.runCommandAsync(`scoreboard players set @s "${property}" ${value}`)
+                    entity.runCommandAsync(`scoreboard players set @s "${property}" ${value}`)
                 }
             })
         }

@@ -19,9 +19,26 @@ declare module "@minecraft/server" {
         time: number;
         find(entity: mc.Entity, query: mc.EntityQueryOptions): mc.Entity | false;
     }
+    interface System{
+        readonly nextTick: Promise
+    }
+    interface Dimension{
+        setBlock(location: mc.Vector3, type: mc.BlockType | mc.BlockPermutation): number
+    }
+    interface Block{
+        readonly canBeWaterlogged: boolean
+        readonly container?: mc.BlockInventoryComponentContainer
+    }
+    interface ItemStack{
+        enchantments: mc.EnchantmentList
+    }
 }
-
-declare global{
+declare module "@minecraft/server-ui" {
+    interface FormResponse{
+        readonly output: (number | (string | number)[])
+    }
+}
+declare global {
     var nextTick: Promise;
     var currentTick: number;
     var run: PromiseConstructor['prototype']['then']
