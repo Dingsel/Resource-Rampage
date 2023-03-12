@@ -2,7 +2,7 @@
 	"format_version": "1.17.0",
 	"minecraft:entity": {
 		"description": {
-			"identifier": "dest:enemy_basic",
+			"identifier": "dest:enemy_grunt",
 			"is_summonable": true,
 			"is_spawnable": true
 		},
@@ -66,7 +66,7 @@
 			"minecraft:type_family": {
 				"family": [
 					"enemy",
-					"basic"
+					"grunt"
 				]
 			},
 			"minecraft:tick_world": {
