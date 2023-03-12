@@ -8,7 +8,6 @@ declare module "@minecraft/server" {
         readonly viewBlock?: mc.Block;
         readonly viewEntities: mc.Entity[];
         readonly scores: { [key: string]: number };
-        updateName(): void
     }
     interface Player {
         readonly mainhand: mc.ContainerSlot;

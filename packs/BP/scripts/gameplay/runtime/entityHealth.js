@@ -1,4 +1,10 @@
-import { world } from "@minecraft/server";
+import { system, world } from "@minecraft/server";
 
-world.events.entitySpawn.subscribe(({ entity })            => { entity.updateName() })
-world.events.entityHurt.subscribe (({ hurtEntity: entity })=> { entity.updateName() })
+
+function updateName(entity) {
+    const percentHealth = entity.health / entity.maxHealth * 10
+    const fullChars = maxChars - Math.floor(percentHealth)
+    const emptyChars = maxChars - fullChars
+    const nameStr = "§2|".repeat(fullChars) + "§c|".repeat(emptyChars)
+    entity.nameTag = nameStr
+}

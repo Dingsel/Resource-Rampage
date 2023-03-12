@@ -26,13 +26,6 @@ Object.defineProperties(Entity.prototype, {
                 }
             })
         }
-    },
-    updateName: function () {
-        const percentHealth = this.health / this.maxHealth * 10
-        const fullChars = maxChars - Math.floor(percentHealth)
-        const emptyChars = maxChars - fullChars
-        const nameStr = "§2|".repeat(fullChars) + "§c|".repeat(emptyChars)
-        this.nameTag = nameStr
     }
 });
 Object.defineProperties(Player.prototype, {
