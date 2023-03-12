@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server"
-import { coinId } from "../globalVars"
+global.coinId
 
 //chatgpt moment
 function getRandomFloat(min, max) {

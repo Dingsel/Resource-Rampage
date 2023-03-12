@@ -1,5 +1,6 @@
 export const EntityIds = {
-    coin: "dest:coin"
+    coin: "dest:coin",
+    database: "dest:database"
 }
 export const ItemIds = {
 

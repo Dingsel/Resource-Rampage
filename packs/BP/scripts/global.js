@@ -1,3 +1,4 @@
+/**@type {{coinId:"dest:coin"}}*/
 const global = globalThis.global??{
     coinId:"dest:coin"
 };
