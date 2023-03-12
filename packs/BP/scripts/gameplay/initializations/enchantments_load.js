@@ -8,10 +8,16 @@ const x_enchantments = {},
     } } = world,
     runCommand = overworld.runCommand.bind(overworld);
 
-system.run(function loadXEnchants() {
-    const loaded = runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
-    if (!loaded) return system.run(loadXEnchants)
-});
+export function loadEnchantments() {
+    new Promise(res => {
+        system.run(function load() {
+            const loaded = runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
+            if (!loaded) return system.run(load)
+            res(true)
+        })
+    })
+};
+loadEnchantments()
 const evId = entitySpawn.subscribe(({ entity }) => {
     const { typeId } = entity
     if ('dest:database' !== typeId) return
