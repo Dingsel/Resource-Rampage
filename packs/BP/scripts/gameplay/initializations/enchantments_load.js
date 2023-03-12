@@ -6,20 +6,23 @@ const x_enchantments = {},
     { events: {
         entitySpawn
     } } = world,
-    runCommand = overworld.runCommand.bind(overworld);
+    runCommand = overworld.runCommandAsync.bind(overworld);
 
 export function loadEnchantments() {
-    new Promise(res => {
-        system.run(function load() {
-            const loaded = runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
-            if (!loaded) return system.run(load)
-            res(true)
-        })
+    runCommand('tickingarea add circle 0 0 0 0 loadEnchant')
+    return new Promise( res => {
+        (async function load() {
+            const {successCount} = await runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
+            if (!successCount) return load()
+            res(successCount)
+            runCommand('tickingarea remove loadEnchant')
+        })()
     })
 };
 loadEnchantments()
 const evId = entitySpawn.subscribe(({ entity }) => {
     const { typeId } = entity
+    print(typeId)
     if ('dest:database' !== typeId) return
     const { inventory: { container: inv, inventorySize: size } } = entity
     entity.triggerEvent('despawn')
