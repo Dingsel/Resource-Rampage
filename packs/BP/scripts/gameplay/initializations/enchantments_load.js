@@ -1,8 +1,34 @@
-import { Enchantment, MinecraftEnchantmentTypes } from "@minecraft/server";
+import { system, world } from "@minecraft/server";
+/**@type {X_Enxhantments} */
+const x_enchantments = {},
+    getDimension = world.getDimension.bind(world),
+    overworld = getDimension('overworld'),
+    { events: {
+        entitySpawn
+    } } = world,
+    runCommand = overworld.runCommand.bind(overworld)
 
-const enchaments = {};
+system.run(function loadXEnchants() {
+    const loaded = runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
+    if (!loaded) return system.run(loadXEnchants)
+})
+const evId = entitySpawn.subscribe(({ entity }) => {
+    const { typeId } = entity
+    if ('dest:database' !== typeId) return
+    const { inventory: { container: inv, inventorySize: size } } = entity
+    entity.triggerEvent('despawn')
+    entitySpawn.unsubscribe(evId)
+    for (let i = 0; i < size; i++) {
+        const item = inv.getItem(i)
+        if (item?.typeId !== 'minecraft:enchanted_book') continue
+        const { enchantments: ench } = item
+        for (const E of ench) {
+            const { type: { id }, level } = E
+            x_enchantments[id] ? x_enchantments[id][level] = E : x_enchantments[id] = { [level]: E }
+        }
+    }
+})
+x_enchantments
 
 
-
-
-export {enchaments};
+export { x_enchantments };
