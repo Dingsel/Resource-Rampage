@@ -1,41 +1,42 @@
 import * as mc from '@minecraft/server';
 
 declare module "@minecraft/server" {
-    interface Entity{
+    interface Entity {
         readonly inventory: mc.EntityInventoryComponent;
         readonly container: mc.Container;
         health: number;
         readonly viewBlock?: mc.Block;
         readonly viewEntities: mc.Entity[];
         readonly scores: { [key: string]: number };
+        updateName(): void
     }
-    interface Player{
+    interface Player {
         readonly mainhand: mc.ContainerSlot;
         coins: number;
     }
-    interface World{
+    interface World {
         readonly overword: mc.Dimension;
         readonly nether: mc.Dimension;
         readonly theEnd: mc.Dimension;
         time: number;
         find(entity: mc.Entity, query: mc.EntityQueryOptions): mc.Entity | false;
     }
-    interface System{
+    interface System {
         readonly nextTick: Promise
     }
-    interface Dimension{
+    interface Dimension {
         setBlock(location: mc.Vector3, type: mc.BlockType | mc.BlockPermutation): number
     }
-    interface Block{
+    interface Block {
         readonly canBeWaterlogged: boolean
         readonly container?: mc.BlockInventoryComponentContainer
     }
-    interface ItemStack{
+    interface ItemStack {
         enchantments: mc.EnchantmentList
     }
 }
 declare module "@minecraft/server-ui" {
-    interface FormResponse{
+    interface FormResponse {
         readonly output: (number | (string | number)[])
     }
 }
@@ -55,7 +56,7 @@ declare global {
          * Creates a new Generator object.
          * @param args A list of arguments the function accepts.
          */
-        new (...args: any[]): Generator;
+        new(...args: any[]): Generator;
         /**
          * Creates a new Generator object.
          * @param args A list of arguments the function accepts.
@@ -80,7 +81,7 @@ declare global {
          * Creates a new Generator function.
          * @param args A list of arguments the function accepts.
          */
-        new (...args: string[]): GeneratorFunction;
+        new(...args: string[]): GeneratorFunction;
         /**
          * Creates a new Generator function.
          * @param args A list of arguments the function accepts.
@@ -111,7 +112,7 @@ declare global {
          * Creates a new AsyncGenerator object.
          * @param args A list of arguments the function accepts.
          */
-        new (...args: any[]): AsyncGenerator;
+        new(...args: any[]): AsyncGenerator;
         /**
          * Creates a new AsyncGenerator object.
          * @param args A list of arguments the function accepts.
@@ -135,7 +136,7 @@ declare global {
          * Creates a new AsyncGenerator function.
          * @param args A list of arguments the function accepts.
          */
-        new (...args: string[]): AsyncGeneratorFunction;
+        new(...args: string[]): AsyncGeneratorFunction;
         /**
          * Creates a new AsyncGenerator function.
          * @param args A list of arguments the function accepts.
@@ -154,12 +155,12 @@ declare global {
          */
         readonly prototype: AsyncGeneratorFunction;
     }
-    interface AsyncFunctionConstructor extends FunctionConstructor{
+    interface AsyncFunctionConstructor extends FunctionConstructor {
         /**
             * Creates a new AsyncGenerator function.
             * @param args A list of arguments the function accepts.
             */
-        new (...args: string[]): AsyncFunction;
+        new(...args: string[]): AsyncFunction;
         /**
             * Creates a new AsyncGenerator function.
             * @param args A list of arguments the function accepts.
@@ -178,32 +179,32 @@ declare global {
             */
         readonly prototype: AsyncFunction;
     }
-    interface AsyncFunction extends Function{
+    interface AsyncFunction extends Function {
         (): Promise
         readonly prototype: Promise
     }
-    interface Object{
+    interface Object {
         static clone(arg: any): object;
         static clear<T extends object>(arg: T): T;
         static addPrototypeOf<T extends object>(arg: T, proto: object): T;
         static applyOwnGetters<T extends object>(ownGetters: object, source: T): T;
     }
-    interface Symbol{
+    interface Symbol {
         static isGenerator: Symbol
     }
-    interface Date{
+    interface Date {
         toHHMMSS(): string
     }
-    interface Math{
+    interface Math {
         rad(deg: number): number
         deg(rad: number): number
         randomBetween(max: number, min?: number): number
     }
-    interface Number{
+    interface Number {
         static unitTypes: string[]
         unitFormat(place?: number, space?: string): string
     }
-    interface Array<T>{
+    interface Array<T> {
         readonly randomElement: T
     }
 }

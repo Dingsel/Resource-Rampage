@@ -1,12 +1,15 @@
-import {Entity, Player} from '@minecraft/server';
+import { Entity, Player } from '@minecraft/server';
+
+const maxChars = 10; //Move into global pls there are like 3 different files for it and idk which one to choose
 
 Object.defineProperties(Entity.prototype, {
-    toString:{value(){return `[Entity: ${this.typeId}]`;}},
-    inventory:{get(){return this.getComponent('minecraft:inventory')}},
-    container:{get(){return this.getComponent('minecraft:inventory')?.container}},
-    health:{get(){return this.getComponent('minecraft:health')?.current}, set(n){this.getComponent('minecraft:health').setCurrent(n)}},
-    viewBlock:{get(){return this.getBlockFromViewDirection({maxDisatnce:10,includePassableBlocks:true});}},
-    viewEntities:{get(){return this.getEntitiesFromViewDirection({maxDisatnce:10});}},
+    toString    : { value() { return `[Entity: ${this.typeId}]`; } },
+    inventory   : { get() { return this.getComponent('minecraft:inventory') } },
+    container   : { get() { return this.getComponent('minecraft:inventory')?.container } },
+    health      : { get() { return this.getComponent('minecraft:health')?.current }, set(n) { this.getComponent('minecraft:health').setCurrent(n) } },
+    maxHealth   : { get() { return this.getComponent('minecraft:health')?.value } },
+    viewBlock   : { get() { return this.getBlockFromViewDirection({ maxDisatnce: 10, includePassableBlocks: true }); } },
+    viewEntities: { get() { return this.getEntitiesFromViewDirection({ maxDisatnce: 10 }); } },
     scores: {
         get() {
             const entity = this
@@ -23,11 +26,18 @@ Object.defineProperties(Entity.prototype, {
                 }
             })
         }
+    },
+    updateName: function () {
+        const percentHealth = this.health / this.maxHealth * 10
+        const fullChars = maxChars - Math.floor(percentHealth)
+        const emptyChars = maxChars - fullChars
+        const nameStr = "§2|".repeat(fullChars) + "§c|".repeat(emptyChars)
+        this.nameTag = nameStr
     }
 });
 Object.defineProperties(Player.prototype, {
-    toString:{value(){return `[Player: ${this.name}]`;}},
-    mainhand:{ get(){return this.container.getSlot(this.selectedSlot);} },
+    toString: { value() { return `[Player: ${this.name}]`; } },
+    mainhand: { get() { return this.container.getSlot(this.selectedSlot); } },
     coins: {
         get() {
             return this.getDynamicProperty("coins")
