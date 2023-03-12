@@ -28,7 +28,10 @@ Object.defineProperties(Entity.prototype, {
 });
 Object.defineProperties(Player.prototype, {
     toString: { value() { return `[Player: ${this.name}]`; } },
-    mainhand: { get() { return this.container.getSlot(this.selectedSlot); } },
+    mainhand: {
+        get() { return this.container.getSlot(this.selectedSlot); },
+        set(s){ this.container.setItem(this.selectedSlot,s);return s;}
+    },
     coins: {
         get() {
             return this.getDynamicProperty("coins")
