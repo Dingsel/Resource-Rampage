@@ -2,6 +2,7 @@ import {Entity, Player} from '@minecraft/server';
 
 Object.defineProperties(Entity.prototype, {
     toString:{value(){return `[Entity: ${this.typeId}]`;}},
+    inventory:{get(){return this.getComponent('minecraft:inventory')}},
     container:{get(){return this.getComponent('minecraft:inventory')?.container}},
     health:{get(){return this.getComponent('minecraft:health')?.current}, set(n){this.getComponent('minecraft:health').setCurrent(n)}},
     viewBlock:{get(){return this.getBlockFromViewDirection({maxDisatnce:10,includePassableBlocks:true});}},

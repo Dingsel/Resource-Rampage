@@ -2,6 +2,7 @@ import * as mc from '@minecraft/server';
 
 declare module "@minecraft/server" {
     interface Entity{
+        readonly inventory: mc.EntityInventoryComponent;
         readonly container: mc.Container;
         health: number;
         readonly viewBlock?: mc.Block;
