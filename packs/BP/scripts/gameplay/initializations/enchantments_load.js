@@ -1,17 +1,17 @@
 import { system, world } from "@minecraft/server";
-/**@type {X_Enxhantments} */
+
 const x_enchantments = {},
     getDimension = world.getDimension.bind(world),
     overworld = getDimension('overworld'),
     { events: {
         entitySpawn
     } } = world,
-    runCommand = overworld.runCommand.bind(overworld)
+    runCommand = overworld.runCommand.bind(overworld);
 
 system.run(function loadXEnchants() {
     const loaded = runCommand('structure load x_enchantments 0 0 0 0_degrees none true false')
     if (!loaded) return system.run(loadXEnchants)
-})
+});
 const evId = entitySpawn.subscribe(({ entity }) => {
     const { typeId } = entity
     if ('dest:database' !== typeId) return
@@ -27,8 +27,7 @@ const evId = entitySpawn.subscribe(({ entity }) => {
             x_enchantments[id] ? x_enchantments[id][level] = E : x_enchantments[id] = { [level]: E }
         }
     }
-})
-x_enchantments
+});
 
 
 export { x_enchantments };
