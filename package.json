@@ -1,0 +1,23 @@
+{
+  "name": "ressource-rampage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dingsel/Ressource-Rampage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dingsel/Ressource-Rampage/issues"
+  },
+  "homepage": "https://github.com/Dingsel/Ressource-Rampage#readme",
+  "dependencies": {
+    "@minecraft/server": "^1.2.0-beta.1.19.80-preview.20"
+  }
+}

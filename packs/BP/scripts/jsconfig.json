@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "baseUrl": ".",
+        "target": "ES2022",
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+    }
+}
+
+//you know what happened with the types? does it have to do with this file?
