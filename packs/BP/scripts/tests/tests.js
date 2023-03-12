@@ -1,6 +1,7 @@
 import { MinecraftBlockTypes, ScriptEventCommandMessageEvent } from "@minecraft/server";
 import {ActionFormData} from '@minecraft/server-ui';
 import { path } from "gameplay/building/index.js";
+import { x_enchantments } from "gameplay/initializations";
 
 //please use sneak_case format for test names
 
@@ -30,5 +31,11 @@ export const tests = {
             }
         }
         return true;
+    },
+    add_enchantment(item){
+        const {enchantments} = item
+        const enchant = x_enchantments['fireAspect'][10]
+        enchantments.add_enchantment(enchant)
+        item.enchantments = enchant
     }
 }
