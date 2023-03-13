@@ -2,6 +2,7 @@ import "./global.js"
 import './extensions/import';
 import './gameplay/index.js';
 import './tests/import.js';
+import './gameplay/building/index.js'
 import { world, system, DynamicPropertiesDefinition } from "@minecraft/server"
 
 world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
