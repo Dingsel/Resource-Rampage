@@ -10,7 +10,7 @@ Object.defineProperties(Entity.prototype, {
     maxHealth   : { get() { return this.getComponent('minecraft:health')?.value } },
     viewBlock   : { get() { return this.getBlockFromViewDirection({ maxDisatnce: 10, includePassableBlocks: true }); } },
     viewEntities: { get() { return this.getEntitiesFromViewDirection({ maxDisatnce: 10 }); } },
-    applyDamage : { value(amount, source) { applyDamage.call(this, amount, source); return (this.health === 0) && (++coins) && this.dimension.spawnParticle("dest:coin", this.location, map); }},
+    applyDamage : { value(amount, source) { applyDamage.call(this, amount, source); }},
     scores      : { get() { const entity = this; return new Proxy({}, { get(_, property) { try { return world.scoreboard.getObjective(property).getScore(entity.scoreboard); } catch { return NaN; } }, set(_, property, value) { entity.runCommandAsync(`scoreboard players set @s "${property}" ${value}`); } }) } }
 });
 Object.defineProperties(Player.prototype, {
