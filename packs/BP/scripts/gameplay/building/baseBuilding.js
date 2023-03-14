@@ -24,16 +24,16 @@ const map = new MolangVariableMap()
 /**
  * 
  * @param {Vector} lookAt 
- * @param {Array<number>} size 
+ * @param {[number,number]} size 
  */
-function draw(lookAt, size, player) {
+function draw(lookAt, [s0,s1], player) {
 
     let intercepting;
     for (const obj of world.db) {
         const loc = player.viewBlock?.location
 
-        loc.x -= size[0] / 2 - 1
-        loc.z -= size[1] / 2 - 1
+        loc.x -= s0 / 2 - 1
+        loc.z -= s1 / 2 - 1
 
         if (checkOverlap(loc, size, obj.location, obj.size)) {
             intercepting = true
@@ -44,27 +44,27 @@ function draw(lookAt, size, player) {
     let colour = intercepting ? "red" : "green"
 
 
-    for (let i = 0; i < size[0] + 1; i++) {
+    for (let i = 0; i < s0 + 1; i++) {
         const { x, y, z } = lookAt
         const loc = {
-            x: x + i - size[0] / 2 + 0.5,
+            x: x + i - s0 / 2 + 0.5,
             y: y + 1,
-            z: z - size[1] / 2 + 0.5
+            z: z - s1 / 2 + 0.5
         }
         spawnParticle(`dest:${colour}`, loc, map)
-        loc.z += size[1]
+        loc.z += s1
         spawnParticle(`dest:${colour}`, loc, map)
     }
 
-    for (let i = 0; i < size[1] + 1; i++) {
+    for (let i = 0; i < s1 + 1; i++) {
         const { x, y, z } = lookAt
         const loc = {
-            x: x - size[0] / 2 + 0.5,
+            x: x - s0 / 2 + 0.5,
             y: y + 1,
-            z: z + i - size[1] / 2 + 0.5
+            z: z + i - s1 / 2 + 0.5
         }
         spawnParticle(`dest:${colour}`, loc, map)
-        loc.x += size[0]
+        loc.x += s0
         spawnParticle(`dest:${colour}`, loc, map)
     }
 }

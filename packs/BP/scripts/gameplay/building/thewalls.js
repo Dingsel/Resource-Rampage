@@ -1,7 +1,7 @@
-import { world, BlockType } from "@minecraft/server";
+import { BlockType } from "@minecraft/server";
 import { level_1 } from "resources/wall_definitions";
 
-export async function buildWall(from, to, wallDefinition = level_1, dimension = world.overworld) {
+export async function buildWall(from, to, wallDefinition = level_1, dimension = overworld) {
     const gen = path(from, to);
     const defGen = fromDefinitionOverloads(level_1);
     for (const { x: x, y: y, z: z, rotated } of gen) {
