@@ -2,8 +2,6 @@ import { MolangVariableMap, system, world, Vector } from "@minecraft/server";
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
 import { towers } from "resources/pack";
 
-const db = []
-
 const baseSelection = new ActionFormData()
 baseSelection.title("Select a Piece to Build!")
 baseSelection.body("Test")
@@ -27,7 +25,24 @@ const map = new MolangVariableMap()
  * @param {Vector} lookAt 
  * @param {Array<number>} size 
  */
-function draw(lookAt, size) {
+function draw(lookAt, size, player) {
+
+    let intercepting;
+    for (const obj of world.db) {
+        const loc = player.viewBlock?.location
+
+        loc.x -= size[0] / 2 - 1
+        loc.z -= size[1] / 2 - 1
+
+        if (checkOverlap(loc, size, obj.location, obj.size)) {
+            intercepting = true
+            break
+        }
+    }
+
+    let colour = intercepting ? "red" : "green"
+
+
     for (let i = 0; i < size[0] + 1; i++) {
         const { x, y, z } = lookAt
         const loc = {
@@ -35,10 +50,11 @@ function draw(lookAt, size) {
             y: y + 1,
             z: z - size[1] / 2 + 0.5
         }
-        world.overworld.spawnParticle("dest:green", loc, map)
+        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
         loc.z += size[1]
-        world.overworld.spawnParticle("dest:green", loc, map)
+        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
     }
+
     for (let i = 0; i < size[1] + 1; i++) {
         const { x, y, z } = lookAt
         const loc = {
@@ -46,9 +62,9 @@ function draw(lookAt, size) {
             y: y + 1,
             z: z + i - size[1] / 2 + 0.5
         }
-        world.overworld.spawnParticle("dest:green", loc, map)
+        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
         loc.x += size[0]
-        world.overworld.spawnParticle("dest:green", loc, map)
+        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
     }
 }
 
@@ -56,7 +72,7 @@ system.runInterval(() => {
     for (const player of world.getPlayers()) {
         const block = player.viewBlock
         if (!player.structureTemp || !block?.location) continue;
-        draw(block.location, player.structureTemp.size)
+        draw(block.location, player.structureTemp.size, player)
     }
 })
 
@@ -73,7 +89,7 @@ function checkOverlap(loc1, size1, loc2, size2) {
     const y3 = loc2.y;
     const z3 = loc2.z;
     const x4 = loc2.x + size2[0];
-    const y4 = loc2.y + size2[1];
+    const y4 = loc2.y + size1[1];
     const z4 = loc2.z + size2[1];
 
     if (
@@ -83,7 +99,7 @@ function checkOverlap(loc1, size1, loc2, size2) {
     ) {
         return true;
     } else {
-        return false; 
+        return false;
     }
 }
 
@@ -111,15 +127,15 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
 
         let intercepting;
 
-        for (const obj of db) {
-            console.warn(obj.location, obj.size)
+        for (const obj of world.db) {
             if (checkOverlap(loc, size, obj.location, obj.size)) {
                 intercepting = true
                 break
             }
         }
-        if (intercepting){
+        if (intercepting) {
             console.warn("yikes")
+            delete player.structureTemp
             return
         }
 
@@ -128,10 +144,10 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
 
             await player.dimension.runCommandAsync(`structure load ${player.structureTemp.structureId} ${loc.x} ${loc.y} ${loc.z} 0_degrees none`)
 
-            db.push({ location: loc, size: size })
+            world.db.push({ location: loc, size: size })
         }
         delete player.structureTemp
     } catch (error) {
-        console.error(error)
+        console.error(error, error.stack)
     }
 })

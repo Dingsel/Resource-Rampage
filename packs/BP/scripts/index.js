@@ -8,6 +8,7 @@ import { world, system, DynamicPropertiesDefinition } from "@minecraft/server"
 world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
     const propertyDefinitions = new DynamicPropertiesDefinition()
     propertyDefinitions.defineNumber("coins")
+    propertyDefinitions.defineString("db", 9800)
     propertyRegistry.registerWorldDynamicProperties(propertyDefinitions)
 })
 

@@ -19,6 +19,7 @@ declare module "@minecraft/server" {
         readonly theEnd: mc.Dimension;
         time: number;
         find(entity: mc.Entity, query: mc.EntityQueryOptions): mc.Entity | false;
+        db: Array<any>;
     }
     interface System {
         readonly nextTick: Promise
