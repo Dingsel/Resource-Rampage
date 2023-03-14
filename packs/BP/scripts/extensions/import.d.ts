@@ -47,11 +47,12 @@ declare global {
     var worldInitialize: mc.IWorldInitializeEventSignal, entityDie: mc.IEntityDieEventSignal,
         beforeChat: mc.IBeforeChatEventSignal,
         beforeItemUse: mc.IBeforeItemUseEventSignal, beforeItemUseOn: mc.IBeforeItemUseOnEventSignal,
-    var nextTick: Promise;
-    var currentTick: number;
-    var run: PromiseConstructor['prototype']['then'];
-    var coins: number;
-    var objectives: { [key: string]: undefined | mc.ScoreboardObjective };
+        overworld: mc.Dimension,
+        nextTick: Promise,
+        currentTick: number,
+        run: PromiseConstructor['prototype']['then'],
+        coins: number,
+        objectives: { [key: string]: undefined | mc.ScoreboardObjective };
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
         // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
         next(...args: [] | [TNext]): IteratorResult<T, TReturn>;

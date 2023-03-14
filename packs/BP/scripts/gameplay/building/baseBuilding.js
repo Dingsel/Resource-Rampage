@@ -8,6 +8,7 @@ baseSelection.body("Test")
 for (const tower of towers) {
     baseSelection.button(`${tower.alias}\n${tower.description}`, tower.icon)
 }
+const spawnParticle = overworld.spawnParticle.bind(overworld)
 
 
 beforeItemUse.subscribe(async ({ item, source: player }) => {
@@ -50,9 +51,9 @@ function draw(lookAt, size, player) {
             y: y + 1,
             z: z - size[1] / 2 + 0.5
         }
-        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
+        spawnParticle(`dest:${colour}`, loc, map)
         loc.z += size[1]
-        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
+        spawnParticle(`dest:${colour}`, loc, map)
     }
 
     for (let i = 0; i < size[1] + 1; i++) {
@@ -62,45 +63,35 @@ function draw(lookAt, size, player) {
             y: y + 1,
             z: z + i - size[1] / 2 + 0.5
         }
-        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
+        spawnParticle(`dest:${colour}`, loc, map)
         loc.x += size[0]
-        world.overworld.spawnParticle(`dest:${colour}`, loc, map)
+        spawnParticle(`dest:${colour}`, loc, map)
     }
 }
 
 setInterval(() => {
     for (const player of world.getPlayers()) {
-        const block = player.viewBlock
-        if (!player.structureTemp || !block?.location) continue;
-        draw(block.location, player.structureTemp.size, player)
+        const { location } = player.viewBlock ?? {}
+        if (!player.structureTemp || !location) continue;
+        draw(location, player.structureTemp.size, player)
     }
 })
 
 
-function checkOverlap(loc1, size1, loc2, size2) {
-    const x1 = loc1.x;
-    const y1 = loc1.y;
-    const z1 = loc1.z;
-    const x2 = loc1.x + size1[0];
-    const y2 = loc1.y + size1[1];
-    const z2 = loc1.z + size1[1];
+function checkOverlap({ x: x1, y: y1, z: z1 }, [s1_0, s1_1], { x: x3, y: y3, z: z3 }, [s2_0, s2_1]) {
+    const x2 = x1 + s1_0,
+        y2 = y1 + s1_1,
+        z2 = z1 + s1_1,
 
-    const x3 = loc2.x;
-    const y3 = loc2.y;
-    const z3 = loc2.z;
-    const x4 = loc2.x + size2[0];
-    const y4 = loc2.y + size1[1];
-    const z4 = loc2.z + size2[1];
+        x4 = x2 + s2_0,
+        y4 = y2 + s1_1,
+        z4 = z2 + s2_1;
 
-    if (
+    return (
         x1 <= x4 && x2 >= x3 &&
         y1 <= y4 && y2 >= y3 &&
         z1 <= z4 && z2 >= z3
-    ) {
-        return true;
-    } else {
-        return false;
-    }
+    )
 }
 
 
