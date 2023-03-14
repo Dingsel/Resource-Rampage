@@ -1,9 +1,7 @@
 import { system, world } from "@minecraft/server";
 
 const x_enchantments = {},
-    getDimension = world.getDimension.bind(world),
-    overworld = getDimension('overworld'),
-    runCommand = overworld.runCommandAsync.bind(overworld),
+    runCommand = world.overworld.runCommandAsync.bind(world.overworld),
     databaseId = 'dest:database';
 
 export function loadEnchantments() {
@@ -12,7 +10,7 @@ export function loadEnchantments() {
         await runCommand('tickingarea add circle 0 0 0 0 loadEnchant true');
         await runCommand('structure load x_enchantments 0 0 0 0_degrees none true false');
         (async function load() {
-            const entities = [...overworld.getEntities(q)]
+            const entities = [...world.overworld.getEntities(q)]
             if (!entities[0]) return system.run(load)
             let { length } = entities
             for (let i = 0; i < length; i++) {

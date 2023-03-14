@@ -10,8 +10,11 @@ function updateName(entity) {
     entity.nameTag = nameStr
 }
 
-system.runInterval(() => {
+system.runInterval(async () => {
     for (const entity of world.overworld.getEntities({ families: ["enemy"] })) {
-        updateName(entity)
+        try {
+            updateName(entity);
+            await null;
+        } catch (error) {}
     }
-})
+},5)

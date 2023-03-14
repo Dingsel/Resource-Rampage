@@ -1,5 +1,5 @@
 import "./global.js"
-import './extensions/import';
+import './extensions/import.js';
 import './gameplay/index.js';
 import './tests/import.js';
 import './gameplay/building/index.js'
