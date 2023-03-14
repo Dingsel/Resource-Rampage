@@ -32,6 +32,6 @@ async function aoeFire(level, vec) {
 
 // aoe: 0 r:6, 1: r:11, 2: r:16
 
-system.runInterval(() => {
+setInterval(() => {
     aoeFire(3, new Vector(0, 100, 0)).catch(e => console.error(e))
 }, 200)

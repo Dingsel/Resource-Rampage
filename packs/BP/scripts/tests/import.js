@@ -1,17 +1,17 @@
-import {MessageSourceType, Player, system, world} from '@minecraft/server';
-import {tests} from './tests.js'; 
+import { MessageSourceType, Player, system, world } from '@minecraft/server';
+import { tests } from './tests.js';
 
-console.warn(world.overworld.id);
-system.events.scriptEventReceive.subscribe(async (any)=>{
-    let test = any.id.split(':')[1]
-    if(test in tests){
+system.events.scriptEventReceive.subscribe(async (any) => {
+    const { id } = any;
+    let test = id.split(':')[1];
+    if (test in tests) {
         try {
             var a = await tests[test](any);
         } catch (error) {
-            console.error(`§cTest "${any.id}" failed with error: \n${error}\n${error.stack}`);
+            console.error(`§cTest "${id}" failed with error: \n${error}\n${error.stack}`);
         }
-        if(a) console.warn(`§2Test "${any.id}" was susccessfully executed.`)
-        else console.error(`§cTest "${any.id}" failed.`);
+        if (a) console.warn(`§2Test "${id}" was susccessfully executed.`)
+        else console.error(`§cTest "${id}" failed.`);
     }
-    else console.error("Test can't be found, available tests: §l§2\n" + Object.keys(tests).map(n=>`tests:${n}`).join('\n'));
-},{namespaces:["tests"]});
+    else console.error("Test cannot be found, available tests: §l§2\n" + Object.keys(tests).map(n => `tests:${n}`).join('\n'));
+}, { namespaces: ["tests"] });

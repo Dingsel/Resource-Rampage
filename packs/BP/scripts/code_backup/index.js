@@ -1,13 +1,13 @@
 import { world, DynamicPropertiesDefinition, MinecraftEntityTypes } from "@minecraft/server"
 
 
-world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
+worldInitialize.subscribe(({ propertyRegistry }) => {
     const propertyDefinitions = new DynamicPropertiesDefinition()
     propertyDefinitions.defineNumber("coins")
     propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinitions, MinecraftEntityTypes.player)
 })
 
-world.events.beforeChat.subscribe((data) => {
+beforeChat.subscribe((data) => {
     if (!data.message.startsWith("-")) return
     let { sender: player, message } = data
     data.cancel = true

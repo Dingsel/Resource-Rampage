@@ -10,7 +10,7 @@ for (const tower of towers) {
 }
 
 
-world.events.beforeItemUse.subscribe(async ({ item, source: player }) => {
+beforeItemUse.subscribe(async ({ item, source: player }) => {
     if (item.typeId != "minecraft:apple" || player.structureTemp) return;
     const result = await baseSelection.show(player)
     player.structureTemp = towers[result.selection]
@@ -68,7 +68,7 @@ function draw(lookAt, size, player) {
     }
 }
 
-system.runInterval(() => {
+setInterval(() => {
     for (const player of world.getPlayers()) {
         const block = player.viewBlock
         if (!player.structureTemp || !block?.location) continue;
@@ -105,7 +105,7 @@ function checkOverlap(loc1, size1, loc2, size2) {
 
 
 
-world.events.beforeItemUseOn.subscribe(async (event) => {
+beforeItemUseOn.subscribe(async (event) => {
     try {
         const { source: player } = event
         const loc = player.viewBlock?.location

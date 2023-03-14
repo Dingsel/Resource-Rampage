@@ -23,12 +23,13 @@ export const tests = {
         return true;
     },
     add_enchantment(data) {
-        const { sourceEntity } = data,
-            item = sourceEntity.mainhand.getItem(),
-            { enchantments: ench } = item,
-            added = ench.addEnchantment(x_enchantments[MinecraftEnchantmentTypes.unbreaking.id][7]);
+        const { sourceEntity } = data, item = sourceEntity.mainhand.getItem(), { enchantments: ench } = item, results = {}, lvl = 7;
+        for (const key in x_enchantments) {
+            if (ench.addEnchantment(x_enchantments[key][lvl])) results['§aadded§r'] ? results['§aadded§r'] += `, ${key} ${lvl}` : results['§aadded§r'] = `${key} ${lvl}`;
+            else results['§cinvalid§r'] ? results['§cinvalid§r'] += `, ${key} ${lvl}` : results['§cinvalid§r'] = `${key} ${lvl}`;
+        } print(JSON.stringify(results, 0, 3))
         item.enchantments = ench;
         sourceEntity.mainhand = item;
-        return added;
+        return true;
     }
 }
