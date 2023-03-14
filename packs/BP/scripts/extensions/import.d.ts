@@ -2,38 +2,38 @@ import * as mc from '@minecraft/server';
 
 declare module "@minecraft/server" {
     interface Entity {
-        readonly inventory?: mc.EntityInventoryComponent;
-        readonly container?: mc.Container;
+        readonly inventory?: EntityInventoryComponent;
+        readonly container?: Container;
         health: number;
         readonly maxHealth?: number;
-        readonly viewBlock?: mc.Block;
-        readonly viewEntities: mc.Entity[];
+        readonly viewBlock?: Block;
+        readonly viewEntities: Entity[];
         readonly scores: { [key: string]: number };
     }
     interface Player {
-        readonly mainhand: mc.ContainerSlot;
+        readonly mainhand: ContainerSlot;
     }
     interface World {
-        readonly overworld: mc.Dimension;
-        readonly nether: mc.Dimension;
-        readonly theEnd: mc.Dimension;
+        readonly overworld: Dimension;
+        readonly nether: Dimension;
+        readonly theEnd: Dimension;
         time: number;
-        find(entity: mc.Entity, query: mc.EntityQueryOptions): mc.Entity | false;
+        find(entity: Entity, query: EntityQueryOptions): Entity | false;
         db: Array<any>;
     }
     interface System {
         readonly nextTick: Promise
     }
     interface Dimension {
-        setBlock(location: mc.Vector3, type: mc.BlockType | mc.BlockPermutation): number
+        setBlock(location: Vector3, type: BlockType | BlockPermutation): number
     }
     interface Block {
         readonly canBeWaterlogged: boolean
-        readonly inventory?: mc.BlockInventoryComponent;
-        readonly container?: mc.BlockInventoryComponentContainer
+        readonly inventory?: BlockInventoryComponent;
+        readonly container?: BlockInventoryComponentContainer
     }
     interface ItemStack {
-        enchantments: mc.EnchantmentList
+        enchantments: EnchantmentList
     }
 }
 declare module "@minecraft/server-ui" {
@@ -41,11 +41,17 @@ declare module "@minecraft/server-ui" {
         readonly output: (number | (string | number)[])
     }
 }
+
+
 declare global {
+    var worldInitialize: mc.IWorldInitializeEventSignal, entityDie: mc.IEntityDieEventSignal,
+        beforeChat: mc.IBeforeChatEventSignal,
+        beforeItemUse: mc.IBeforeItemUseEventSignal, beforeItemUseOn: mc.IBeforeItemUseOnEventSignal,
     var nextTick: Promise;
     var currentTick: number;
-    var run: PromiseConstructor['prototype']['then']
-    var coins: number
+    var run: PromiseConstructor['prototype']['then'];
+    var coins: number;
+    var objectives: { [key: string]: undefined | mc.ScoreboardObjective };
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
         // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
         next(...args: [] | [TNext]): IteratorResult<T, TReturn>;
@@ -209,5 +215,5 @@ declare global {
     interface Array<T> {
         readonly randomElement: T
     }
-    function runCommand(command: string): Promise<mc.CommandResult>;
+    function runCommand(command: string): Promise<CommandResult>;
 }

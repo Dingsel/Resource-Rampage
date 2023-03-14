@@ -1,13 +1,14 @@
-import {Block, ContainerSlot, ItemStack} from '@minecraft/server';
+import { Block, ItemStack } from '@minecraft/server';
 
-Object.defineProperties(ItemStack.prototype,{
+const { defineProperties: setProperties } = Object;
+setProperties(ItemStack.prototype, {
     enchantments: {
-        get(){return this.getComponent('enchantments').enchantments;},
-        set(enchs){return this.getComponent('enchantments').enchantments = enchs;}
+        get() { return this.getComponent('enchantments').enchantments; },
+        set(enchs) { return this.getComponent('enchantments').enchantments = enchs; }
     }
 });
-Object.defineProperties(Block.prototype,{
-    canBeWaterlogged:{get(){return this.type.canBeWaterlogged}},
-    inventory   : { get() { return this.getComponent('minecraft:inventory') } },
-    container:{ get(){return this.getComponent('minecraft:inventory')?.container;} }
+setProperties(Block.prototype, {
+    canBeWaterlogged: { get() { return this.type.canBeWaterlogged } },
+    inventory: { get() { return this.getComponent('minecraft:inventory') } },
+    container: { get() { return this.getComponent('minecraft:inventory')?.container; } }
 });

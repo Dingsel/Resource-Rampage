@@ -1,10 +1,10 @@
 import { World, Dimension, world, MinecraftDimensionTypes, System } from '@minecraft/server';
 
-const { overworld, nether, theEnd } = MinecraftDimensionTypes;
+const { overworld, nether, theEnd } = MinecraftDimensionTypes, { defineProperties: setProperties } = Object;
 
 let dbCache;
 
-Object.defineProperties(World.prototype, {
+setProperties(World.prototype, {
     overworld: { value: world.getDimension(overworld) },
     nether: { value: world.getDimension(nether) },
     theEnd: { value: world.getDimension(theEnd) },
@@ -22,17 +22,17 @@ Object.defineProperties(World.prototype, {
     }
 });
 
-Object.defineProperties(Dimension.prototype, {
+setProperties(Dimension.prototype, {
     setBlock: { value: function setBlock(loc, permutation) { return this.fillBlocks(loc, loc, permutation); } }
 });
 
-Object.defineProperties(System.prototype, {
+setProperties(System.prototype, {
     nextTick: { get() { return new Promise(res => this.run(res)); } }
 });
 
 
-world.events.worldInitialize.subscribe(() => {
-    Object.defineProperties(World.prototype, {
+worldInitialize.subscribe(() => {
+    setProperties(World.prototype, {
         db: {
             get() {
                 if (dbCache) return dbCache
