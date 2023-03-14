@@ -1,8 +1,25 @@
 import { MinecraftBlockTypes } from "@minecraft/server";
 
-
+export const wall_1_patterns = 
+{
+    top:{
+        right:[MinecraftBlockTypes.spruceLog],
+        middle:MinecraftBlockTypes.stonebrick,
+        left:[MinecraftBlockTypes.spruceLog]
+    },
+    body:{
+        right:[],
+        middle:MinecraftBlockTypes.basalt,
+        left:[]
+    },
+    bottom:{
+        right:[MinecraftBlockTypes.bedrock],
+        middle:MinecraftBlockTypes.stonebrick,
+        left:[MinecraftBlockTypes.bedrock]
+    }
+};
 export const level_1 = {
-    step_overloads:[
+    step_overloads:[wall_1_patterns,
         {
             top:{
                 right:[MinecraftBlockTypes.spruceLog],
@@ -10,16 +27,17 @@ export const level_1 = {
                 left:[MinecraftBlockTypes.spruceLog]
             },
             body:{
-                right:[],
+                right:[MinecraftBlockTypes.cobblestoneWall],
                 middle:MinecraftBlockTypes.basalt,
-                left:[]
+                left:[MinecraftBlockTypes.cobblestoneWall]
             },
             bottom:{
                 right:[MinecraftBlockTypes.bedrock],
                 middle:MinecraftBlockTypes.stonebrick,
                 left:[MinecraftBlockTypes.bedrock]
             }
-        }
+        },
+        wall_1_patterns
     ]
 };
 
