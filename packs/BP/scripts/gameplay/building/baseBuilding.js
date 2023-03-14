@@ -8,7 +8,7 @@ baseSelection.body("Test")
 for (const tower of towers) {
     baseSelection.button(`${tower.alias}\n${tower.description}`, tower.icon)
 }
-const spawnParticle = overworld.spawnParticle.bind(overworld)
+const spawnParticle = world.overworld.spawnParticle.bind(world.overworld)
 
 
 beforeItemUse.subscribe(async ({ item, source: player }) => {
@@ -26,7 +26,7 @@ const map = new MolangVariableMap()
  * @param {Vector} lookAt 
  * @param {[number,number]} size 
  */
-function draw(lookAt, [s0,s1], player) {
+function draw(lookAt, [s0, s1], player) {
 
     let intercepting;
     for (const obj of world.db) {
@@ -35,7 +35,7 @@ function draw(lookAt, [s0,s1], player) {
         loc.x -= s0 / 2 - 1
         loc.z -= s1 / 2 - 1
 
-        if (checkOverlap(loc, size, obj.location, obj.size)) {
+        if (checkOverlap(loc, [s0, s1], obj.location, obj.size)) {
             intercepting = true
             break
         }
@@ -79,13 +79,14 @@ setInterval(() => {
 
 
 function checkOverlap({ x: x1, y: y1, z: z1 }, [s1_0, s1_1], { x: x3, y: y3, z: z3 }, [s2_0, s2_1]) {
+
     const x2 = x1 + s1_0,
         y2 = y1 + s1_1,
         z2 = z1 + s1_1,
 
-        x4 = x2 + s2_0,
-        y4 = y2 + s1_1,
-        z4 = z2 + s2_1;
+        x4 = x3 + s2_0,
+        y4 = y3 + s1_1,
+        z4 = z3 + s2_1;
 
     return (
         x1 <= x4 && x2 >= x3 &&

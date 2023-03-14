@@ -1,0 +1,27 @@
+{
+	"format_version": "1.19.0",
+	"animation_controllers": {
+		"controller.animation.balista.fire": {
+			"states": {
+				"default": {
+					"animations": ["load"],
+					"transitions": [
+						{"wait": "query.all_animations_finished"}
+					]
+				},
+				"fire": {
+					"animations": ["fire"],
+					"transitions": [
+						{"default": "query.all_animations_finished"}
+					]
+				},
+				"wait": {
+					"animations": ["wait"],
+					"transitions": [
+						{"fire": "query.all_animations_finished"}
+					]
+				}
+			}
+		}
+	}
+}
