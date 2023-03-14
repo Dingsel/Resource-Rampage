@@ -19,7 +19,7 @@ export const wall_1_patterns =
     }
 };
 export const level_1 = {
-    step_overloads:[wall_1_patterns,
+    step_overloads:[wall_1_patterns,wall_1_patterns,wall_1_patterns,
         {
             top:{
                 right:[MinecraftBlockTypes.spruceLog],
@@ -27,17 +27,16 @@ export const level_1 = {
                 left:[MinecraftBlockTypes.spruceLog]
             },
             body:{
-                right:[MinecraftBlockTypes.cobblestoneWall],
+                right:[MinecraftBlockTypes.blackstone],
                 middle:MinecraftBlockTypes.basalt,
-                left:[MinecraftBlockTypes.cobblestoneWall]
+                left:[MinecraftBlockTypes.blackstoneWall]
             },
             bottom:{
                 right:[MinecraftBlockTypes.bedrock],
                 middle:MinecraftBlockTypes.stonebrick,
                 left:[MinecraftBlockTypes.bedrock]
             }
-        },
-        wall_1_patterns
+        }
     ]
 };
 
