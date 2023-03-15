@@ -1,0 +1,30 @@
+{
+    "format_version": "1.19.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "dest:mage_1",
+            "is_spawnable": true,
+            "is_summonable": true
+        },
+        "component_groups": {},
+        "components": {
+            "minecraft:type_family": {
+                "family": [
+                    "tower"
+                ]
+            },
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "cause": "all",
+                        "deals_damage": false
+                    }
+                ]
+            },
+            "minecraft:knockback_resistance": {
+                "value": 1
+            }
+        },
+        "events": {}
+    }
+}

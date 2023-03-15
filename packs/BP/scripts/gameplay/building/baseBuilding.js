@@ -48,7 +48,7 @@ function draw(lookAt, [s0, s1], player) {
         const { x, y, z } = lookAt
         const loc = {
             x: x + i - s0 / 2 + 0.5,
-            y: y + 1,
+            y: y + 1.5,
             z: z - s1 / 2 + 0.5
         }
         spawnParticle(`dest:${colour}`, loc, map)
@@ -60,7 +60,7 @@ function draw(lookAt, [s0, s1], player) {
         const { x, y, z } = lookAt
         const loc = {
             x: x - s0 / 2 + 0.5,
-            y: y + 1,
+            y: y + 1.5,
             z: z + i - s1 / 2 + 0.5
         }
         spawnParticle(`dest:${colour}`, loc, map)
@@ -137,6 +137,14 @@ beforeItemUseOn.subscribe(async (event) => {
             await player.dimension.runCommandAsync(`structure load ${player.structureTemp.structureId} ${loc.x} ${loc.y} ${loc.z} 0_degrees none`)
 
             world.db.push({ location: loc, size: size })
+
+            const middle = {
+                x: loc.x + size[0] / 2 - 0.5,
+                y: loc.y + 1,
+                z: loc.z + size[1] / 2 - 0.5
+            }
+
+            const entity = player.dimension.spawnEntity(`dest:${player.structureTemp.structureId}`, middle)
         }
         delete player.structureTemp
     } catch (error) {
