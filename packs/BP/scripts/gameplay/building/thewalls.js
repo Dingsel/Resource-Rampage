@@ -3,6 +3,7 @@ import { level_1 } from "resources/wall_definitions";
 
 export async function buildWall(from, to, wallDefinition = level_1, dimension = overworld) {
     const gen = path(from, to);
+    /*
     const defGen = fromDefinitionOverloads(level_1);
     for (const { x: x, y: y, z: z, rotated } of gen) {
         let block = dimension.getBlock({x,y,z}), def = defGen.get();
@@ -16,7 +17,7 @@ export async function buildWall(from, to, wallDefinition = level_1, dimension = 
                 await placeLayer(def.body,dimension,{x,y:y-i,z},rotated);
             }
         }
-    }
+    }*/
 }
 async function placeLayer(layerDefinition, dimension, base, rotated){
     let block = dimension.getBlock(base), def = layerDefinition, offSet = 1;
@@ -31,7 +32,7 @@ async function placeLayer(layerDefinition, dimension, base, rotated){
         await null;
     }
 }
-/**@param {WallDefinition} wall_definitions @returns {Generator<WallOverload> & {get(): WallOverload}} */
+/**@returns {Generator<WallOverload> & {get(): WallOverload}} */
 function* fromDefinitionOverloads(wall_definitions = level_1){
     while(true){
         for (const n of level_1.step_overloads) {
@@ -56,6 +57,3 @@ export function* path({ x: x1, y: y1, z: z1 }, { x: x2, y: y2, z: z2 }) {
     }
     yield { x: x1, y: y1, z: z1, rotated };
 }
-/**@typedef {{right: BlockType[], middle: BlockType, left:BlockType[]}} LayerDefinition */
-/**@typedef {{top:LayerDefinition,body:LayerDefinition,bottom:LayerDefinition}} WallOverload */
-/**@typedef {{step_overloads:WallOverload[]}} WallDefinition*/

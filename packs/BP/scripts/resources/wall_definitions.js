@@ -1,5 +1,20 @@
 import { MinecraftBlockTypes, BlockPermutation } from "@minecraft/server";
-import { BlockDefinition, LayerDefinitionBuilder, LayerMirrorDefinitonBuiler, LayerOverloadDefinitionBuilder, LayersDefinition, LayersDefinitionBuilder, WallDefiniton } from "utilities/import.js";
+import * as UT from "utilities/import.js";
+
+const {
+    WallDefiniton, 
+    LayersDefinitionBuilder, 
+    LayerMirrorDefinitonBuiler, 
+    BlockDefinition,
+    LayerOverloadDefinitionBuilder
+} = UT;
+const {
+    crimsonPlanks,
+    deepslateBricks,
+    polishedBlackstoneBricks,
+    polishedBlackstoneBrickStairs
+} = MinecraftBlockTypes;
+
 
 export const wall_1_patterns = 
 {
@@ -22,17 +37,20 @@ export const wall_1_patterns =
 export const level_1 = new WallDefiniton()
     .setUpLayers(new LayersDefinitionBuilder()
         .addLayer(new LayerMirrorDefinitonBuiler()
-            .setMiddle(MinecraftBlockTypes.crimsonPlanks)
+            .setMiddle(crimsonPlanks)
             .setSide([
-                MinecraftBlockTypes.deepslateBricks,
-                MinecraftBlockTypes.polishedBlackstoneBricks,
-                new BlockDefinition(MinecraftBlockTypes.polishedBlackstoneBrickStairs, {weirdo_direction:0})
+                deepslateBricks,
+                polishedBlackstoneBricks,
+                new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:0})
             ])
         )
     )
     .setBody(new LayerOverloadDefinitionBuilder()
         .addOverloads(new LayerMirrorDefinitonBuiler()
-
+            .setMiddle(polishedBlackstoneBricks)
+            .setSide([
+                polishedBlackstoneBricks
+            ])
         )
     )
 /*{

@@ -79,7 +79,7 @@ export class LayerOverloadDefinitionBuilder extends LayerDefinition{
 export class LayerDefinitionBuilder extends LayerDefinition{
     /**@param {(BlockDefinition | BlockType | BlockPermutation)[]} rights @returns {this} */
     setRights(rights){
-        if(Array.isArray(rights)) rights = [rights];
+        if(!Array.isArray(rights)) rights = [rights];
         this.rights = [...from(rights)];
         return this;
     }
@@ -90,7 +90,7 @@ export class LayerDefinitionBuilder extends LayerDefinition{
     }
     /**@param {(BlockDefinition | BlockType | BlockPermutation)[]} lefts @returns {this} */
     setLefts(lefts){
-        if(Array.isArray(lefts)) lefts = [lefts];
+        if(!Array.isArray(lefts)) lefts = [lefts];
         this.lefts = [...from(lefts)];
         return this;
     }
@@ -98,9 +98,9 @@ export class LayerDefinitionBuilder extends LayerDefinition{
 export class LayerMirrorDefinitonBuiler extends LayerDefinition{
     /**@param {(BlockDefinition | BlockType | BlockPermutation)[]} sides @returns {this} */
     setSide(sides){
-        if(Array.isArray(rights)) rights = [rights];
-        this.rights = [...from(rights)];
-        this.lefts = this.rights;
+        if(!Array.isArray(sides)) sides = [sides];
+        this.rights = [...from(sides)];
+        this.lefts = this.sides;
         return this;
     }
     /**@param {(BlockDefinition | BlockType | BlockPermutation)} one @returns {this} */
@@ -116,7 +116,7 @@ export class BlockDefinition{
         if(type instanceof BlockType) this.permutation = BlockPermutation.resolve(...[type.id, permutation]);
         else if (type instanceof BlockPermutation) this.permutation = type;
         else if (typeof type == 'string' || type instanceof String) this.permutation =  BlockPermutation.resolve(...["" + type, permutation]);
-        else throw new TypeError("Is not a block" + type);
+        else throw new TypeError("Is not a block " + type);
     }
     /** @param {boolean} rotation @param {boolean} mirror @returns {BlockPermutation} */
     getBlock(rotation, mirror){
