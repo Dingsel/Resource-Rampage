@@ -6,11 +6,12 @@ const {
     LayersDefinitionBuilder, 
     LayerMirrorDefinitonBuiler, 
     BlockDefinition,
-    LayerOverloadDefinitionBuilder
+    LayerOverloadDefinitionBuilder,
+    LayerDefinition
 } = UT;
 const {
     crimsonPlanks,
-    deepslateBricks,
+    deepslateBricks, deepslateTileWall,
     polishedBlackstoneBricks,
     polishedBlackstoneBrickStairs,
     blackstone,
@@ -36,8 +37,18 @@ export const level_1 = new WallDefiniton()
                 polishedBlackstoneBricks,
                 new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:3, upside_down_bit:true})
             ]))
-        .addLayer(new LayerMirrorDefinitonBuiler()
-            .setSide([air,air, polishedBlackstoneBricks]))
+            .addLayer(new LayerOverloadDefinitionBuilder()
+                .addOverload(new LayerMirrorDefinitonBuiler().setSide([air, deepslateTileWall, polishedBlackstoneBricks]))
+                .addOverload(new LayerMirrorDefinitonBuiler().setSide([air, air, polishedBlackstoneBricks]),3))
+            .addLayer(new LayerOverloadDefinitionBuilder()
+                .addOverload(new LayerMirrorDefinitonBuiler().setSide([air, deepslateTileWall, polishedBlackstoneBrickStairs]))
+                .addOverload(new LayerDefinition())
+                .addOverload(new LayerMirrorDefinitonBuiler().setSide([air, air, polishedBlackstoneBrickStairs]))
+                .addOverload(new LayerDefinition()))
+            .addLayer(new LayerOverloadDefinitionBuilder()
+                .addOverload(new LayerMirrorDefinitonBuiler().setSide([air, deepslateTileWall]))
+                .addOverload(new LayerDefinition(),3),4)
+        
     )
     .setBody(new LayerOverloadDefinitionBuilder()
         .addOverload(new LayerMirrorDefinitonBuiler()

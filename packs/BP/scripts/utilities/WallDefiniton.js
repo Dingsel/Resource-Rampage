@@ -41,9 +41,9 @@ export class LayersDefinition{
     }
 }
 export class LayersDefinitionBuilder extends LayersDefinition{
-    /** @param {LayerDefinition} layerDefinition @returns {this} */
-    addLayer(layerDefinition){
-        this.layers.push(layerDefinition);
+    /** @param {LayerDefinition} layerDefinition @param {?number} repeat @returns {this} */
+    addLayer(layerDefinition,repeat = 1){
+        for (let index = 0; index < repeat; index++) this.layers.push(layerDefinition);
         return this;
     }
 }

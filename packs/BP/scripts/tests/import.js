@@ -2,6 +2,7 @@ import { MessageSourceType, Player, system, world } from '@minecraft/server';
 import { tests } from './tests.js';
 
 system.events.scriptEventReceive.subscribe(async (any) => {
+    console.warn("Test");
     const { id } = any;
     let test = id.split(':')[1];
     if (test in tests) {

@@ -70,6 +70,7 @@ function getMostDown(dimension, {x,y,z}){
 }
 export function* path({ x: x1, y: y1, z: z1 }, { x: x2, y: y2, z: z2 }) {
     const x = x2 - x1, y = y2 - y1, z = z2 - z1;
+    yield { x: x1, y: y1, z: z1 };
     const maxs = { x: Math.abs(x), y: Math.abs(y), z: Math.abs(z) };
     const key = maxs.x > maxs.z ? (maxs.x > maxs.y ? "x" : "y") : (maxs.z > maxs.y ? "z" : "y"), n = maxs[key];
     const xd = x / n, yd = y / n, zd = z / n;
@@ -78,5 +79,4 @@ export function* path({ x: x1, y: y1, z: z1 }, { x: x2, y: y2, z: z2 }) {
         yield { x: x1 + xc, y: y1 + yc, z: z1 + zc };
         xc += xd, yc += yd, zc += zd;
     }
-    yield { x: x1, y: y1, z: z1 };
 }
