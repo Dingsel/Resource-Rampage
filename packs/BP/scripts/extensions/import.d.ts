@@ -48,7 +48,7 @@ interface structureEntry {
     size: [number, number],
     type: string,
     tier: number,
-    entitiy: number
+    entity: number
 }
 
 declare global {

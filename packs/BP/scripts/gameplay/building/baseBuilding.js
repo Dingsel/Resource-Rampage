@@ -150,14 +150,3 @@ beforeItemUseOn.subscribe(async (event) => {
         console.error(error, error.stack)
     }
 })
-
-
-
-/**
- * @typedef {Object} structureEntry
- * @property {import("@minecraft/server").Vector3} location
- * @property {[number,number]} size
- * @property {string} type
- * @property {number} tier
- * @property {number} entity - The Entities Id
- */

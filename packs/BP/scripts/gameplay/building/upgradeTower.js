@@ -8,9 +8,7 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
         const loc = player?.viewBlock.location
         if (player.isBusy) return;
         player.isBusy = true
-        /**
-         * @type {import("./baseBuilding").structureEntry}
-         */
+
         const structure = world.db.find((x) => {
             const maxLoc = Vector.add(x.location, { x: x.size[0], y: 0, z: x.size[1] })
             return (
