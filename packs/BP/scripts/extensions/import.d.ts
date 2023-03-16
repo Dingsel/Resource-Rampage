@@ -5,6 +5,7 @@ declare module "@minecraft/server" {
         readonly inventory?: EntityInventoryComponent;
         readonly container?: Container;
         health: number;
+        cd : number
         readonly maxHealth?: number;
         readonly viewBlock?: Block;
         readonly viewEntities: Entity[];

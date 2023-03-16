@@ -2,7 +2,7 @@ import { World, Dimension, world, MinecraftDimensionTypes, System } from '@minec
 
 const { overworld, nether, theEnd } = MinecraftDimensionTypes, { defineProperties: setProperties } = Object;
 
-let dbCache;
+let dbCache = false;
 
 setProperties(World.prototype, {
     overworld: { value: world.getDimension(overworld) },
@@ -36,7 +36,7 @@ worldInitialize.subscribe(() => {
         db: {
             get() {
                 if (dbCache) return dbCache
-                const data = JSON.parse(this.getDynamicProperty("db") ?? "[]")
+                const data = JSON.parse(this.getDynamicProperty("db")) ?? []
                 dbCache = data
                 return dbCache
             },

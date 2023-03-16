@@ -34,3 +34,5 @@ Object.defineProperties(Player.prototype, {
         set(s) { const { container, selectedSlot } = this; container.setItem(selectedSlot, s); return s; }
     },
 });
+
+Entity.prototype.cd = 0

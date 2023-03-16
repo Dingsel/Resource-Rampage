@@ -136,8 +136,6 @@ beforeItemUseOn.subscribe(async (event) => {
 
             await player.dimension.runCommandAsync(`structure load ${player.structureTemp.structureId} ${loc.x} ${loc.y} ${loc.z} 0_degrees none`)
 
-            world.db.push({ location: loc, size: size })
-
             const middle = {
                 x: loc.x + size[0] / 2 - 0.5,
                 y: loc.y + 1,
@@ -145,6 +143,7 @@ beforeItemUseOn.subscribe(async (event) => {
             }
 
             const entity = player.dimension.spawnEntity(`dest:${player.structureTemp.structureId}`, middle)
+            world.db.push({ location: loc, size: size, type: player.structureTemp.type, tier: player.structureTemp.tier, entity: entity.id })
         }
         delete player.structureTemp
     } catch (error) {
