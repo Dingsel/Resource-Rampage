@@ -5,7 +5,7 @@ declare module "@minecraft/server" {
         readonly inventory?: EntityInventoryComponent;
         readonly container?: Container;
         health: number;
-        cd : number
+        cd: number
         readonly maxHealth?: number;
         readonly viewBlock?: Block;
         readonly viewEntities: Entity[];
@@ -20,7 +20,7 @@ declare module "@minecraft/server" {
         readonly theEnd: Dimension;
         time: number;
         find(entity: Entity, query: EntityQueryOptions): Entity | false;
-        db: Array<any>;
+        db: Array<structureEntry>;
     }
     interface System {
         readonly nextTick: Promise
@@ -43,6 +43,13 @@ declare module "@minecraft/server-ui" {
     }
 }
 
+interface structureEntry {
+    location: mc.Vector3,
+    size: [number, number],
+    type: string,
+    tier: number,
+    entitiy: number
+}
 
 declare global {
     var worldInitialize: mc.IWorldInitializeEventSignal, entityDie: mc.IEntityDieEventSignal,
