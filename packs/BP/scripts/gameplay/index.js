@@ -1,4 +1,5 @@
 import './initializations/index.js';
 import './runtime/index.js';
+import './building/index.js';
 
-console.warn("GameSet up done");
+console.warn('gameplay - Initialization')

@@ -1,7 +1,7 @@
-/**@type {{coinId:"dest:coin"}}*/
-const global = globalThis.global ?? {
-    coinId: "dest:coin"
-};
+import { Castle } from "utilities/import";
+
+/**@type {{castle:Castle}}*/
+const global = globalThis.global??{};
 globalThis.global = global;
 export { global };
 export default global;
