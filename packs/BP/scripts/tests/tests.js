@@ -19,7 +19,7 @@ export const tests = {
     async place_blocks(data) {
         const e = data.sourceEntity, dim = e.dimension;
         const { x: x1, y: y1, z: z1 } = e.location;
-        await buildWall({ x: x1, y: y1, z: z1 }, { x: x1 + 70, y: y1 + 3, z: z1 },level_1, dim);
+        await buildWall({ x: x1, y: y1, z: z1 }, { x: x1 + 50, y: y1, z: z1 - 3},level_1, dim);
         return true;
     },
     add_enchantment(data) {

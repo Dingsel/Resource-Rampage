@@ -29,9 +29,11 @@ declare module "@minecraft/server" {
         setBlock(location: Vector3, type: BlockType | BlockPermutation): number
     }
     interface Block {
-        readonly canBeWaterlogged: boolean
+        readonly canBeWaterlogged: boolean;
         readonly inventory?: BlockInventoryComponent;
-        readonly container?: BlockInventoryComponentContainer
+        readonly container?: BlockInventoryComponentContainer;
+        setTo(type: mc.BlockType | mc.BlockPermutation): void
+
     }
     interface ItemStack {
         enchantments: EnchantmentList

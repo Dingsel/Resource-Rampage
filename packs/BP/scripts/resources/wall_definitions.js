@@ -35,13 +35,18 @@ export const wall_1_patterns =
     }
 };
 export const level_1 = new WallDefiniton()
+    .setDownLayers(new LayersDefinitionBuilder()
+        .addLayer(new LayerMirrorDefinitonBuiler()
+            .setMiddle("bedrock")
+        )
+    )
     .setUpLayers(new LayersDefinitionBuilder()
         .addLayer(new LayerMirrorDefinitonBuiler()
             .setMiddle(crimsonPlanks)
             .setSide([
                 deepslateBricks,
                 polishedBlackstoneBricks,
-                new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:0})
+                new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:3, upside_down_bit:true})
             ])
         )
     )

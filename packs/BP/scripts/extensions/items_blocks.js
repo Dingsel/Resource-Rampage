@@ -1,4 +1,4 @@
-import { Block, ItemStack } from '@minecraft/server';
+import { Block, BlockPermutation, ItemStack } from '@minecraft/server';
 
 const { defineProperties: setProperties } = Object;
 setProperties(ItemStack.prototype, {
@@ -10,5 +10,9 @@ setProperties(ItemStack.prototype, {
 setProperties(Block.prototype, {
     canBeWaterlogged: { get() { return this.type.canBeWaterlogged } },
     inventory: { get() { return this.getComponent('minecraft:inventory') } },
-    container: { get() { return this.getComponent('minecraft:inventory')?.container; } }
+    container: { get() { return this.getComponent('minecraft:inventory')?.container; } },
+    setTo:{value(type){
+        if(type instanceof BlockPermutation) this.setPermutation(type);
+        else this.setType(type);
+    }}
 });

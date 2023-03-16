@@ -1,59 +1,82 @@
-import { BlockType } from "@minecraft/server";
+import { BlockType, world, Vector } from "@minecraft/server";
 import { level_1 } from "resources/wall_definitions";
 
-export async function buildWall(from, to, wallDefinition = level_1, dimension = overworld) {
+export async function buildWall(from, to, wallDefinition = level_1, dimension = world.overworld) {
     const gen = path(from, to);
-    /*
-    const defGen = fromDefinitionOverloads(level_1);
-    for (const { x: x, y: y, z: z, rotated } of gen) {
-        let block = dimension.getBlock({x,y,z}), def = defGen.get();
-        await placeLayer(def.top,dimension,{x,y,z},rotated);
-        for (let i = 1; true; i++) {
-            block = dimension.getBlock({x,y:y - i - 1,z});
-            if(block.isSolid()){
-                await placeLayer(def.bottom,dimension,{x,y:y-i,z},rotated);
-                break;
-            }else{
-                await placeLayer(def.body,dimension,{x,y:y-i,z},rotated);
-            }
-        }
-    }*/
+    const direction = getDirection(from,to);
+    let i = 0;
+    for (const loc of gen) {
+        await place(wallDefinition,loc,dimension,direction,i++);
+    }
 }
-async function placeLayer(layerDefinition, dimension, base, rotated){
-    let block = dimension.getBlock(base), def = layerDefinition, offSet = 1;
-    block.setType(def.middle);
-    for (const d of def.left) {
-        dimension.setBlock(offSetRotated(base,offSet++,rotated), d);
+async function place(definition = level_1, base, d = world.overworld, direction,index){
+    const {x,y:yb,z} = base;
+    let block = getMostDown(d,base);
+    let difference = block.y - yb;
+    let y = block.y;
+    for (const layer of definition.downLayers.getLayers(index)) {
+        placeLayer({x,y,z},direction,d,layer.getLayer(index));
+        difference++;
+        y++;
         await null;
     }
-    offSet=-1;
-    for (const d of def.right) {
-        dimension.setBlock(offSetRotated(base,offSet--,rotated), d);
+    for(let a = difference, layer = definition.bodyLayer.getLayer(index); a <= 0; a++, y++){
+        placeLayer({x,y,z},direction,d,layer);
+        await null;
+    }
+    for (const layer of definition.upLayers.getLayers(index)) {
+        placeLayer({x,y,z},direction,d,layer.getLayer(index));
+        y++;
         await null;
     }
 }
-/**@returns {Generator<WallOverload> & {get(): WallOverload}} */
-function* fromDefinitionOverloads(wall_definitions = level_1){
+
+
+function placeLayer(loc, direction, dimension, layer){
+    dimension.setBlock(loc, layer.middle.getBlock(direction));
+    const {x,y,z} = loc;
+    let n = {x,y,z};
+    const key = (direction == "forward" || direction == "backward")?"x":"z";
+    const changer = (direction == "forward" || direction == "right")?1:-1;
+    for (const block of layer.lefts) {
+        n[key] += changer;
+        dimension.setBlock(n,block.getBlock(direction));
+    }
+    n = {x,y,z};
+    for (const block of layer.rights) {
+        n[key] -= changer;
+        dimension.setBlock(n,block.getBlock(direction));
+    }
+}
+
+
+
+
+function getDirection({x:x1,y:y1,z:z1}, {x:x2,y:y2,z:z2}){
+    const {x,z} = new Vector(x2-x1, y2-y1, z2-z1).normalized();
+    return Math.abs(z) > Math.abs(x)?(z > 0 ? "forward":"backward"):(x > 0?"left":"right");
+}
+function getMostDown(dimension, {x,y,z}){
+    let i = 0;
     while(true){
-        for (const n of level_1.step_overloads) {
-            yield n;
+        try {
+            let block = dimension.getBlock({x,y:y - i,z});
+            if(block.isSolid()) return block;
+            i++;
+        } catch (error) {
+            return {x,y,z};
         }
     }
-}
-fromDefinitionOverloads.prototype.get=function(){return this.next().value;}
-function offSetRotated({x,y,z},offSet, rotated){
-    return rotated?{x,y,z:z + offSet}:{x:x+offSet,y,z};
 }
 export function* path({ x: x1, y: y1, z: z1 }, { x: x2, y: y2, z: z2 }) {
     const x = x2 - x1, y = y2 - y1, z = z2 - z1;
     const maxs = { x: Math.abs(x), y: Math.abs(y), z: Math.abs(z) };
-    const rotated = maxs.x > maxs.y;
     const key = maxs.x > maxs.z ? (maxs.x > maxs.y ? "x" : "y") : (maxs.z > maxs.y ? "z" : "y"), n = maxs[key];
     const xd = x / n, yd = y / n, zd = z / n;
     let xc = xd, yc = yd, zc = zd;
     for (let i = 0; i < n; i++) {
-        yield { x: x1 + xc, y: y1 + yc, z: z1 + zc, rotated };
+        yield { x: x1 + xc, y: y1 + yc, z: z1 + zc };
         xc += xd, yc += yd, zc += zd;
     }
-    yield { x: x1, y: y1, z: z1, rotated };
+    yield { x: x1, y: y1, z: z1 };
 }
