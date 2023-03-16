@@ -12,33 +12,21 @@ const {
     crimsonPlanks,
     deepslateBricks,
     polishedBlackstoneBricks,
-    polishedBlackstoneBrickStairs
+    polishedBlackstoneBrickStairs,
+    blackstone,
+    cherryLog, air
 } = MinecraftBlockTypes;
 
-
-export const wall_1_patterns = 
-{
-    top:{
-        right:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs],
-        middle:MinecraftBlockTypes.warpedPlanks,
-        left:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs]
-    },
-    body:{
-        right:[MinecraftBlockTypes.deepslateBricks],
-        middle:MinecraftBlockTypes.deepslateBricks,
-        left:[MinecraftBlockTypes.deepslateBricks]
-    },
-    bottom:{
-        right:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs],
-        middle:MinecraftBlockTypes.stonebrick,
-        left:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs]
-    }
-};
 export const level_1 = new WallDefiniton()
     .setDownLayers(new LayersDefinitionBuilder()
         .addLayer(new LayerMirrorDefinitonBuiler()
-            .setMiddle("bedrock")
-        )
+            .setMiddle("bedrock"))
+        .addLayer(new LayerMirrorDefinitonBuiler()
+            .setSide([
+                deepslateBricks,
+                blackstone,
+                new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:3})
+            ]))
     )
     .setUpLayers(new LayersDefinitionBuilder()
         .addLayer(new LayerMirrorDefinitonBuiler()
@@ -47,39 +35,18 @@ export const level_1 = new WallDefiniton()
                 deepslateBricks,
                 polishedBlackstoneBricks,
                 new BlockDefinition(polishedBlackstoneBrickStairs, {weirdo_direction:3, upside_down_bit:true})
-            ])
-        )
+            ]))
+        .addLayer(new LayerMirrorDefinitonBuiler()
+            .setSide([air,air, polishedBlackstoneBricks]))
     )
     .setBody(new LayerOverloadDefinitionBuilder()
-        .addOverloads(new LayerMirrorDefinitonBuiler()
+        .addOverload(new LayerMirrorDefinitonBuiler()
             .setMiddle(polishedBlackstoneBricks)
-            .setSide([
-                polishedBlackstoneBricks
-            ])
-        )
+            .setSide([polishedBlackstoneBricks]))
+        .addOverload(new LayerMirrorDefinitonBuiler()
+            .setMiddle(polishedBlackstoneBricks)
+            .setSide([deepslateBricks,cherryLog]))
     )
-/*{
-    step_overloads:[wall_1_patterns,
-        {
-            top:{
-                right:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs],
-                middle:MinecraftBlockTypes.warpedPlanks,
-                left:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs]
-            },
-            body:{
-                right:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.cherryLog],
-                middle:MinecraftBlockTypes.deepslateBricks,
-                left:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.cherryLog]
-            },
-            bottom:{
-                right:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs],
-                middle:MinecraftBlockTypes.stonebrick,
-                left:[MinecraftBlockTypes.deepslateBricks,MinecraftBlockTypes.polishedBlackstoneBricks,MinecraftBlockTypes.polishedBlackstoneBrickStairs]
-            }
-        }
-    ]
-};*/
-
 export const definitions = {
     level_1
 };

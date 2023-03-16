@@ -77,7 +77,7 @@ export class LayerOverloadDefinitionBuilder extends LayerDefinition{
         this.overloads = [];
     }
     /**@param {LayerDefinition} layerDefinition @param {?number} repeat @returns {this} */
-    addOverloads(layerDefinition, repeat = 1){
+    addOverload(layerDefinition, repeat = 1){
         for (let index = 0; index < repeat; index++) this.overloads.push(layerDefinition);
         return this;
     }
