@@ -1,12 +1,5 @@
 import { MolangVariableMap, system, world, Vector } from "@minecraft/server";
 
-const asyncTimeout = (time) => {
-    return new Promise((resolve) => {
-        system.runTimeout(resolve, time)
-    })
-}
-
-
 const map = new MolangVariableMap();
 
 /**
@@ -26,7 +19,7 @@ export async function aoeFire(level, location) {
             entity.applyImpulse(impulse)
             entity.applyDamage(5 * level)
         }
-        await asyncTimeout(10)
+        await sleep(10)
     }
 }
 
