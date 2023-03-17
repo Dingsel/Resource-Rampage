@@ -25,7 +25,7 @@ const wallForm = new ModalFormData()
 beforeItemUse.subscribe(async ({ item, source: player }) => {
     if (item.typeId != menuId || player.structureTemp) return;
     const sel = Selection.getSelection(player.id)
-    if (sel.location1 && sel.location2) {
+    if (sel.isAvailable()) {
         const res = await wallForm.show(player)
         if (res.canceled) return
         const offset = { x: 0, y: res.formValues[0], z: 0 }
