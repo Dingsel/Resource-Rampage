@@ -47,6 +47,11 @@
 			}
 		},
 		"components": {
+			"minecraft:scale":{},
+			"minecraft:health":{
+				"value":40,
+				"max":40
+			},
 			"minecraft:experience_reward": {
 				"on_death": "math.min(query.player_level*7,100)"
 			},

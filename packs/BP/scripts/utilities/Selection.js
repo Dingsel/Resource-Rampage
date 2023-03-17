@@ -59,7 +59,7 @@ world.events.entityHit.subscribe((ev) => { if (ev.hitBlock && ev.entity.typeId =
 async function onUse(player, block, item, property) {
     const { id, dimension } = player
     const { x, y, z, location, permutation } = block
-    if (item.typeId != Selection.selectionToolId) return;
+    if (item?.typeId != Selection.selectionToolId) return;
     const key = dimension.id + `${x}.${y}.${z}`;
     if (Selection._blocksInUse.has(key) || Selection._playerInUse.has(id) || (player.isSneaking && property == "location2")) return;
     Selection._blocksInUse.add(key); Selection._playerInUse.add(id);

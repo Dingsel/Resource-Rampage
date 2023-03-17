@@ -1,11 +1,7 @@
 import { GameMode, MinecraftEntityTypes, MolangVariableMap, Vector, world } from "@minecraft/server";
-import { AoeMolandVariableMap } from "utilities/MolangVariableMaps";
+import { CrossImpulseMolangVariableMap, ImpulseMolangVariableMap } from "utilities/MolangVariableMaps";
 
-const map = new AoeMolandVariableMap();
-map.setSpeed(5);
-map.setCount(75);
-map.setScale(0.2);
-map.setLifeTime(40);
+const map = new CrossImpulseMolangVariableMap(5,{red:0.1,green:1,blue:0,alpha:0.65});
 
 world.events.playerSpawn.subscribe(async ({player,initialSpawn})=>{
     if(!initialSpawn){
@@ -20,8 +16,5 @@ world.events.entityDie.subscribe(async ({deadEntity})=>{
     const loc = deadEntity.location;
     deadEntity.deadLocation = deadEntity.location;
     deadEntity.deadRotation = deadEntity.getRotation();
-    for (let i = 0; i < 10; i++) {
-        deadEntity.dimension.spawnParticle(`dest:aoe_custom`, loc, map);
-        await sleep(12);
-    }
+    deadEntity.dimension.spawnParticle(`dest:impulse_cross`, loc, map);
 },{entityTypes:[MinecraftEntityTypes.player.id]})
