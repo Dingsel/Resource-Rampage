@@ -1,4 +1,4 @@
-import { Entity, Player, MolangVariableMap } from '@minecraft/server';
+import { Entity, Player, MolangVariableMap, world, GameMode } from '@minecraft/server';
 
 const applyDamage = Entity.prototype.applyDamage, map = new MolangVariableMap()
 
@@ -33,6 +33,17 @@ Object.defineProperties(Player.prototype, {
         get() { const { container, selectedSlot } = this; return container.getSlot(selectedSlot); },
         set(s) { const { container, selectedSlot } = this; container.setItem(selectedSlot, s); return s; }
     },
+    gamemode: {
+        get(){
+            for (const mode of [GameMode.survival,GameMode.creative,GameMode.spectator,GameMode.adventure]) {
+                if(world.getPlayers({name:this.name,gameMode:GameMode.adventure}).length) return GameMode.adventure;
+            }
+            return "defualt";
+        },
+        set(mode){
+            this.runCommandAsync("gamemode " + mode);
+        }
+    }
 });
 
 Entity.prototype.cd = 0
