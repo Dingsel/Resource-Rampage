@@ -12,7 +12,7 @@ declare module "@minecraft/server" {
         readonly scores: { [key: string]: number };
     }
     interface Player {
-        readonly mainhand: ContainerSlot;
+        mainhand: ContainerSlot;
         readonly gamemode: GameMode;
     }
     interface World {
