@@ -6,6 +6,7 @@ import { level_1 } from "resources/wall_definitions";
 
 //please use sneak_case format for test names
 
+/**@type {{[any:string]:(d:ScriptEventCommandMessageEvent)=>boolean}} */
 export const tests = {
     async show_end_form(data) {
         let form = new ActionFormData();

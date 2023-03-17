@@ -2,18 +2,20 @@ import { world, Vector } from "@minecraft/server";
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
 import { towers, towerUpgrades } from "resources/pack";
 
-world.events.beforeItemUseOn.subscribe(async (event) => {
+const { trunc } = Math
+
+beforeItemUseOn.subscribe(async (event) => {
     try {
-        const { cancel, item, source: player } = event
+        const { item, source: player } = event
         const loc = player?.viewBlock.location
         if (player.isBusy) return;
         player.isBusy = true
 
-        const structure = world.db.find((x) => {
-            const maxLoc = Vector.add(x.location, { x: x.size[0], y: 0, z: x.size[1] })
+        const structure = world.db.find(({ location, size: [a, b] }) => {
+            const maxLoc = Vector.add(location, { x: a, y: 0, z: b })
             return (
-                loc.x >= Math.trunc(x.location.x - 1) && loc.x <= Math.trunc(maxLoc.x) &&
-                loc.z >= Math.trunc(x.location.z - 1) && loc.z <= Math.trunc(maxLoc.z)
+                loc.x >= trunc(location.x - 1) && loc.x <= trunc(maxLoc.x) &&
+                loc.z >= trunc(location.z - 1) && loc.z <= trunc(maxLoc.z)
             )
         })
 
