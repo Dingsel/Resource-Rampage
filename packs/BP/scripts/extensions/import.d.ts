@@ -13,6 +13,7 @@ declare module "@minecraft/server" {
     }
     interface Player {
         readonly mainhand: ContainerSlot;
+        readonly gamemode: GameMode;
     }
     interface World {
         readonly overworld: Dimension;
