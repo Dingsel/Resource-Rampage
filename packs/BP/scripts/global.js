@@ -1,6 +1,4 @@
-import { Castle } from "utilities/import";
-
-/**@type {{castle:Castle}}*/
+/**@type {{castle:import('utilities/import').Castle}}*/
 const global = globalThis.global??{};
 globalThis.global = global;
 export { global };

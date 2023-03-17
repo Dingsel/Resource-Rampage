@@ -60,6 +60,7 @@ assign(globalThis, {
     clearTimeout: system.clearRun.bind(system),
     run: function (callBack) { return Promise.resolve().then(callBack) },
     runCommand: ovw.runCommandAsync.bind(ovw),
+    sleep: (n)=>new Promise(res=>setTimeout(res,n)),
     worldInitialize, beforeChat, beforeItemUse, beforeItemUseOn, entityDie
 });
 

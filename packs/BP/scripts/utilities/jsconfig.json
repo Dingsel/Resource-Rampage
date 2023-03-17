@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
-        "target": "ES2022"
+        "module": "CommonJS",
+        "target": "ES2022",
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
     },
     "files":["import.js"]
 }
