@@ -1,9 +1,10 @@
 import { MolangVariableMap, system, world, Vector, ItemStack, Player } from "@minecraft/server";
 import { ActionFormData, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { towers } from "resources/pack";
+import { Selection } from "utils";
 import { buildWall } from "./thewalls";
 
-const selectorId = "minecraft:wooden_axe"
+const selectorId = "minecraft:iron_sword"
 const menuId = "minecraft:apple"
 
 const baseSelection = new ActionFormData()
@@ -23,14 +24,14 @@ const wallForm = new ModalFormData()
 
 beforeItemUse.subscribe(async ({ item, source: player }) => {
     if (item.typeId != menuId || player.structureTemp) return;
-
-    if (player.loc1 && player.loc2) {
+    const sel = Selection.getSelection(player.id)
+    if (sel.location1 && sel.location2) {
         const res = await wallForm.show(player)
         if (res.canceled) return
         const offset = { x: 0, y: res.formValues[0], z: 0 }
-        buildWall(Vector.add(player.loc1, offset), Vector.add(player.loc2, offset))
+        buildWall(Vector.add(sel.location1, offset), Vector.add(sel.location2, offset))
         player.isBusy = false
-        delete player.loc1, player.loc2
+        sel.clear()
         return
     }
 
@@ -176,33 +177,4 @@ beforeItemUseOn.subscribe(async (event) => {
     } catch (error) {
         console.error(error, error.stack)
     }
-})
-
-
-beforeItemUseOn.subscribe(async (event) => {
-    const { item, source: player } = event
-    if (item.typeId != selectorId || player.isBusy || player.isSneaking) return
-    player.isBusy = true
-    const blockLoc = player.viewBlock.location
-    player.loc2 = blockLoc
-    console.warn("2")
-    await nextTick()
-    player.isBusy = false
-})
-
-
-world.events.beforeItemUse.subscribe(({ source: player }) => {
-    if (player.isSneaking) {
-        console.warn("del")
-        delete player.loc1, player.loc2
-        player.isBusy = false
-        return
-    }
-})
-
-world.events.entityHit.subscribe(({ hitBlock, entity: player }) => {
-    if (!(player instanceof Player) || !hitBlock || player.mainhand.typeId != selectorId) return
-    const blockLoc = player.viewBlock.location
-    player.loc1 = blockLoc
-    console.warn("1")
 })

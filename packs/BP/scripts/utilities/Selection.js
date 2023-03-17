@@ -61,7 +61,7 @@ async function onUse(player, block, item, property) {
     const { x, y, z, location, permutation } = block
     if (item.typeId != Selection.selectionToolId) return;
     const key = dimension.id + `${x}.${y}.${z}`;
-    if (Selection._blocksInUse.has(key) || Selection._playerInUse.has(id)) return;
+    if (Selection._blocksInUse.has(key) || Selection._playerInUse.has(id) || (player.isSneaking && property == "location2")) return;
     Selection._blocksInUse.add(key); Selection._playerInUse.add(id);
     const a = Selection.getSelection(id);
     if (Date.now() - a.lastModification > Selection.timeout) {
@@ -85,3 +85,12 @@ async function onUse(player, block, item, property) {
 function formatXYZ({ x, y, z }) {
     return `§2X§8:§a${x} §4Y§8:§c${y} §tZ§8:§9${z}`;
 }
+
+world.events.beforeItemUse.subscribe(({ item, source }) => {
+    const { location } = source
+    if (item.typeId != Selection.selectionToolId || !source.isSneaking) return
+    const sel = Selection.getSelection(source.id)
+    sel.clear()
+    world.playSound('mob.shulker.teleport', { location, pitch: 0.5, volume: 0.5 });
+    source.sendMessage(`%selection.onclear.message`);
+})

@@ -2,3 +2,4 @@ pack.name=Resource Rampage RP
 pack.description=Resource Rampage
 selection.onselect.message1=§7Selected position 1 is
 selection.onselect.message2=§7Selected position 2 is
+selection.onclear.message=§7Cleared Selection
