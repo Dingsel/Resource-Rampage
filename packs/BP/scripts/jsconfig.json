@@ -7,7 +7,8 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "esModuleInterop": true,
-    }
+    },
+    "exclude": ["./utilities/import.js"],
 }
 
 //you know what happened with the types? does it have to do with this file?

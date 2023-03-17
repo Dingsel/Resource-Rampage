@@ -1,7 +1,11 @@
 import { GameMode, MinecraftEntityTypes, MolangVariableMap, Vector, world } from "@minecraft/server";
+import { AoeMolandVariableMap } from "utilities/MolangVariableMaps";
 
-const map = new MolangVariableMap();
-map.setVector3("variable.lifetimes",new Vector(500,25,5));
+const map = new AoeMolandVariableMap();
+map.setSpeed(5);
+map.setCount(75);
+map.setScale(0.2);
+map.setLifeTime(40);
 
 world.events.playerSpawn.subscribe(async ({player,initialSpawn})=>{
     if(!initialSpawn){
