@@ -36,7 +36,7 @@ worldInitialize.subscribe(() => {
         db: {
             get() {
                 if (dbCache) return dbCache
-                const data = JSON.parse(this.getDynamicProperty("db")) ?? []
+                const data = JSON.parse(this.getDynamicProperty("db") ?? "[]")
                 dbCache = data
                 return dbCache
             },

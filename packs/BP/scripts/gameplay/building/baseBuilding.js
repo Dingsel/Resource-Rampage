@@ -1,20 +1,47 @@
-import { MolangVariableMap, system, world, Vector } from "@minecraft/server";
-import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
+import { MolangVariableMap, system, world, Vector, ItemStack, Player } from "@minecraft/server";
+import { ActionFormData, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { towers } from "resources/pack";
+import { buildWall } from "./thewalls";
+
+const selectorId = "minecraft:wooden_axe"
+const menuId = "minecraft:apple"
 
 const baseSelection = new ActionFormData()
 baseSelection.title("Select a Piece to Build!")
 baseSelection.body("Test")
 for (const tower of towers) {
+    baseSelection.button(`Walls`, `textures/icons/walls`)
     baseSelection.button(`${tower.alias}\n${tower.description}`, tower.icon)
 }
+
 const spawnParticle = world.overworld.spawnParticle.bind(world.overworld)
+
+const wallForm = new ModalFormData()
+    .title("Customize your wall!")
+    .slider("height", 3, 10, 3, 3)
 
 
 beforeItemUse.subscribe(async ({ item, source: player }) => {
-    if (item.typeId != "minecraft:apple" || player.structureTemp) return;
+    if (item.typeId != menuId || player.structureTemp) return;
+
+    if (player.loc1 && player.loc2) {
+        const res = await wallForm.show(player)
+        if (res.canceled) return
+        const offset = { x: 0, y: res.formValues[0], z: 0 }
+        buildWall(Vector.add(player.loc1, offset), Vector.add(player.loc2, offset))
+        player.isBusy = false
+        delete player.loc1, player.loc2
+        return
+    }
+
     const result = await baseSelection.show(player)
-    player.structureTemp = towers[result.selection]
+    if (result.selection === 0) {
+        delete player.structureTemp;
+        player.walls = true;
+        player.container.addItem(new ItemStack(selectorId))
+        return
+    }
+    player.structureTemp = towers[result.selection - 1]
 })
 
 
@@ -72,7 +99,7 @@ function draw(lookAt, [s0, s1], player) {
 setInterval(() => {
     for (const player of world.getPlayers()) {
         const { location } = player.viewBlock ?? {}
-        if (!player.structureTemp || !location) continue;
+        if ((!player.structureTemp) || !location) continue;
         draw(location, player.structureTemp.size, player)
     }
 })
@@ -149,4 +176,33 @@ beforeItemUseOn.subscribe(async (event) => {
     } catch (error) {
         console.error(error, error.stack)
     }
+})
+
+
+beforeItemUseOn.subscribe(async (event) => {
+    const { item, source: player } = event
+    if (item.typeId != selectorId || player.isBusy || player.isSneaking) return
+    player.isBusy = true
+    const blockLoc = player.viewBlock.location
+    player.loc2 = blockLoc
+    console.warn("2")
+    await nextTick()
+    player.isBusy = false
+})
+
+
+world.events.beforeItemUse.subscribe(({ source: player }) => {
+    if (player.isSneaking) {
+        console.warn("del")
+        delete player.loc1, player.loc2
+        player.isBusy = false
+        return
+    }
+})
+
+world.events.entityHit.subscribe(({ hitBlock, entity: player }) => {
+    if (!(player instanceof Player) || !hitBlock || player.mainhand.typeId != selectorId) return
+    const blockLoc = player.viewBlock.location
+    player.loc1 = blockLoc
+    console.warn("1")
 })
