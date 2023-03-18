@@ -6,11 +6,13 @@ Object.defineProperties(Entity.prototype, {
     toString: { value() { return `[Entity: ${this.typeId}]`; } },
     inventory: { get() { return this.getComponent('minecraft:inventory') } },
     container: { get() { return this.getComponent('minecraft:inventory')?.container } },
+    armor: {get(){return this.getComponent('equipment_inventory');} },
     health: { get() { return this.getComponent('minecraft:health')?.current }, set(n) { this.getComponent('minecraft:health').setCurrent(n) } },
     maxHealth: { get() { return this.getComponent('minecraft:health')?.value } },
     viewBlock: { get() { return this.getBlockFromViewDirection({ maxDisatnce: 10, includePassableBlocks: true }); } },
     viewEntities: { get() { return this.getEntitiesFromViewDirection({ maxDisatnce: 10 }); } },
     applyDamage: { value(amount, source) { applyDamage.call(this, amount, source); } },
+
     scores: {
         get() {
             const entity = this;
@@ -30,13 +32,13 @@ Object.defineProperties(Entity.prototype, {
 Object.defineProperties(Player.prototype, {
     toString: { value() { return `[Player: ${this.name}]`; } },
     mainhand: {
-        get() { const { container, selectedSlot } = this; return container.getSlot(selectedSlot); },
-        set(s) { const { container, selectedSlot } = this; container.setItem(selectedSlot, s); return s; }
+        get() { return this.armor.getEquipmentSlot("mainhand"); },
+        set(s) { this.armor.setEquipment("mainhand", s); return s; }
     },
     gamemode: {
         get(){
             for (const mode of [GameMode.survival,GameMode.creative,GameMode.spectator,GameMode.adventure]) {
-                if(world.getPlayers({name:this.name,gameMode:GameMode.adventure}).length) return GameMode.adventure;
+                if(world.getPlayers({name:this.name,gameMode:mode}).length) return mode;
             }
             return "defualt";
         },

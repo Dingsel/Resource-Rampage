@@ -53,7 +53,7 @@ world.events.playerSpawn.subscribe(onJoin);
 world.events.playerLeave.subscribe(({ playerId }) => Selection._playerInUse.delete(playerId));
 
 world.events.beforeItemUseOn.subscribe((e) => onUse(e.source, e.source.dimension.getBlock(e.getBlockLocation()), e.item, "location2").catch(er => console.error(er, er.stack)));
-world.events.entityHit.subscribe((ev) => { if (ev.hitBlock && ev.entity.typeId == 'minecraft:player') onUse(ev.entity, ev.hitBlock, ev.entity.mainhand.getItem(), "location1").catch(er => console.error(er, er.stack)); }, { entityTypes: ["minecraft:player"] });
+world.events.entityHit.subscribe((ev) => { if (ev.hitBlock && ev.entity.typeId == 'minecraft:player') onUse(ev.entity, ev.hitBlock, ev.entity.mainhand, "location1").catch(er => console.error(er, er.stack)); }, { entityTypes: ["minecraft:player"] });
 
 /**@param {Player} player, @param {Block} block, @param {ItemStack} item */
 async function onUse(player, block, item, property) {
