@@ -61,6 +61,7 @@ assign(globalThis, {
     run: function (callBack) { return Promise.resolve().then(callBack) },
     runCommand: ovw.runCommandAsync.bind(ovw),
     sleep: (n)=>new Promise(res=>setTimeout(res,n)),
+    errorHandle: er=>console.error(er,er.stack),
     worldInitialize, beforeChat, beforeItemUse, beforeItemUseOn, entityDie
 });
 
