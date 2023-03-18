@@ -1,7 +1,5 @@
-import { GameMode, MinecraftEntityTypes, MolangVariableMap, Vector, world } from "@minecraft/server";
+import { GameMode, MinecraftEntityTypes, MolangVariableMap, Vector, world, World } from "@minecraft/server";
 import { CrossImpulseMolangVariableMap, ImpulseMolangVariableMap } from "utilities/MolangVariableMaps";
-
-const map = new CrossImpulseMolangVariableMap(5, { red: 0.1, green: 1, blue: 0, alpha: 0.65 });
 
 world.events.playerSpawn.subscribe(async ({ player, initialSpawn }) => {
     if (!initialSpawn) {
@@ -16,5 +14,7 @@ world.events.entityDie.subscribe(async ({ deadEntity }) => {
     const loc = deadEntity.location;
     deadEntity.deadLocation = deadEntity.location;
     deadEntity.deadRotation = deadEntity.getRotation();
-    deadEntity.dimension.spawnParticle(`dest:impulse_cross`, loc, map);
+    const {x,y,z} = deadEntity.getViewDirection();
+    console.warn(x,y,z);
+    deadEntity.dimension.spawnParticle(`dest:laser`, deadEntity.getHeadLocation(), new MolangVariableMap().setSpeedAndDirection("variable.speed_direction", 2, new Vector(x,y,z)).setVector3("variable.settings",new Vector(50,5,0.1)).setColorRGBA("variable.color",{red:0,green:1,blue:1,alpha:1}));
 }, { entityTypes: [MinecraftEntityTypes.player.id] })

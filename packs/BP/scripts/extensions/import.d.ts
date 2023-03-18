@@ -39,6 +39,10 @@ declare module "@minecraft/server" {
     interface ItemStack {
         enchantments: EnchantmentList
     }
+    interface Vector{
+        static from(loc: Vector3): Vector
+        static normalized(loc: Vector3): Vector
+    } 
 }
 declare module "@minecraft/server-ui" {
     interface FormResponse {
