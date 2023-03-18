@@ -59,6 +59,7 @@ interface structureEntry {
 }
 
 declare global {
+    var errorHandle:(er)=>void
     var worldInitialize: mc.IWorldInitializeEventSignal, entityDie: mc.IEntityDieEventSignal,
         beforeChat: mc.IBeforeChatEventSignal,
         beforeItemUse: mc.IBeforeItemUseEventSignal, beforeItemUseOn: mc.IBeforeItemUseOnEventSignal;
