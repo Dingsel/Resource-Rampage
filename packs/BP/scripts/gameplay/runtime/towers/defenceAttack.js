@@ -14,13 +14,19 @@ const { overworld } = world,
             level: 2,
             attackFunction: aoeFire,
             radius: 11
+        },
+        "dest:mage_3": {
+            attackInterval: 200,
+            level: 3,
+            attackFunction: aoeFire,
+            radius: 16
         }
     };
 
 
 Object.keys(defences).forEach((type) => {
     const { radius, level, attackFunction, attackInterval } = defences[type]
-    
+
     setInterval(() => {
         for (const entity of overworld.getEntities({ type })) {
             const { cd, location } = entity

@@ -10,8 +10,8 @@ const menuId = "minecraft:apple"
 const baseSelection = new ActionFormData()
 baseSelection.title("Select a Piece to Build!")
 baseSelection.body("Test")
+baseSelection.button(`Walls`, `textures/icons/walls`)
 for (const tower of towers) {
-    baseSelection.button(`Walls`, `textures/icons/walls`)
     baseSelection.button(`${tower.alias}\n${tower.description}`, tower.icon)
 }
 
@@ -19,7 +19,7 @@ const spawnParticle = world.overworld.spawnParticle.bind(world.overworld)
 
 const wallForm = new ModalFormData()
     .title("Customize your wall!")
-    .slider("height", 3, 10, 3, 3)
+    .slider("height", 0, 10, 3, 3)
 
 
 beforeItemUse.subscribe(async ({ item, source: player }) => {
@@ -106,7 +106,7 @@ setInterval(() => {
 })
 
 
-function checkOverlap({ x: x1, y: y1, z: z1 }, [s1_0, s1_1], { x: x3, y: y3, z: z3 }, [s2_0, s2_1]) {
+export function checkOverlap({ x: x1, y: y1, z: z1 }, [s1_0, s1_1], { x: x3, y: y3, z: z3 }, [s2_0, s2_1]) {
 
     const x2 = x1 + s1_0,
         y2 = y1 + s1_1,
