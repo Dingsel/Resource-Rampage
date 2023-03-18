@@ -37,9 +37,6 @@ beforeItemUseOn.subscribe(async (event) => {
             const { x, y, z } = structure.location
             const { type, tier, entity } = structure
 
-            await player.dimension.runCommandAsync(`structure load ${type}_${tier + 1} ${x} ${y} ${z} 0_degrees none`)
-            const e = world.getEntity(entity)
-
             const towerDef = towerUpgrades.find(x => {
                 return (
                     x.tier == tier + 1 &&
@@ -47,8 +44,12 @@ beforeItemUseOn.subscribe(async (event) => {
                 )
             })
 
+            await player.dimension.runCommandAsync(`structure load ${type}_${tier + 1} ${x - (Math.abs(towerDef.size[0] - structure.size[0]) / 2)} ${y} ${z - (Math.abs(towerDef.size[1] - structure.size[1]) / 2)} 0_degrees none`)
+            const e = world.getEntity(entity)
+
+
             const spawned = player.dimension.spawnEntity(`dest:${towerDef.structureId}`, e.location)
-            e.kill()
+            e.triggerEvent("despawn")
 
             world.db = world.db.slice(world.db.indexOf(structure), 1)
 

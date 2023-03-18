@@ -1,6 +1,9 @@
 import { MolangVariableMap, system, world, Vector } from "@minecraft/server";
+import { ImpulseMolangVariableMap } from "utilities/MolangVariableMaps";
 
-const map = new MolangVariableMap(), { overworld } = world;
+const { overworld } = world;
+
+const map = new ImpulseMolangVariableMap()
 
 /**
  * 
@@ -11,7 +14,7 @@ const map = new MolangVariableMap(), { overworld } = world;
 export async function aoeFire(level, location) {
     for (let i = 0; i < level; i++) {
         const n = level - 1 - i
-        overworld.spawnParticle(`dest:aoe_${n}`, location, map)
+        overworld.spawnParticle(`dest:impulse_ignite`, location, map.setRadius(6 + 5 * n))
         world.playSound("mob.ghast.fireball", { location })
         const targets = overworld.getEntities({ location, maxDistance: 6 + 5 * n, excludeTypes: ["minecraft:player"], excludeFamilies: ["tower"] })
         for (const entity of targets) {

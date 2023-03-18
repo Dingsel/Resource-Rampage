@@ -30,5 +30,15 @@ export const towerUpgrades = [
         tier: 2,
         icon: "textures/icons/mageTower_2.png",
         size: [5, 5]
+    },
+    {
+        alias: "Mage Tower",
+        description: "Burns Enemies!",
+        structureId: "mage_3",
+        type : "mage",
+        tier: 3,
+        icon: "textures/icons/mageTower_3.png",
+        size: [11, 11]
     }
+
 ]

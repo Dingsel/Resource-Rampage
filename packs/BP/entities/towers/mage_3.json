@@ -2,7 +2,7 @@
     "format_version": "1.19.0",
     "minecraft:entity": {
         "description": {
-            "identifier": "dest:mage_2",
+            "identifier": "dest:mage_3",
             "is_spawnable": true,
             "is_summonable": true
         },

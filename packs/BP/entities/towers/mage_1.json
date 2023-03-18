@@ -6,7 +6,13 @@
             "is_spawnable": true,
             "is_summonable": true
         },
-        "component_groups": {},
+        "component_groups": {
+            "despawn": {
+                "minecraft:instant_despawn": {
+                    "remove_child_entities": false
+                }
+            }
+        },
         "components": {
             "minecraft:type_family": {
                 "family": [
@@ -29,6 +35,14 @@
                 "width": 0
             }
         },
-        "events": {}
+        "events": {
+            "despawn": {
+                "add": {
+                    "component_groups": [
+                        "despawn"
+                    ]
+                }
+            }
+        }
     }
 }
