@@ -1,4 +1,4 @@
-import { World, Dimension, world, MinecraftDimensionTypes, System } from '@minecraft/server';
+import { World, Dimension, world, MinecraftDimensionTypes, System, system } from '@minecraft/server';
 
 const { overworld, nether, theEnd } = MinecraftDimensionTypes, { defineProperties: setProperties } = Object;
 
@@ -27,9 +27,16 @@ setProperties(Dimension.prototype, {
 });
 
 setProperties(System.prototype, {
-    nextTick: { get() { return new Promise(res => this.run(res)); } }
+    nextTick: { get() { return new Promise(res => this.run(res)); } },
+    deltaTime: {get() { return deltaTime; }}
 });
 
+let deltaTime = 0;
+let lastTime = 0;
+system.runInterval(()=>{
+    deltaTime = (Date.now() - lastTime)/5;
+    lastTime = Date.now();
+},5);
 
 worldInitialize.subscribe(() => {
     setProperties(World.prototype, {
