@@ -1,15 +1,16 @@
 import { world } from "@minecraft/server";
-import { promise } from "./castle.js";
+import { promise } from './enchantments_load.js';
 
 const {overworld} = world;
 async function loadDB(){
     await promise;
     let e = null;
-    for (const db of overworld.getEntities({type:"dest:world_db"})){
+    for (const entityDB of overworld.getEntities({type:"dest:world_db"})){
         if(e) {
-            db.kill(); continue;
+            console.log("killing entity");
+            entityDB.kill(); continue;
         }
-        e=db;
+        e=entityDB;
     }
     if(!e){
         e = overworld.spawnEntity("dest:world_db",{x:0,y:-64,z:0});

@@ -5,9 +5,8 @@ const q = { location: { x: 0.5, y: -64, z: 0.5 }, maxDistance: 10, type: databas
 
 export async function loadEnchantments() {
     await promise;
-    await nextTick;
+    await worldInitialized;
     const {successCount} = await world.overworld.runCommandAsync('structure load x_enchantments 0 -64 0');
-    await worldInitialize;
     let entities = world.overworld.getEntities(q);
     while(entities.length<=0){
         await sleep(5);
@@ -26,8 +25,9 @@ export async function loadEnchantments() {
         }
     }
     for (const e of entities){
-        e.container?.clearAll(); e.kill();
+        e.triggerEvent("dest:despawn");
     }
+
 }; 
 const promise = loadEnchantments();
 

@@ -65,7 +65,8 @@ interface structureEntry {
 
 declare global {
     var errorHandle:(er)=>void;
-    var worldInitialize: Promise<void>;
+    var worldInitialized: Promise<void>;
+    var onGameInitialize: EventSignal;
     var world: mc.World;
     var system: mc.System;
     var events: mc.Events;
@@ -244,4 +245,9 @@ declare global {
         readonly randomElement: T
     }
     function runCommand(command: string): Promise<CommandResult>;
+}
+type EventSignal<arguments = []> = {
+    trigger(...params: arguments): Promise<number>
+    subscribe<k extends (...args: arguments)=>any>(method: k): k
+    unsubscribe<k extends (...args: arguments)=>any>(method: k): k
 }

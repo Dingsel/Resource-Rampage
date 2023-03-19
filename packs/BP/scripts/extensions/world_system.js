@@ -2,7 +2,7 @@ import { World, Dimension, world, MinecraftDimensionTypes, System, system } from
 
 const { overworld, nether, theEnd } = MinecraftDimensionTypes, { defineProperties: setProperties } = Object;
 
-let dbCache = false;
+let db = null;
 
 setProperties(World.prototype, {
     overworld: { value: world.getDimension(overworld) },
@@ -18,6 +18,14 @@ setProperties(World.prototype, {
                 if (entity == e) return e;
             }
             return false;
+        }
+    },
+    db: {
+        get() {
+            return db;
+        },
+        set(val) {
+            db = val;
         }
     }
 });
@@ -37,22 +45,3 @@ system.runInterval(()=>{
     deltaTime = (Date.now() - lastTime)/5;
     lastTime = Date.now();
 },5);
-
-events.worldInitialize.subscribe(() => {
-    setProperties(World.prototype, {
-        db: {
-            get() {
-                if (dbCache) return dbCache
-                const data = JSON.parse(this.getDynamicProperty("db") ?? "[]")
-                dbCache = data
-                return dbCache
-            },
-            set(val) {
-                const str = JSON.stringify(val)
-                if (str.length > 9800) throw new Error("Maximum Towers Reached")
-                this.setDynamicProperty("db", str)
-                dbCache = val
-            }
-        }
-    })
-})

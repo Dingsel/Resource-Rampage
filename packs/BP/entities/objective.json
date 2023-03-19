@@ -8,7 +8,7 @@
 			"is_experimental": false
 		},
 		"component_groups": {
-			"despawn": {
+			"dest:despawn": {
 				"minecraft:instant_despawn": {}
 			}
 		},
@@ -66,10 +66,10 @@
 		},
 		"events": {
 			"dest:warning": {},
-			"despawn": {
+			"dest:despawn": {
 				"add": {
 					"component_groups": [
-						"despawn"
+						"dest:despawn"
 					]
 				}
 			}

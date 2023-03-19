@@ -7,7 +7,7 @@
 			"is_spawnable": true
 		},
 		"component_groups": {
-			"despawn": {
+			"dest:despawn": {
 				"minecraft:instant_despawn": {}
 			}
 		},
@@ -52,10 +52,10 @@
 			}
 		},
 		"events": {
-			"despawn": {
+			"dest:despawn": {
 				"add": {
 					"component_groups": [
-						"despawn"
+						"dest:despawn"
 					]
 				}
 			}
