@@ -10,11 +10,11 @@ export class Castle{
         if(this.#coins == undefined) throw new TypeError("This objective has no coins on it");
     }
     /** @param {number} numer @returns {number} */
-    addCoins(number){this.#coins.setScore(this.#objective,this.getCoins() + number); return number;}
+    addCoins(number){let n = this.getCoins() + number; this.#coins.setScore(this.#objective,n); return n;}
     /** @param {number} numer @returns {number} */
     setCoins(number){this.#coins.setScore(this.#objective, number);return number;}
     /** @returns {number} */
-    getCoins(){this.#coins.getScore(this.#objective);}
+    getCoins(){return this.#coins.getScore(this.#objective);}
     /** @returns {ScoreboardObjective} */
     getObjective(){return this.#objective;}
     #objective;

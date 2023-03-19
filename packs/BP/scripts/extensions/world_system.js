@@ -38,7 +38,7 @@ system.runInterval(()=>{
     lastTime = Date.now();
 },5);
 
-worldInitialize.subscribe(() => {
+events.worldInitialize.subscribe(() => {
     setProperties(World.prototype, {
         db: {
             get() {

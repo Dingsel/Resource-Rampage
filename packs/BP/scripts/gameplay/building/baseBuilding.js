@@ -22,7 +22,7 @@ const wallForm = new ModalFormData()
     .slider("height", 0, 10, 3, 3)
 
 
-beforeItemUse.subscribe(async ({ item, source: player }) => {
+events.beforeItemUse.subscribe(async ({ item, source: player }) => {
     if (item.typeId != menuId || player.structureTemp) return;
     const sel = Selection.getSelection(player.id)
     if (sel.isAvailable()) {
@@ -125,7 +125,7 @@ export function checkOverlap({ x: x1, y: y1, z: z1 }, [s1_0, s1_1], { x: x3, y: 
 
 
 
-beforeItemUseOn.subscribe(async (event) => {
+events.beforeItemUseOn.subscribe(async (event) => {
     try {
         const { source: player } = event
         const loc = player.viewBlock?.location

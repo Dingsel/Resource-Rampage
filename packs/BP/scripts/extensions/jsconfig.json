@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
+        "module": "System",
         "target": "ES2022",
     },
     "files":["import.d.ts"]

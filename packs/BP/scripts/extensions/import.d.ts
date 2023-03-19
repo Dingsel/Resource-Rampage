@@ -1,6 +1,11 @@
 import * as mc from '@minecraft/server';
 
 declare module "@minecraft/server" {
+    namespace Enchantment {
+        var Custom:{
+            [key: string]:{[key: number]: Enchantment}
+        }
+    }
     interface Entity {
         readonly inventory?: EntityInventoryComponent;
         readonly container?: Container;
@@ -39,9 +44,9 @@ declare module "@minecraft/server" {
     interface ItemStack {
         enchantments: EnchantmentList
     }
-    interface Vector{
-        static from(loc: Vector3): Vector
-        static normalized(loc: Vector3): Vector
+    namespace Vector{
+        var from:(loc: Vector3)=> Vector
+        var normalized:(loc: Vector3)=> Vector
     } 
 }
 declare module "@minecraft/server-ui" {
@@ -59,10 +64,14 @@ interface structureEntry {
 }
 
 declare global {
-    var errorHandle:(er)=>void
-    var worldInitialize: mc.IWorldInitializeEventSignal, entityDie: mc.IEntityDieEventSignal,
-        beforeChat: mc.IBeforeChatEventSignal,
-        beforeItemUse: mc.IBeforeItemUseEventSignal, beforeItemUseOn: mc.IBeforeItemUseOnEventSignal;
+    var errorHandle:(er)=>void;
+    var worldInitialize: Promise<void>;
+    var world: mc.World;
+    var system: mc.System;
+    var events: mc.Events;
+    var overworld: mc.Dimension;
+    var nether: mc.Dimension;
+    var theEnd: mc.Dimension;
     var nextTick: Promise;
     var currentTick: number;
     var run: PromiseConstructor['prototype']['then'];
@@ -225,8 +234,10 @@ declare global {
         deg(rad: number): number
         randomBetween(max: number, min?: number): number
     }
-    interface Number {
+    interface NumberConstructor{
         static unitTypes: string[]
+    }
+    interface Number {
         unitFormat(place?: number, space?: string): string
     }
     interface Array<T> {

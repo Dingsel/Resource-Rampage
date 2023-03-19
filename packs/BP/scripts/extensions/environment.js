@@ -15,7 +15,7 @@ export const AsyncGenerator = AsyncGeneratorFunction.prototype;
 /** @type {FunctionConstructor} */
 export const AsyncFunctionConstructor = Object.getPrototypeOf(async function () { }).constructor;
 
-import { system, world } from '@minecraft/server';
+import { MinecraftDimensionTypes, system, world } from '@minecraft/server';
 //@ts-ignore
 const {
     assign, create,
@@ -24,7 +24,10 @@ const {
     getOwnPropertyDescriptors: getProperties,
     defineProperties: setProperties,
 } = Object,
-    { scoreboard, events: { worldInitialize, beforeChat, beforeItemUse, beforeItemUseOn, entityDie } }= world
+{ scoreboard, events } = world,
+overworld = world.getDimension(MinecraftDimensionTypes.overworld),
+nether = world.getDimension(MinecraftDimensionTypes.nether),
+theEnd = world.getDimension(MinecraftDimensionTypes.theEnd)
 
 assign(Object, {
     clone(object, newObject = create(getProto(object))) { return setProperties(newObject, getProperties(object)); },
@@ -62,7 +65,8 @@ assign(globalThis, {
     runCommand: ovw.runCommandAsync.bind(ovw),
     sleep: (n)=>new Promise(res=>setTimeout(res,n)),
     errorHandle: er=>console.error(er,er.stack),
-    worldInitialize, beforeChat, beforeItemUse, beforeItemUseOn, entityDie
+    system, world, events,
+    worldInitialize: new Promise(res=>events.worldInitialize.subscribe(res)), overworld, nether, theEnd
 });
 
 console.logLike = console.log;
@@ -70,7 +74,7 @@ console.log = console.warn;
 setProperties(globalThis, {
     nextTick: { get() { return new Promise(res => setTimeout(() => res(system.currentTick + 1))); } },
     currentTick: { get() { return system.currentTick; } },
-    coins: { get() { return world.getDynamicProperty("coins"); }, set(v) { world.setDynamicProperty("coins", v); } },
+    coins: { get() { return global.castle.getCoins(); }, set(v) { global.castle.setCoins(v); } },
     objectives: {
         get() {
             return new Proxy(scoreboard, {

@@ -101,7 +101,6 @@ export class SquareParticlePropertiesBuilder extends DefaultParticlePropertiesBu
         return this;
     }
 }
-
 Object.assign(DestParticlePropertiesBuilder.prototype,{
     speed:1,
     settings: Object.create(defualtRGBA),

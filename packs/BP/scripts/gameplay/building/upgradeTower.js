@@ -5,7 +5,7 @@ import { checkOverlap } from "./baseBuilding";
 
 const { trunc } = Math
 
-beforeItemUseOn.subscribe(async (event) => {
+events.beforeItemUseOn.subscribe(async (event) => {
     try {
         const { item, source: player } = event
         const loc = player?.viewBlock.location

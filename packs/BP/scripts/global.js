@@ -1,5 +1,7 @@
-/**@type {{castle:import('utilities/import').Castle}}*/
-const global = globalThis.global??{};
+/**@type {{castle:import('utilities/import').Castle,initialized:boolean}}*/
+const global = globalThis.global??{
+    initialized:false
+};
 globalThis.global = global;
 export { global };
 export default global;

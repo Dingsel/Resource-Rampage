@@ -1,34 +1,34 @@
-import { system, world } from "@minecraft/server";
+import { system, world, Enchantment } from "@minecraft/server";
+import { promise } from "./castle.js";
+let x_enchantments = Enchantment.Custom, databaseId = 'dest:database';
+const q = { location: { x: 0.5, y: -64, z: 0.5 }, maxDistance: 10, type: databaseId };
 
-let x_enchantments = {}, databaseId = 'dest:database';
+export async function loadEnchantments() {
+    await promise;
+    await nextTick;
+    const {successCount} = await world.overworld.runCommandAsync('structure load x_enchantments 0 -64 0');
+    await worldInitialize;
+    let entities = world.overworld.getEntities(q);
+    while(entities.length<=0){
+        await sleep(5);
+        entities = overworld.getEntities(q);
+    }
+    const entity = entities[0];
+    if((!entity) && successCount) return console.error("error when loading enchantments",entity,successCount,entities.length);
+    const { inventory: { container: inv, inventorySize: size } } = entity;
+    for (let j = 0; j < size; j++) {
+        const item = inv.getItem(j);
+        if (item?.typeId !== 'minecraft:enchanted_book') break;
+        const { enchantments: ench } = item;
+        for (const E of ench) {
+            const { type: { id }, level } = E;
+            x_enchantments[id] ? x_enchantments[id][level] = E : x_enchantments[id] = { [level]: E };
+        }
+    }
+    for (const e of entities){
+        e.container?.clearAll(); e.kill();
+    }
+}; 
+const promise = loadEnchantments();
 
-export function loadEnchantments() {
-    const q = { location: { x: 0.5, y: 0, z: 0.5 }, maxDistance: 1, type: databaseId }
-    return new Promise(async res => {
-        await runCommand('tickingarea add circle 0 0 0 0 loadEnchant true');
-        await runCommand('structure load x_enchantments 0 0 0 0_degrees none true false');
-        (async function load() {
-            const entities = [...world.overworld.getEntities(q)];
-            if (!entities[0]) return system.run(load);
-            let { length } = entities;
-            x_enchantments = {};
-            for (let i = 0; i < length; i++) {
-                const entity = entities[i];
-                const { inventory: { container: inv, inventorySize: size } } = entity;
-                for (let j = 0; j < size; j++) {
-                    const item = inv.getItem(j);
-                    if (item?.typeId !== 'minecraft:enchanted_book') continue;
-                    const { enchantments: ench } = item;
-                    for (const E of ench) {
-                        i == length ? null : i = length;
-                        const { type: { id }, level } = E;
-                        x_enchantments[id] ? x_enchantments[id][level] = E : x_enchantments[id] = { [level]: E };
-                    }
-                } entity.triggerEvent('despawn');
-            } res(runCommand('tickingarea remove loadEnchant'));
-
-        })();
-    });
-}; loadEnchantments();
-
-export { x_enchantments };
+export { x_enchantments, promise };

@@ -1,8 +1,8 @@
 {
-	"format_version": "1.19.0",
+	"format_version": "1.17.0",
 	"minecraft:entity": {
 		"description": {
-			"identifier": "dest:database",
+			"identifier": "dest:world_db",
 			"is_summonable": true,
 			"is_spawnable": true
 		},
@@ -15,11 +15,11 @@
 			"minecraft:inventory": {
 				"can_be_siphoned_from": false,
 				"container_type": "inventory",
-				"inventory_size": 50
+				"inventory_size": 255
 			},
 			"minecraft:health": {
-				"max":1,
-				"value": 1
+				"value": 1,
+				"min": 1
 			},
 			"minecraft:physics": {
 				"has_collision": false,
