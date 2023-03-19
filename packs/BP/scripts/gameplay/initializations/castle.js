@@ -5,9 +5,9 @@ const gameplay = "gameplay"
 const overworld = world.overworld;
 
 async function init(long){
-    const {successCount:sus} = await overworld.runCommandAsync('tickingarea remove ticking_area');
-    const {successCount:sus2} = await overworld.runCommandAsync('function onStart');
-    if(!(sus && sus2)) return console.error("Castle couldn`t be initialized")
+    await overworld.runCommandAsync('tickingarea remove ticking_area');
+    const {successCount} = await overworld.runCommandAsync('function onStart');
+    if(!successCount) return console.error("Castle couldn`t be initialized");
     let obj = world.scoreboard.getObjective(gameplay);
     try {
         global.castle = global.castle??new Castle(obj);

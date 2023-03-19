@@ -44,6 +44,10 @@ declare module "@minecraft/server" {
     interface ItemStack {
         enchantments: EnchantmentList
     }
+    interface SystemEvents{
+        readonly gameInitialize: EventSignal;
+        readonly tick: EventSignal;
+    }
     namespace Vector{
         var from:(loc: Vector3)=> Vector
         var normalized:(loc: Vector3)=> Vector

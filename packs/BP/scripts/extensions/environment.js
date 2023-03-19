@@ -16,7 +16,7 @@ export const AsyncGenerator = AsyncGeneratorFunction.prototype;
 export const AsyncFunctionConstructor = Object.getPrototypeOf(async function () { }).constructor;
 
 import { MinecraftDimensionTypes, system, world } from '@minecraft/server';
-import { EventSignal } from 'utilities/EventSignal.js';
+import './events.js';
 //@ts-ignore
 const {
     assign, create,
@@ -51,7 +51,6 @@ Symbol.isGenerator = Symbol('Symbol.isGenerator');
 GeneratorFunction.prototype[Symbol.isGenerator] = true;
 GeneratorFunction.isGenerator = function isGenerator(generator) { return (generator[Symbol.isGenerator] === true); }
 const ovw = world.getDimension('overworld')
-const onGameInitialize =  new EventSignal();
 assign(globalThis, {
     GeneratorFunction,
     GeneratorFunctionConstructor,
@@ -69,7 +68,7 @@ assign(globalThis, {
     errorHandle: er=>console.error(er,er?.stack??""),
     system, world, events,
     worldInitialized: new Promise(res=>events.worldInitialize.subscribe(res)), overworld, nether, theEnd,
-    onGameInitialize, gameInitialized: new Promise(res=>onGameInitialize.subscribe(res))
+    gameInitialized: new Promise(res=>system.events.gameInitialize.subscribe(res))
 
 });
 

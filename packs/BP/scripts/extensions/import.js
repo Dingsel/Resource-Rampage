@@ -1,3 +1,4 @@
+export * from './events.js';
 export * from './environment.js';
 export * from './world_system.js';
 export * from './entity.js';
