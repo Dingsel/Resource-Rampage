@@ -6,5 +6,9 @@ Object.defineProperties(Vector, {
     }},
     normalized:{value(loc){
         return this.from(loc).normalized();
+    }},
+    dot:{value(a,b){
+        const {x,y,z} = this.multiply(a,b)
+        return x+y+z
     }}
 });
