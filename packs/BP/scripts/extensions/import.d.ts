@@ -74,7 +74,7 @@ interface structureEntry {
 declare global {
     var errorHandle:(er)=>void;
     var worldInitialized: Promise<void>;
-    var onGameInitialize: EventSignal;
+    var gameInitialized: EventSignal;
     var world: mc.World;
     var system: mc.System;
     var events: mc.Events;

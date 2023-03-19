@@ -9,7 +9,7 @@ async function Initialization(){
     for (const m of modules) a.push((await import(m)).promise);
     await Promise.allSettled(a);
     global.initialized = true;
-    await onGameInitialize.trigger();
+    await system.events.gameInitialize.trigger();
     console.log("Susccessfully Initialized");
 }
 export const promise = Initialization().catch(errorHandle);
