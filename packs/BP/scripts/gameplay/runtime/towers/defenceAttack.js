@@ -1,50 +1,64 @@
-import { world } from "@minecraft/server";
+import { world, Vector } from "@minecraft/server";
 import { aoeFire } from "./fireAoe";
 
-const { overworld } = world,
-    defences = {
-        "dest:mage_1": {
-            attackInterval: 200,
-            level: 1,
-            attackFunction: aoeFire,
-            radius: 6
-        },
-        "dest:mage_2": {
-            attackInterval: 200,
-            level: 2,
-            attackFunction: aoeFire,
-            radius: 11
-        },
-        "dest:mage_3": {
-            attackInterval: 200,
-            level: 3,
-            attackFunction: aoeFire,
-            radius: 16
-        }
-    };
+Defence.addDefence("mage", aoeFire, {
+    attackInterval: 200,
+    radius: function (level) { return 1 + level * 5 }
+})
 
+class Defence {
+    /**
+     * @type {Array<defence>}
+     */
+    static defence = [];
+    /**
+     * @param {towerTypes} type 
+     * @param {function} callback 
+     * @param {defenceOptions} options 
+     */
+    static addDefence(type, callback, options) {
+        this.defence.push({ id: type, callback: callback, options: options })
+    }
 
-Object.keys(defences).forEach((type) => {
-    const { radius, level, attackFunction, attackInterval } = defences[type]
-
-    setInterval(() => {
-        for (const entity of overworld.getEntities({ type })) {
-            const { cd, location } = entity
-
-            if (cd > 0) entity.cd -= 1
-            if (cd != 0) continue
-
-            const targets = overworld.getEntities({
-                location,
-                maxDistance: radius,
-                excludeTypes: ["minecraft:player"],
-                excludeFamilies: ["tower"]
-            })
-
-            if (targets.length > 0) {
-                attackFunction(level, location)
-                entity.cd = attackInterval
+    static init() {
+        system.runInterval(() => {
+            const entities = world.overworld.getEntities({ families: ["tower"] })
+            for (const entity of entities) {
+                const { cd, location } = entity
+                if (cd != 0) { entity.cd--; return }
+                const obj = this.defence.find(x => entity.typeId.includes(x.type))
+                const level = entity.typeId.split("_")[1]
+                const targets = world.overworld.getEntities({
+                    location: location,
+                    closest: 1,
+                    maxDistance: obj.options.radius(level),
+                    excludeFamilies: ["tower"],
+                    excludeTypes: ["minecraft:player"]
+                })
+                if (targets.length > 0) {
+                    entity.cd = obj.options.attackInterval
+                    obj.callback(level, entity.location)
+                }
             }
-        }
-    })
-}) 
+        })
+    }
+}
+
+Defence.init()
+
+/**
+ * @typedef {Object} defenceOptions
+ * @property {number} attackInterval
+ * @property {function(number):number} radius
+ */
+
+/**
+ * @typedef {"mage" | "archer"} towerTypes
+ */
+
+/**
+ * @typedef defence
+ * @property {towerTypes} id
+ * @property {function(number,Vector)} callback
+ * @property {defenceOptions} options
+ */

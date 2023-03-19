@@ -1,0 +1,28 @@
+{
+    "format_version": "1.19.0",
+    "animation_controllers": {
+        "controller.animation.ladybug.walk": {
+            "states": {
+                "default": {
+                    "blend_transition" : 0.2,
+                    "transitions": [
+                        {
+                            "walking": "q.modified_move_speed > 0"
+                        }
+                    ]
+                },
+                "walking": {
+                    "blend_transition" : 0.2,
+                    "animations": [
+                        "walk"
+                    ],
+                    "transitions": [
+                        {
+                            "default": "q.modified_move_speed <= 0"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

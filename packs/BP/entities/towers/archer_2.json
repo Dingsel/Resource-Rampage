@@ -16,7 +16,8 @@
         "components": {
             "minecraft:type_family": {
                 "family": [
-                    "tower"
+                    "tower",
+                    "archer"
                 ]
             },
             "minecraft:damage_sensor": {
