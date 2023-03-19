@@ -21,7 +21,7 @@ class Defence {
             for (const entity of entities) {
                 const { cd, location } = entity
                 if (cd != 0) { entity.cd--; return }
-                const obj = this.defence.find(x => entity.typeId.includes(x.type))
+                const obj = this.defence.find(x => entity.typeId.includes(x.id))
                 const level = entity.typeId.split("_")[1]
                 const targets = world.overworld.getEntities({
                     location: location,
