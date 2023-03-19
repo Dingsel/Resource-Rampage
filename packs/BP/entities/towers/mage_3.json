@@ -16,7 +16,8 @@
         "components": {
             "minecraft:type_family": {
                 "family": [
-                    "tower"
+                    "tower",
+                    "mage"
                 ]
             },
             "minecraft:damage_sensor": {
