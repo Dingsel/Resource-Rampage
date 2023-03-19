@@ -1,11 +1,6 @@
 import { world, Vector } from "@minecraft/server";
 import { aoeFire } from "./fireAoe";
 
-Defence.addDefence("mage", aoeFire, {
-    attackInterval: 200,
-    radius: function (level) { return 1 + level * 5 }
-})
-
 class Defence {
     /**
      * @type {Array<defence>}
@@ -44,7 +39,16 @@ class Defence {
     }
 }
 
-Defence.init()
+
+//#region Defence Defenitions
+
+Defence.addDefence("mage", aoeFire, {
+    attackInterval: 200,
+    radius: function (level) { return 1 + level * 5 }
+})
+
+//#endregion Defence
+
 
 /**
  * @typedef {Object} defenceOptions
@@ -62,3 +66,5 @@ Defence.init()
  * @property {function(number,Vector)} callback
  * @property {defenceOptions} options
  */
+
+Defence.init()
