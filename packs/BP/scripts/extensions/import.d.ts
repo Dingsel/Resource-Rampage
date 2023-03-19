@@ -51,6 +51,7 @@ declare module "@minecraft/server" {
     namespace Vector{
         var from:(loc: Vector3)=> Vector
         var normalized:(loc: Vector3)=> Vector
+        var dot:(loc1: Vector3, loc2: Vector3)=> Vector3
     } 
 }
 declare module "@minecraft/server-ui" {
@@ -64,7 +65,10 @@ interface structureEntry {
     size: [number, number],
     type: string,
     tier: number,
-    entity: number
+    /**
+     * Returns entity's id, which is a numeric string.
+     */
+    entity: string
 }
 
 declare global {

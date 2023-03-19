@@ -69,7 +69,7 @@ events.beforeItemUseOn.subscribe(async (event) => {
 
 
             const spawned = player.dimension.spawnEntity(`dest:${towerDef.structureId}`, e.location)
-            e.triggerEvent("despawn")
+            e.triggerEvent("dest:despawn")
 
             world.db = []
 

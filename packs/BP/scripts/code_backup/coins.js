@@ -10,7 +10,7 @@ setInterval(() => {
         const { location, dimension } = player
         for (const entity of dimension.getEntities({ type: global.coinId, location, maxDistance: 2 })) {
             player.runCommandAsync(`playsound random.orb @s ~~~ 1 ${getRandomFloat(1.3, 1.7)}`)
-            entity.triggerEvent(`despawn`)
+            entity.triggerEvent(`dest:despawn`)
             player.coins++
         }
     }

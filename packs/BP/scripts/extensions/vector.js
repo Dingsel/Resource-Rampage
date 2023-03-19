@@ -8,7 +8,6 @@ Object.defineProperties(Vector, {
         return this.from(loc).normalized();
     }},
     dot:{value(a,b){
-        const {x,y,z} = this.multiply(a,b)
-        return x+y+z
+        const{x,y,z}=this.multiply(a,b);return x+y+z;
     }}
 });
