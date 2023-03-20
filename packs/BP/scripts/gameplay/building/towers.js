@@ -62,12 +62,7 @@ class Tower {
 
 
 const db = [
-    new DbTowerEntry("mage", { x: 0, y: 0, z: 0 }, [5, 5], {
-        tier: 1,
-        attackInterval: 200,
-        damage: 2,
-        power: 5
-    })
+
 ]
 
 /** @type {Array<TowerDefenition>} */
