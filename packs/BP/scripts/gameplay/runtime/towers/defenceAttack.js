@@ -7,9 +7,9 @@ class Defence {
      */
     static defence = [];
     /**
-     * @param {towerTypes} type 
-     * @param {function} callback 
-     * @param {defenceOptions} options 
+     * @param {towerTypes} type
+     * @param {function(number,Vector)} callback
+     * @param {defenceOptions} options
      */
     static addDefence(type, callback, options) {
         this.defence.push({ id: type, callback: callback, options: options })
@@ -46,7 +46,6 @@ Defence.addDefence("mage", aoeFire, {
     attackInterval: 200,
     radius: function (level) { return 1 + level * 5 }
 })
-
 //#endregion Defence
 
 

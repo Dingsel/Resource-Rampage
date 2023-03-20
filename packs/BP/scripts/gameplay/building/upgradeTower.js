@@ -1,5 +1,6 @@
 import { world, Vector } from "@minecraft/server";
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
+import { aoeFire } from "gameplay/runtime";
 import { towers, towerUpgrades } from "resources/pack";
 import { checkOverlap } from "./baseBuilding";
 
@@ -81,3 +82,91 @@ events.beforeItemUseOn.subscribe(async (event) => {
 })
 
 world.db = []
+
+
+
+class TowerDefenition {
+    /**
+     * @param {towerTypes} type 
+     * @param {TowerLevelDefenition} levelDefenition 
+     * @param {TowerDefence} defence 
+     */
+    constructor(type, levelDefenition, defence) {
+        this.type = type
+        this.levelDefenition = levelDefenition
+        this.defence = defence
+    }
+}
+
+class TowerLevelDefenition {
+    /**
+     * @param {function(upgradeStats, number) : upgradeStats} changeStats
+     */
+    constructor(towerType, changeStats, structures) {
+        this.type = towerType
+        this.changeStats = changeStats
+        this.structures = structures
+    }
+}
+
+class TowerDefence {
+    /**
+     * @param {function(number,Vector)} callback
+     * @param {defenceOptions} options
+     */
+    constructor(callback, options) {
+        this.callback = callback
+        this.options = options
+    }
+}
+
+
+
+const def = new TowerLevelDefenition((stat, level) => {
+
+    const stats = stat
+    stats.damage += level * 2
+    stats.attackInterval -= level * 5
+    stats.power += 1
+
+    return { stats }
+}, {
+    "mage_1": [5, 5],
+    "mage_2": [5, 5],
+    "mage_3": [11, 11]
+})
+
+
+const a = new TowerDefence(aoeFire, {
+    attackInterval: 200,
+    radius: function (level) { return 1 + level * 5 }
+})
+
+
+
+const tower = new TowerDefenition("mage", def, a)
+
+
+/**
+ * @typedef {Object} defenceOptions
+ * @property {number} attackInterval
+ * @property {function(number):number} radius
+ */
+
+/**
+ * @typedef defence
+ * @property {towerTypes} id
+ * @property {function(number,Vector)} callback
+ * @property {defenceOptions} options
+ */
+
+/**
+ * @typedef {"mage" | "archer"} towerTypes
+ */
+
+/**
+ * @typedef {Object} upgradeStats
+ * @property {number} attackInterval
+ * @property {number} damage
+ * @property {number} power
+ */
