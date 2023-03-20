@@ -1,9 +1,10 @@
 import * as mc from '@minecraft/server';
+import { TowerDefenition } from "../gameplay/building/towers"
 
 declare module "@minecraft/server" {
     namespace Enchantment {
-        var Custom:{
-            [key: string]:{[key: number]: Enchantment}
+        var Custom: {
+            [key: string]: { [key: number]: Enchantment }
         }
     }
     interface Entity {
@@ -19,6 +20,7 @@ declare module "@minecraft/server" {
     interface Player {
         mainhand: ContainerSlot;
         readonly gamemode: GameMode;
+        selectedTower?: TowerDefenition
     }
     interface World {
         readonly overworld: Dimension;
@@ -44,15 +46,15 @@ declare module "@minecraft/server" {
     interface ItemStack {
         enchantments: EnchantmentList
     }
-    interface SystemEvents{
+    interface SystemEvents {
         readonly gameInitialize: EventSignal;
         readonly tick: EventSignal;
     }
-    namespace Vector{
-        var from:(loc: Vector3)=> Vector
-        var normalized:(loc: Vector3)=> Vector
-        var dot:(loc1: Vector3, loc2: Vector3)=> Vector3
-    } 
+    namespace Vector {
+        var from: (loc: Vector3) => Vector
+        var normalized: (loc: Vector3) => Vector
+        var dot: (loc1: Vector3, loc2: Vector3) => Vector3
+    }
 }
 declare module "@minecraft/server-ui" {
     interface FormResponse {
@@ -72,7 +74,7 @@ interface structureEntry {
 }
 
 declare global {
-    var errorHandle:(er)=>void;
+    var errorHandle: (er) => void;
     var worldInitialized: Promise<void>;
     var gameInitialized: EventSignal;
     var world: mc.World;
@@ -86,7 +88,7 @@ declare global {
     var run: PromiseConstructor['prototype']['then'];
     var coins: number;
     var objectives: { [key: string]: undefined | mc.ScoreboardObjective };
-    var sleep: (delay: number)=>Promise<void>;
+    var sleep: (delay: number) => Promise<void>;
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
         // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
         next(...args: [] | [TNext]): IteratorResult<T, TReturn>;
@@ -243,7 +245,7 @@ declare global {
         deg(rad: number): number
         randomBetween(max: number, min?: number): number
     }
-    interface NumberConstructor{
+    interface NumberConstructor {
         static unitTypes: string[]
     }
     interface Number {
@@ -256,6 +258,6 @@ declare global {
 }
 type EventSignal<arguments = []> = {
     trigger(...params: arguments): Promise<number>
-    subscribe<k extends (...args: arguments)=>any>(method: k): k
-    unsubscribe<k extends (...args: arguments)=>any>(method: k): k
+    subscribe<k extends (...args: arguments) => any>(method: k): k
+    unsubscribe<k extends (...args: arguments) => any>(method: k): k
 }
