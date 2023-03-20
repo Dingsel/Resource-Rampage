@@ -1,0 +1,60 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.centipede_tail",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 6, 0],
+					"rotation": [0, 180, 0],
+					"cubes": [
+						{"origin": [-5, 2, -6], "size": [10, 7, 13], "uv": [0, 20]},
+						{"origin": [-5, 2, -6], "size": [10, 7, 13], "inflate": 0.5, "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "leg",
+					"parent": "bb_main",
+					"pivot": [-3, 5, 7],
+					"rotation": [0, 90, 0],
+					"cubes": [
+						{"origin": [-14, 4, 6], "size": [11, 2, 2], "uv": [0, 42]}
+					]
+				},
+				{
+					"name": "lower2",
+					"parent": "leg",
+					"pivot": [-14, 5, 7],
+					"cubes": [
+						{"origin": [-25, 4.5, 6.5], "size": [11, 1, 1], "uv": [0, 48]}
+					]
+				},
+				{
+					"name": "leg2",
+					"parent": "bb_main",
+					"pivot": [3, 5, 7],
+					"rotation": [0, -90, 0],
+					"cubes": [
+						{"origin": [3, 4, 6], "size": [11, 2, 2], "uv": [0, 42], "mirror": true}
+					]
+				},
+				{
+					"name": "lower",
+					"parent": "leg2",
+					"pivot": [14, 5, 7],
+					"cubes": [
+						{"origin": [14, 4.5, 6.5], "size": [11, 1, 1], "uv": [0, 48], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}
