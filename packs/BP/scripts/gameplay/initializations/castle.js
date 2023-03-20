@@ -15,8 +15,9 @@ async function init(long){
         if(long < 1) throw new Error("Objective couldn`t be initialized");
         await nextTick;
         world.scoreboard.removeObjective(obj);
-        init(long-1);
+        return init(long-1);
     }
+    return global.castle;
 }
 const promise = init(5).catch((er)=>console.error(er,er.stack));
 export {promise};

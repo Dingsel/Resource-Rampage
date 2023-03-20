@@ -253,7 +253,10 @@ declare global {
         unitFormat(place?: number, space?: string): string
     }
     interface Array<T> {
-        readonly randomElement: T
+        readonly randomElement: T,
+        readonly x:number,
+        readonly y:number,
+        readonly z:number,
     }
     function runCommand(command: string): Promise<CommandResult>;
 }

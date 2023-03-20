@@ -7,14 +7,9 @@ let database = null;
 
 async function loadDB(){
     await promise;
-    try {
-        const n = Date.now();
-        const database = await loadPromise;
-        console.log("Current SessionId: ", database.getSessionId());
-        return database;
-    } catch (error) {
-        errorHandle(error);
-    }
-
+    const n = Date.now();
+    const database = await loadPromise;
+    console.log("Current SessionId: ", database.getSessionId());
+    return database;
 }
 export const promise = loadDB();

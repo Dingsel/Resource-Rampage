@@ -1,4 +1,4 @@
-import { system, world, Enchantment } from "@minecraft/server";
+import { Enchantment } from "@minecraft/server";
 import { promise } from "./castle.js";
 let x_enchantments = Enchantment.Custom, databaseId = 'dest:database';
 const q = { location: { x: 0.5, y: -64, z: 0.5 }, maxDistance: 10, type: databaseId };
@@ -27,7 +27,7 @@ export async function loadEnchantments() {
     for (const e of entities){
         e.triggerEvent("dest:despawn");
     }
-
+    return Enchantment.Custom;
 }; 
 const promise = loadEnchantments();
 

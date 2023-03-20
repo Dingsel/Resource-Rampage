@@ -116,5 +116,8 @@ assign(Number.prototype, {
     }
 });
 setProperties(Array.prototype, {
+    x:{get(){return this[0]}},
+    y:{get(){return this[1]}},
+    z:{get(){return this[2]}},
     randomElement: { get() { return this[Math.floor(Math.random() * this.length)]; } }
 });
