@@ -18,6 +18,7 @@ world.events.entityDie.subscribe( async ({ deadEntity }) => {
     const {x,y,z} = deadEntity.getViewDirection();
     console.warn(x,y,z);
     await sleep(10);
+    console.log(deadEntity.mainhand.getLore().length);
     deadEntity.dimension.spawnParticle(`dest:ignite_impulse`, deadEntity.location,force1);
     deadEntity.dimension.spawnParticle(`dest:ignite_impulse`, deadEntity.location,force2);
 }, { entityTypes: [MinecraftEntityTypes.player.id] })
