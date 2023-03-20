@@ -48,7 +48,7 @@ declare module "@minecraft/server" {
     }
     interface SystemEvents {
         readonly gameInitialize: EventSignal;
-        readonly tick: EventSignal;
+        readonly tick: EventSignal<[{currentTick:number,deltaTime:number}]>;
     }
     namespace Vector {
         var from: (loc: Vector3) => Vector
