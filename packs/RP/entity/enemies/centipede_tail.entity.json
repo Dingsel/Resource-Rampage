@@ -1,0 +1,28 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "dest:centipede_tail",
+            "materials": {
+                "default": "bat"
+            },
+            "textures": {
+                "default": "textures/entity/centipede_tail"
+            },
+            "geometry": {
+                "default": "geometry.centipede_tail"
+            },
+            "animations": {
+                "centipede_tail": "animation.centipede_tail.move"
+            },
+            "scripts": {
+                "animate": [
+                    "centipede_tail"
+                ]
+            },
+            "render_controllers": [
+                "controller.render.default"
+            ]
+        }
+    }
+}
