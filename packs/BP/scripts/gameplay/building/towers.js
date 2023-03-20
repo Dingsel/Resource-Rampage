@@ -114,12 +114,15 @@ world.events.beforeItemUse.subscribe(async (event) => {
 
 
 //Show grid
+
+const builder = new SquareParticlePropertiesBuilder()
+
 system.runInterval(() => {
     for (const player of world.getPlayers()) {
         if (!player.selectedTower) return
         const block = player.viewBlock
         if (!block) return
-        player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), new SquareParticlePropertiesBuilder(player.selectedTower.baseRadius / 2).variableMap)
+        player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(player.selectedTower.baseRadius / 2).variableMap)
     }
 })
 //
