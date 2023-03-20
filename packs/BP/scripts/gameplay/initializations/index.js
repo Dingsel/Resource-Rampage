@@ -2,9 +2,6 @@ export * from './castle.js';
 export * from './enchantments_load.js';
 export * from './database.js';
 
-import { promise as database } from './database.js';
-
-
 const modules = ["./database.js","./castle.js","./enchantments_load.js"];
 async function Initialization(){
     const a = [];

@@ -1,23 +1,13 @@
 import { world } from "@minecraft/server";
+import { promise } from "./base.js";
 import { Castle } from "utilities/import.js";
 
-const gameplay = "gameplay"
-const overworld = world.overworld;
+const gameplay = "gameplay";
+const objective = world.scoreboard.getObjective(gameplay)??world.scoreboard.addObjective(gameplay,gameplay);
 
-async function init(long){
-    await worldInitialized;
-    const {successCount} = await overworld.runCommandAsync('function onStart');
-    if(!successCount) return console.error("Castle couldn`t be initialized");
-    let obj = world.scoreboard.getObjective(gameplay);
-    try {
-        global.castle = global.castle??new Castle(obj);
-    } catch (error) {
-        if(long < 1) throw new Error("Objective couldn`t be initialized");
-        await nextTick;
-        world.scoreboard.removeObjective(obj);
-        return init(long-1);
-    }
+async function init(){
+    await promise;
+    global.castle = global.castle??new Castle(objective);
     return global.castle;
 }
-const promise = init(5).catch((er)=>console.error(er,er.stack));
-export {promise};
+export const promise = init();

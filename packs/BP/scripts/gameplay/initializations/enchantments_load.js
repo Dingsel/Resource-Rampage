@@ -1,11 +1,10 @@
 import { Enchantment } from "@minecraft/server";
-import { promise } from "./castle.js";
+import { promise } from "./base.js";
 let x_enchantments = Enchantment.Custom, databaseId = 'dest:database';
 const q = { location: { x: 0.5, y: -64, z: 0.5 }, maxDistance: 10, type: databaseId };
 
 export async function loadEnchantments() {
     await promise;
-    await worldInitialized;
     const {successCount} = await world.overworld.runCommandAsync('structure load x_enchantments 0 -64 0');
     let entities = world.overworld.getEntities(q);
     while(entities.length<=0){
