@@ -1,18 +1,17 @@
-import { world } from "@minecraft/server";
-import { Database } from "utils.js";
+import { GameDatabase } from "utils.js";
 import { promise } from './enchantments_load.js';
 
-const {overworld} = world;
+const {scoreboard} = world;
+const game_db_key = "world_db", loadPromise = GameDatabase.Start(game_db_key);
+let database = null;
+
 async function loadDB(){
     await promise;
     try {
         const n = Date.now();
-        const database = Database.createDatabase('world_db');
-        for (let i = 0; i < 100; i++) {
-            database.set(Number.createUID(),Number.createUID());
-        }
-        database.clear();
-        console.log("100x in ",Date.now() - n,"ms");
+        const database = await loadPromise;
+        console.log("Current SessionId: ", database.getSessionId());
+        return database;
     } catch (error) {
         errorHandle(error);
     }

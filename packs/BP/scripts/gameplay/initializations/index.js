@@ -1,9 +1,8 @@
 export * from './castle.js';
-export * from './scores.js';
 export * from './enchantments_load.js';
 export * from './database.js';
 
-const modules = ["./castle.js","./scores.js","./enchantments_load.js"];
+const modules = ["./castle.js","./database.js","./enchantments_load.js"];
 async function Initialization(){
     const a = [];
     for (const m of modules) a.push((await import(m)).promise);

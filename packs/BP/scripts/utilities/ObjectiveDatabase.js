@@ -1,6 +1,8 @@
 import { CommandResult, ScoreboardObjective } from "@minecraft/server";
 
 const sets = new Map();
+const splitKey = '.$_';
+const matchRegex = /\.\$\_/g;
 const {scoreboard} = world;
 /**
  * Database
@@ -18,6 +20,7 @@ export class Database extends Map{
         sets.set(objective.id,n);
         return n;
     }
+    /**@param {Database} databse */
     static deleteDatabase(databse){
         if(sets.has(databse.id)) sets.delete(databse.id);
         world.scoreboard.removeObjective(databse.objective);
@@ -31,8 +34,8 @@ export class Database extends Map{
     constructor(objective) {
         super();
         this.#objective = objective;
-        this.id = objective.id;
-        objective.getParticipants().forEach(e => super.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), JSON.parse(e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"'))));
+        this.#id = objective.id;
+        objective.getParticipants().forEach(e => super.set(e.displayName.split(splitKey)[0].replaceAll(/\\"/g, '"'), JSON.parse(e.displayName.split(splitKey).filter((v, i) => i > 0).join(splitKey).replaceAll(/\\"/g, '"'))));
     }
     /**
      * Set a value from a key
@@ -40,13 +43,13 @@ export class Database extends Map{
      * @param {any} value The value
      */
     async set(key, value) {
-        if (key.includes('_'))
-            throw new TypeError(`Database keys can't include "_"`);
+        if (key.match(matchRegex))
+            throw new TypeError(`Database keys can't include "${splitKey}"`);
         if ((JSON.stringify(value).replaceAll(/"/g, '\\"').length + key.replaceAll(/"/g, '\\"').length + 1) > 32000)
             throw new Error(`Database setter to long... somehow`);
         if (this.has(key))
-            await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.id}"`);
-        await runCommand(`scoreboard players set "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(value).replaceAll(/"/g, '\\"')}" "${this.id}" 0`);
+            await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.#id}"`);
+        await runCommand(`scoreboard players set "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(value).replaceAll(/"/g, '\\"')}" "${this.#id}" 0`);
         super.set(key, value);
     }
     /**
@@ -54,16 +57,23 @@ export class Database extends Map{
      * @param {string} key Key to delete from the database
      */
     async delete(key) {
+        if (key.match(matchRegex))
+            throw new TypeError(`Database keys can't include "${splitKey}"`);
         if (!this.has(key)) return false;
-        await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.id}"`);
+        await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.#id}"`);
         return super.delete(key);
     }
     clear() {
         scoreboard.removeObjective(this.#objective);
-        this.#objective = scoreboard.addObjective(this.id,this.id);
+        this.#objective = scoreboard.addObjective(this.#id,this.#id);
         return super.clear();
     }
+    #id;
     #objective;
+    /**@returns {string} */
+    getId(){return this.#id;}
+    /**@returns {ScoreboardObjective} */
+    getScoreboardObjective(){return this.#objective;}
 }
 /**
  * Run a command!

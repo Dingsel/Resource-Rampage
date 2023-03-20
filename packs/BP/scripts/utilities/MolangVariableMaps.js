@@ -1,13 +1,11 @@
 import { MolangVariableMap, Vector } from "@minecraft/server";
 const v = "variable.";
-const currentVariableId = "variable.current";
 const Variables = {
     "sets":"sets",
     "color":"color",
     "sd":"sd",
     "var":"var"
 }
-const defualtRGBA = {red:1,green:1,blue:1,alpha:1};
 export class DestParticleProperties{
     getMolangVariableMap(){
         return new MolangVariableMap();
@@ -101,6 +99,8 @@ export class SquareParticlePropertiesBuilder extends DefaultParticlePropertiesBu
         return this;
     }
 }
+
+const defualtRGBA = {red:1,green:1,blue:1,alpha:1};
 Object.assign(DestParticlePropertiesBuilder.prototype,{
     speed:1,
     settings: Object.create(defualtRGBA),
