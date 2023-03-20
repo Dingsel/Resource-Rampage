@@ -119,5 +119,22 @@ setProperties(Array.prototype, {
     x:{get(){return this[0]}},
     y:{get(){return this[1]}},
     z:{get(){return this[2]}},
-    randomElement: { get() { return this[Math.floor(Math.random() * this.length)]; } }
+    randomElement: { get() { return this[Math.floor(Math.random() * this.length)]; } },
+    remove:{
+        value(value) {
+            let i = this.indexOf(value);
+            if (i > -1) this.splice(i, 1);
+            return this;
+        }
+    },
+    removeAll:{
+        value(value) {
+            let i = 0;
+            while (i < this.length) {
+                if (this[i] === value) this.splice(i, 1);
+                else ++i;
+            }
+            return this;
+        }
+    }
 });

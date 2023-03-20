@@ -43,7 +43,11 @@ export class ElementDatabase extends Database{
     }
     getElement(elementId,construct = Element){
         if(!this.has(elementId)) throw new ReferenceError(`Element for id: ${elementId} does not exist.`);
-        return this.#elements.get(elementId)??new construct(this,elementId);
+        if(this.#elements.has(elementId)){return this.#elements.get(elementId);}
+        else{
+            this.#elements.set(elementId, new construct(this,elementId));
+            return this.#elements.get(elementId);
+        }
     }
     hasElement(elementId){return this.has(elementId);}
     async delete(elementId){
@@ -98,22 +102,57 @@ export class GameDatabase extends ElementDatabase{
     }
     /**@returns {Promise<SessionGameElement>} */
     async getSession(){
-        if(this.hasElement(this.#id)) return this.getElement(this.#id,SessionGameElement);
+        if(this.hasElement(this.#id)) return this.getElement(this.#id, SessionGameElement);
         else {
             await this.set(this.#id, {});
             return await this.getSession();
         }
     }
+    async getTowerIDs(){return (await this.getSession()).getTowerIDs()}
+    /**@param {string} @returns {Promise<boolean>} */
+    async hasTower(towerId){
+        const session = await this.getSession();
+        return (session.get("towers")??[]).includes(towerId);
+    }
+    /**@param {Promise<TowerElement>} */
+    async addTower(){
+        const session = await this.getSession();
+        const id = Number.createUID();
+        await this.set(id,{});
+        const tower = this.getElement(id,TowerElement);
+        const towers = session.get("towers")??[];
+        towers.push(id);
+        await session.set("towers",towers);
+        return tower;
+    }
+    /**@param {Promise<TowerElement>} */
+    async getTower(towerId){
+        if(!await this.hasTower(towerId)) throw new ReferenceError("No tower found with id: " + towerId);
+        else return this.getElement(towerId,TowerElement);
+    }
+    async removeTower(towerId){
+        if(!await this.hasTower(towerId)) return false;
+        else{
+            const session = await this.getSession();
+            await session.set('towers',session.get("towers").remove(towerId));
+            return await this.deleteElement(towerId);
+        }
+    }
     getSessionId(){return this.#id;}
 }
-
-export class SessionGameElement extends Element{
-    constructor(db,id){
-        super(db,id);
-    }
+export class TowerElement extends Element{
+    getTowerId(){return this.getId();}
     /**@returns {string} */
-    get levelName(){return this.get("levelName")??"";}
-    async setLevelName(name){await this.set("levelName",name);}
+    getTowerName(){ return this.get("name")??"";}
+    /**@param {string} name */
+    async setTowerName(name){ await this.set("name",name); }
+}
+export class SessionGameElement extends Element{
+    /**@returns {Promise<string[]>} */
+    async getTowerIDs(){
+        if(!this.has("towers")) await this.set("towers",[]);
+        return [...this.get("towers")];
+    }
     get time(){system.currentTick*50;}
 }
 

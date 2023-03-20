@@ -257,6 +257,8 @@ declare global {
         readonly x:number,
         readonly y:number,
         readonly z:number,
+        remove(element: any): this;
+        removeAll(element: any): this;
     }
     function runCommand(command: string): Promise<CommandResult>;
 }
