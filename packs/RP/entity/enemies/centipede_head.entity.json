@@ -1,0 +1,32 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "dest:centipede_head",
+            "materials": {
+                "default": "bat"
+            },
+            "textures": {
+                "default": "textures/entity/centipede_head"
+            },
+            "geometry": {
+                "default": "geometry.centipede_head"
+            },
+            "animations": {
+                "idle": "animation.centipede_head.idle",
+                "biting": "animation.centipede_head.bite",
+                "swing": "animation.centipede_head.swing"
+            },
+            "scripts": {
+                "animate": [
+                    "idle",
+                    "biting",
+                    "swing"
+                ]
+            },
+            "render_controllers": [
+                "controller.render.default"
+            ]
+        }
+    }
+}
