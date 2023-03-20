@@ -3,7 +3,8 @@ import { ContainerSlot, EntityInventoryComponent, ItemStack } from "@minecraft/s
 const loreMax = 32e3;
 export const DataBaseSessions={
     Testing:0,
-    Towers:1
+    Towers:1,
+    Castle:2
 }
 
 export class DataBase{

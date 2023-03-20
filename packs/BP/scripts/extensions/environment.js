@@ -102,6 +102,7 @@ assign(Math, {
 });
 
 Number.unitTypes = ['', 'k', 'M', 'G', 'T', 'E'];
+Number.createUID = function(){return `${~~(__date_clock()/1000000)}-${system.currentTick}-${~~(Math.random()*900 + 100)}`;}
 // 56,485 -> 56.4k
 assign(Number.prototype, {
     unitFormat: function (place = 1, space = "", exponent = 3, component = 1) {

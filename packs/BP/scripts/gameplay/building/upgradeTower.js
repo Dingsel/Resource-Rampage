@@ -1,6 +1,6 @@
 import { world, Vector } from "@minecraft/server";
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
-import { aoeFire } from "gameplay/runtime";
+import { aoeFire } from "gameplay/runtime/index.js";
 import { towers, towerUpgrades } from "resources/pack";
 import { checkOverlap } from "./baseBuilding";
 

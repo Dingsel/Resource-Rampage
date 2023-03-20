@@ -19,7 +19,7 @@ declare module "@minecraft/server" {
     }
     interface Player {
         mainhand: ContainerSlot;
-        readonly gamemode: GameMode;
+        gamemode: GameMode;
         selectedTower?: TowerDefenition
     }
     interface World {
@@ -246,7 +246,8 @@ declare global {
         randomBetween(max: number, min?: number): number
     }
     interface NumberConstructor {
-        static unitTypes: string[]
+        unitTypes: string[]
+        createUID(): number
     }
     interface Number {
         unitFormat(place?: number, space?: string): string
