@@ -60,7 +60,7 @@ class Tower {
     }
 }
 
-
+/** @type {Array<DbTowerEntry>} */
 const db = [
 
 ]
@@ -112,6 +112,23 @@ world.events.beforeItemUse.subscribe(async (event) => {
 
 ////#endregion Display
 
+const { trunc } = Math
+function checkInterfearance(loc1, [s1, s2]) {
+    const structure = db.find(({ location, size: [s2_1, s2_2] }) => {
+        const maxLoc1 = Vector.add(loc1, { x: s1, y: 0, z: s2 })
+
+        const maxLoc2 = Vector.add(location, { x: s2_1, y: 0, z: s2_2 })
+
+        return (
+            loc1.x < maxLoc2.x &&
+            loc1.z < maxLoc2.z &&
+            location.x < maxLoc1.x &&
+            location.z < maxLoc1.z
+        )
+    })
+    return !!structure
+}
+
 
 //Show grid
 
@@ -122,7 +139,13 @@ system.runInterval(() => {
         if (!player.selectedTower) return
         const block = player.viewBlock
         if (!block) return
-        player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(player.selectedTower.baseRadius / 2).variableMap)
+
+        const offset = player.selectedTower.baseRadius / 2
+        const structureStart = Vector.subtract(Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
+        const interfearing = checkInterfearance(structureStart, [player.selectedTower.baseRadius, player.selectedTower.baseRadius])
+        //console.warn(interfearing)
+        const colour = interfearing ? { red: 255 / 255, green: 80 / 255, blue: 80 / 255, alpha: 1 } : { red: 80 / 255, green: 255 / 255, blue: 80 / 255, alpha: 1 }
+        player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(player.selectedTower.baseRadius / 2).setColor(colour).variableMap)
     }
 })
 //
