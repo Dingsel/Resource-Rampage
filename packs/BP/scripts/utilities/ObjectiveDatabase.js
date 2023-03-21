@@ -2,7 +2,7 @@ import { CommandResult, ScoreboardIdentityType, ScoreboardObjective } from "@min
 
 const sets = new Map();
 const splitKey = '.$_';
-const matchRegex = /\.\n\$\_/g;
+const matchRegex = /\.\$_/g;
 const {scoreboard} = world;
 /**
  * Database
