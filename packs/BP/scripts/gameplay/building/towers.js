@@ -13,12 +13,16 @@ class DbTowerEntry {
      * @param {import("@minecraft/server").Vector3} location 
      * @param {[number,number]} size 
      * @param {dbEntryOptions} options 
+     * @param {number} level
+     * @param {[number,number,number]} statsLevel
      */
-    constructor(type, location, size, options) {
+    constructor(type, location, size, options, level, statsLevel) {
         this.type = type
         this.location = location
         this.size = size
         this.options = options
+        this.level = level
+        this.statsLevel = statsLevel
     }
 }
 
@@ -26,17 +30,19 @@ class DbTowerEntry {
 export class TowerDefenition {
     /**
      * @param {towerTypes} towerType
-     * @param {function(number) : upgradeStats} getStats
+     * @param {upgradeStats} defaultStats
      * @param {appearanceModifierOptions} appearanceModifierOptions
      * @param {any} structures
-     * @param {function}
-     * @param {number}
+     * @param {function([number,number,number]) : dbEntryOptions} levelFunction
+     * @param {function} attackFunction
+     * @param {number} baseRadius
      */
-    constructor(towerType, getStats, appearanceModifierOptions, structures, attackFunction, baseRadius) {
+    constructor(towerType, defaultStats, appearanceModifierOptions, structures, levelFunction, attackFunction, baseRadius) {
         this.type = towerType
-        this.getStats = getStats
+        this.defaultStats = defaultStats
         this.attackFunction = attackFunction
         this.appearanceModifierOptions = appearanceModifierOptions
+        this.levelFunction = levelFunction
         this.structures = structures
         this.baseRadius = baseRadius
     }
@@ -68,12 +74,10 @@ const db = [
 /** @type {Array<TowerDefenition>} */
 const defs = [
     new TowerDefenition("mage",
-        function (level) {
-            const stats = {}
-            stats.damage = 2 + level - 1
-            stats.attackInterval = 200 - ((level - 1) * 30)
-            stats.power = 1 + level - 1
-            return { stats }
+        {
+            damage: 2,
+            attackInterval: 200,
+            power: 1
         },
         {
             name: "Mage Tower",
@@ -84,7 +88,15 @@ const defs = [
             "mage_1": [5, 5],
             "mage_2": [5, 5],
             "mage_3": [11, 11]
-        }, function () { }, 5)
+        },
+        function ([stat1, stat2, stat3]) {
+            const stats = {}
+            stats.attackInterval = 0 - stat1 * 20
+            stats.damage = stat2
+            stats.power = stat3
+            return stats
+        },
+        function () { }, 5)
 ]
 
 
@@ -112,8 +124,7 @@ world.events.beforeItemUse.subscribe(async (event) => {
 
 ////#endregion Display
 
-const { trunc } = Math
-function checkInterfearance(loc1, [s1, s2]) {
+function checkInterfearance(loc1, [s1, s2] = [1, 1]) {
     const structure = db.find(({ location, size: [s2_1, s2_2] }) => {
         const maxLoc1 = Vector.add(loc1, { x: s1, y: 0, z: s2 })
 
@@ -126,7 +137,7 @@ function checkInterfearance(loc1, [s1, s2]) {
             location.z < maxLoc1.z
         )
     })
-    return !!structure
+    return structure
 }
 
 
@@ -142,7 +153,7 @@ system.runInterval(() => {
 
         const offset = player.selectedTower.baseRadius / 2
         const structureStart = Vector.subtract(Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
-        const interfearing = checkInterfearance(structureStart, [player.selectedTower.baseRadius, player.selectedTower.baseRadius])
+        const interfearing = !!checkInterfearance(structureStart, [player.selectedTower.baseRadius, player.selectedTower.baseRadius])
         //console.warn(interfearing)
         const colour = interfearing ? { red: 255 / 255, green: 80 / 255, blue: 80 / 255, alpha: 1 } : { red: 80 / 255, green: 255 / 255, blue: 80 / 255, alpha: 1 }
         player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(player.selectedTower.baseRadius / 2).setColor(colour).variableMap)
@@ -172,13 +183,68 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
     const structureId = Object.keys(player.selectedTower.structures)[0]
     await player.dimension.runCommandAsync(`structure load ${structureId} ${x} ${y} ${z} 0_degrees none`)
 
-    const { type, baseRadius, getStats } = player.selectedTower
-    db.push(new DbTowerEntry(type, structureStart, [baseRadius, baseRadius], getStats(1)))
+    const { type, baseRadius, defaultStats } = player.selectedTower
+    db.push(new DbTowerEntry(type, structureStart, [baseRadius, baseRadius], defaultStats, 1, [0, 0, 0]))
     delete player.selectedTower
 })
 //
 
+const char = "§a:"
+const emptyChar = "§c:"
+function drawProgress(statLevel, tier, chars = 50) {
+    const maxLevel = tier * 3
 
+    const fullChars = Math.abs((statLevel / maxLevel) * chars)
+    const emptyChars = chars - fullChars
+
+    return `${char.repeat(fullChars)}${emptyChar.repeat(emptyChars)}`
+}
+
+
+//Upgrade Towers
+world.events.beforeItemUseOn.subscribe(async (event) => {
+    try {
+        const { source: player } = event
+        if (player.isBussy) return
+        player.isBussy = true
+        const block = player.viewBlock
+        const interacted = checkInterfearance(block.location)
+        if (!interacted) { player.isBussy = false; return }
+    
+        const tower = Tower.from(interacted)
+        const stats = tower.tower.defaultStats
+        const upgrades = tower.towerEntry.statsLevel
+        const current = tower.tower.levelFunction(upgrades)
+        console.warn(JSON.stringify(current))
+    
+        const upgradeForm = new ActionFormData()
+            .title("%upgrade.title")
+            .body("%upgrade.body")
+        const keys = Object.keys(current)
+        for (const [key, value] of Object.entries(current)) {
+            upgradeForm.button(`${key} ${Number(stats[key]) + value}\n${drawProgress(upgrades[keys.indexOf(key)], tower.towerEntry.level)}`)
+        }
+    
+        const res = await upgradeForm.show(player)
+        if (res.canceled) { player.isBussy = false; return }
+        const selection = res.selection
+        const inDb = db.find(x => {
+            return (x.location == interacted.location)
+        })
+        if (inDb.statsLevel[selection] + 1 > tower.towerEntry.level * 3) {
+            console.warn("Max")
+            player.isBussy = false
+            return
+        }
+        inDb.statsLevel[selection]++
+        db[0] = inDb
+        player.isBussy = false
+    } catch (error) {
+        console.error(error, error.stack)
+    }
+
+})
+//
 
 
 /**
@@ -187,7 +253,6 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
 
 /**
  * @typedef dbEntryOptions
- * @property {number} tier
  * @property {number} attackInterval
  * @property {number} damage
  * @property {number} power
