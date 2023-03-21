@@ -1,0 +1,40 @@
+{
+    "namespace": "hud",
+    "hud_title_text": {
+        "type": "panel",
+        "offset": [
+            -10,
+            0
+        ],
+        "alpha": 1,
+        "controls": [
+            {
+                "sidebar": {
+                    "type": "image",
+                    "size": [
+                        "100%c + 20px",
+                        "100%c + 8px"
+                    ],
+                    "anchor_from": "right_middle",
+                    "anchor_to": "right_middle",
+                    "texture": "textures/ui/background",
+                    "alpha": 0.6,
+                    "controls": [
+                        {
+                            "title": {
+                                "type": "label",
+                                "offset": [
+                                    0,
+                                    -4
+                                ],
+                                "text_alignment": "left",
+                                "text": "$title_text",
+                                "layer": 1
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

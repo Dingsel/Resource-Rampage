@@ -20,14 +20,7 @@ setProperties(World.prototype, {
             return false;
         }
     },
-    db: {
-        get() {
-            return db;
-        },
-        set(val) {
-            db = val;
-        }
-    }
+    db: { get() { return db; }, set(val) { db = val; } }
 });
 
 setProperties(Dimension.prototype, {
