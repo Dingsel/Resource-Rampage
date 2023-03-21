@@ -83,6 +83,10 @@ export class Element extends DisposableHandle{
     getDatabase(){return this.#database;}
     async setData(value){this.#data = value; return await this.update(); }
     getData(){return this.#data;}
+    async getDefault(property, defaultValue=0){
+        if(!this.has(property)) await this.set(property,defaultValue);
+        return this.get(property);
+    }
 }
 
 
@@ -149,10 +153,11 @@ export class TowerElement extends Element{
 }
 export class SessionGameElement extends Element{
     /**@returns {Promise<string[]>} */
-    async getTowerIDs(){
-        if(!this.has("towers")) await this.set("towers",[]);
-        return [...this.get("towers")];
-    }
+    getCurrentLevel(){return this.getDefault("level",0);}
+    /** @param {number} number @returns {Promise<void>} */
+    async setCurrentLevel(number){await this.set("level",number)}
+    /**@returns {Promise<number>} */
+    async getTowerIDs(){return [...await this.getDefault("towers",[])];}
     get time(){system.currentTick*50;}
 }
 

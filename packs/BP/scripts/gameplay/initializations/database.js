@@ -18,6 +18,7 @@ async function loadDB(){
     else tower = await database.getTower(keys[0]);
     await tower.setTowerName(tower.getTowerName() + "-" + tower.getTowerName());
     if(tower.getTowerName().length > 1000) await tower.setTowerName("");
+    console.log(await session.getCurrentLevel());
     console.log("New Tower Name is: " + tower.getTowerName());
     return database;
 }
