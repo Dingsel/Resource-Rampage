@@ -1,8 +1,8 @@
-import { CommandResult, ScoreboardObjective } from "@minecraft/server";
+import { CommandResult, ScoreboardIdentityType, ScoreboardObjective } from "@minecraft/server";
 
 const sets = new Map();
-const splitKey = '.$_';
-const matchRegex = /\.\$\_/g;
+const splitKey = '.\n$_';
+const matchRegex = /\.\n\$\_/g;
 const {scoreboard} = world;
 /**
  * Database
@@ -35,7 +35,15 @@ export class Database extends Map{
         super();
         this.#objective = objective;
         this.#id = objective.id;
-        objective.getParticipants().forEach(e => super.set(e.displayName.split(splitKey)[0].replaceAll(/\\"/g, '"'), JSON.parse(e.displayName.split(splitKey).filter((v, i) => i > 0).join(splitKey).replaceAll(/\\"/g, '"'))));
+        this.#participants = new Map();
+        for (const p of objective.getParticipants()) {
+            if(p.type == ScoreboardIdentityType.fakePlayer){
+                const [key,value] = p.displayName.split(splitKey);
+                const v = JSON.parse(value.replaceAll("\\\"","\""));
+                super.set(key,v);
+                this.#participants.set(key,p);
+            }
+        }
     }
     /**
      * Set a value from a key
@@ -43,33 +51,38 @@ export class Database extends Map{
      * @param {any} value The value
      */
     async set(key, value) {
-        if (key.match(matchRegex))
-            throw new TypeError(`Database keys can't include "${splitKey}"`);
-        if ((JSON.stringify(value).replaceAll(/"/g, '\\"').length + key.replaceAll(/"/g, '\\"').length + 1) > 32000)
-            throw new Error(`Database setter to long... somehow`);
-        if (this.has(key))
-            await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.#id}"`);
-        await runCommand(`scoreboard players set "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(value).replaceAll(/"/g, '\\"')}" "${this.#id}" 0`);
+        if (value==undefined) throw new TypeError("Value must be defined");
+        if (key.match(matchRegex)) throw new TypeError(`Database keys can't include "${splitKey}"`);
+        const build = key + splitKey + JSON.stringify(value).replaceAll(/"/g, '\\"');
+        if ((build.length + 1) > 32000) throw new Error(`Database setter to long... somehow`);
+        if (this.has(key)) this.#objective.removeParticipant(this.#participants.get(key));
+        await runCommand(`scoreboard players set "${build}" "${this.#id}" 0`);
+        const p = this.#objective.getParticipants().find(pa=>pa.displayName.startsWith(key + splitKey));
+        if(p == undefined) throw new Error("Value could be settet");
+        this.#participants.set(key,p);
         super.set(key, value);
     }
     /**
      * Delete a key from the database 
      * @param {string} key Key to delete from the database
      */
-    async delete(key) {
+    delete(key) {
         if (key.match(matchRegex))
             throw new TypeError(`Database keys can't include "${splitKey}"`);
         if (!this.has(key)) return false;
-        await runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}${splitKey}${JSON.stringify(super.get(key)).replaceAll(/"/g, '\\"')}" "${this.#id}"`);
+        this.#objective.removeParticipant(this.#participants.get(key));
+        this.#participants.delete(key);
         return super.delete(key);
     }
     clear() {
         scoreboard.removeObjective(this.#objective);
         this.#objective = scoreboard.addObjective(this.#id,this.#id);
+        this.#participants.clear();
         return super.clear();
     }
     #id;
     #objective;
+    #participants;
     /**@returns {string} */
     getId(){return this.#id;}
     /**@returns {ScoreboardObjective} */

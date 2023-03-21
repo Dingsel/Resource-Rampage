@@ -1,4 +1,4 @@
-import { GameDatabase } from "utils.js";
+import { GameDatabase, TowerElement } from "utils.js";
 import { promise } from './base.js';
 
 const {scoreboard} = world;
@@ -7,12 +7,18 @@ let database = null;
 
 async function loadDB(){
     await promise;
-    const n = Date.now();
+    let n = Date.now();
     const database = await loadPromise;
     const session = await database.getSession();
-    console.warn("db_info",`\nlevelName:"${session.levelName}"`,session.levelName.length,"/",50,"\nsessionId:",database.getSessionId());
-    await session.setLevelName(session.levelName + "a");
-    if(session.levelName.length>50) await session.setLevelName("");
+    const keys = await session.getTowerIDs();
+    console.warn("Available towers:" + JSON.stringify(keys));
+    /**@type {TowerElement} */
+    let tower;
+    if(keys.length<1) tower = await database.addTower();
+    else tower = await database.getTower(keys[0]);
+    await tower.setTowerName(tower.getTowerName() + "-" + tower.getTowerName());
+    if(tower.getTowerName().length > 1000) await tower.setTowerName("");
+    console.log("New Tower Name is: " + tower.getTowerName());
     return database;
 }
 export const promise = loadDB();
