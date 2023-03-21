@@ -1,8 +1,8 @@
 import { CommandResult, ScoreboardIdentityType, ScoreboardObjective } from "@minecraft/server";
 
 const sets = new Map();
-const splitKey = '.$_';
-const matchRegex = /\.\$_/g;
+const splitKey = '.\n$_';
+const matchRegex = /\.\n\$\_/g;
 const {scoreboard} = world;
 /**
  * Database
