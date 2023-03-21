@@ -3,7 +3,7 @@
     "hud_title_text": {
         "type": "panel",
         "offset": [
-            -10,
+            10,
             0
         ],
         "alpha": 1,
@@ -15,8 +15,8 @@
                         "100%c + 20px",
                         "100%c + 8px"
                     ],
-                    "anchor_from": "right_middle",
-                    "anchor_to": "right_middle",
+                    "anchor_from": "left_middle",
+                    "anchor_to": "left_middle",
                     "texture": "textures/ui/background",
                     "alpha": 0.6,
                     "controls": [
