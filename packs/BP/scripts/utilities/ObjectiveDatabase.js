@@ -32,7 +32,17 @@ export class Database extends Map{
      * @param {ScoreboardObjective} objective
      */
     constructor(objective) {
+        if(!objective instanceof ScoreboardObjective) throw new TypeError("Objective object must by type of ScoreboardObjective.");
         super();
+        try {
+            this.#init(objective);
+        } catch (error) {
+            console.error("§4§lThere was a problem loading data from the database, all data was reset");
+            this.clear();
+            this.#init(objective);
+        }
+    }
+    #init(objective){
         this.#objective = objective;
         this.#id = objective.id;
         this.#participants = new Map();
