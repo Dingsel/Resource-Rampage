@@ -27,12 +27,14 @@ async function defualtAction(){
     }
 }
 async function walls(player){
+    console.warn('pick blocks-not working in progress');
 }
 async function onTowerSelect(player,towerId){
+    console.log("on tower select");
 
 }
 async function buyTower(player){
-    console.log("buy tower")
+    console.log("buy tower");
 }
 async function towers(player){
     const actions = [];
@@ -47,7 +49,6 @@ async function towers(player){
     form.button('form.close');
     const {output} = await form.show(player);
     actions[output]?.(player,towers[output]);
-    player.sendMessage("towers page");
 }
 async function informations(player){
     let text = "";
