@@ -2,6 +2,11 @@
 	"resource_pack_name": "Resource Rampage",
 	"texture_name": "atlas.items",
 	"texture_data": {
-		
+		"dest.wall_builder" : {
+			"textures" : "textures/items/iron_sword"
+		},
+		"dest.building_gadged":{
+			"textures" : "textures/items/apple"
+ 		}
 	}
 }

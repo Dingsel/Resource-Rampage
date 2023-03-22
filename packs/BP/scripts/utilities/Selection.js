@@ -1,9 +1,9 @@
-import { Block, ItemStack, MinecraftBlockTypes, MinecraftItemTypes, MolangVariableMap, Player, Vector, world } from '@minecraft/server';
+import { Block, ItemStack, MinecraftBlockTypes, MolangVariableMap, Player, Vector, world } from '@minecraft/server';
 
 const selection = Symbol("selection");
 export class Selection {
     static timeout = 10000;
-    static selectionToolId = MinecraftItemTypes.ironSword.id;
+    static selectionToolId = "dest:wall_builder";
     static _blocksInUse = new Set();
     static _playerInUse = new Set();
     static _registry = new Map();
