@@ -101,4 +101,4 @@ let options = generateWave(3)
 		world.overworld.spawnEntity(e.id, options.location)
 		await asyncTickTimeout(100)
 	}
-})()
+})
