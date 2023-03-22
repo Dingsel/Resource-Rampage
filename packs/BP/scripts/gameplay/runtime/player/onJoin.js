@@ -2,6 +2,7 @@ import { ItemLockMode, ItemStack } from "@minecraft/server";
 
 const item = new ItemStack('stick');
 item.lockMode = ItemLockMode.slot;
+item.keepOnDeath = true;
 
 events.playerSpawn.subscribe(({player,initialSpawn})=>{
     if(!initialSpawn) return;

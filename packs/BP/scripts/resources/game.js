@@ -35,5 +35,5 @@ const InfoMapProperties = {
     level:"level",
     kills:"kills"
 }
-
-export {TowerLevelDefinition,InfoMapProperties,TowerTypes};
+const SettingsItemId = 'minecraft:stick';
+export {TowerLevelDefinition,InfoMapProperties,TowerTypes,SettingsItemId};
