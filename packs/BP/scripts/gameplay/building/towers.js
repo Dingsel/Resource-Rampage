@@ -1,10 +1,10 @@
 import { world, Vector, Player } from "@minecraft/server";
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui"
-import { SquareParticlePropertiesBuilder } from "utils";
+import { Selection, SquareParticlePropertiesBuilder } from "utils";
+import { buildWall } from "./thewalls";
 
 // Constants
-const selectorId = "minecraft:iron_sword"
-const menuId = "minecraft:apple"
+const menuId = "dest:building_gadged"
 //
 
 class DbTowerEntry {
@@ -106,17 +106,35 @@ const defs = [
 const Towers = defs
 
 const buildingForm = new ActionFormData()
-    .title("%building.title")
-    .body("%building.body")
+    .title("Select A Defence To Build!")
+    .body("Different Towers Have Different Effects.")
 Towers.forEach((x) => {
     const { description, icon, name } = x.appearanceModifierOptions
     buildingForm.button(`${name}\n${description}`, icon)
 })
 
 
+const wallForm = new ActionFormData()
+    .title("%building.wallTitle")
+    .body("%building.wallBody")
+    .button("Build")
+    .button("Cancel")
+
+
 world.events.beforeItemUse.subscribe(async (event) => {
     const { item, source: player } = event
+    const sel = Selection.getSelection(player.id)
     if (item.typeId != menuId) return
+    event.cancel = true
+    if (sel.isAvailable()) {
+        const res = await wallForm.show(player)
+        if (res.selection == 0) {
+            //if building walls
+            buildWall(sel.location1, sel.location2)
+        }
+        sel.clear()
+        return
+    }
     const res = await buildingForm.show(player)
     if (res.canceled) return
     player.selectedTower = defs[res.selection]
@@ -166,7 +184,7 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
     const { item, source: player } = event
     if (!(player instanceof Player) || !player.selectedTower || player.isBussy) return
     player.isBussy = true
-
+    event.cancel = true
     const confirmForm = new MessageFormData()
         .title("ajof")
         .body("afhk")
@@ -210,13 +228,14 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
         const block = player.viewBlock
         const interacted = checkInterfearance(block.location)
         if (!interacted) { player.isBussy = false; return }
-    
+        event.cancel = true;
+        
         const tower = Tower.from(interacted)
         const stats = tower.tower.defaultStats
         const upgrades = tower.towerEntry.statsLevel
         const current = tower.tower.levelFunction(upgrades)
-        console.warn(JSON.stringify(current))
-    
+        //console.warn(JSON.stringify(current))
+
         const upgradeForm = new ActionFormData()
             .title("%upgrade.title")
             .body("%upgrade.body")
@@ -224,13 +243,37 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
         for (const [key, value] of Object.entries(current)) {
             upgradeForm.button(`${key} ${Number(stats[key]) + value}\n${drawProgress(upgrades[keys.indexOf(key)], tower.towerEntry.level)}`)
         }
-    
+        const upgraded = Object.keys(current).map((key) => {
+            return !(upgrades[keys.indexOf(key)] >= tower.towerEntry.level * 3)
+        })
+        const containsTrue = upgraded.find(x => x)
+        if (!containsTrue && (3 > tower.towerEntry.level) && tower.towerEntry.level <= tier) upgradeForm.button("Upgrade Tier")
+
         const res = await upgradeForm.show(player)
         if (res.canceled) { player.isBussy = false; return }
         const selection = res.selection
         const inDb = db.find(x => {
             return (x.location == interacted.location)
         })
+
+        if (!containsTrue && (3 > tower.towerEntry.level) && tower.towerEntry.level <= tier) {
+            const keys = Object.keys(tower.tower.structures)
+            const structureId = keys[tower.towerEntry.level]
+            const prevId = keys[tower.towerEntry.level - 1]
+            const size = tower.tower.structures[structureId]
+            const prevSize = tower.tower.structures[prevId]
+            const offset = { x: Math.abs((size[0] / 2) - (prevSize[0] / 2)), y: 0, z: Math.abs((size[1] / 2) - (prevSize[1] / 2)) }
+            const location = Vector.subtract(tower.towerEntry.location, offset)
+            const { x, y, z } = location
+            //const intercect = !!checkInterfearance(interacted, size)
+            await player.runCommandAsync(`structure load ${structureId} ${x} ${y} ${z} 0_degrees none`)
+            inDb.level += 1
+            inDb.size = size
+            inDb.location = location
+            db[0] = inDb
+            player.isBussy = false
+            return
+        }
         if (inDb.statsLevel[selection] + 1 > tower.towerEntry.level * 3) {
             console.warn("Max")
             player.isBussy = false

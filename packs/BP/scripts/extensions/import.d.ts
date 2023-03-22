@@ -90,6 +90,7 @@ declare global {
     var coins: number;
     var objectives: { [key: string]: mc.ScoreboardObjective };
     var sleep: (delay: number) => Promise<void>;
+    var tier: number
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {
         // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
         next(...args: [] | [TNext]): IteratorResult<T, TReturn>;

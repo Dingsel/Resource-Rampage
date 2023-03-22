@@ -68,8 +68,8 @@ assign(globalThis, {
     errorHandle: er=>console.error(er,er?.stack??""),
     system, world, events,
     worldInitialized: new Promise(res=>events.worldInitialize.subscribe(res)), overworld, nether, theEnd,
-    gameInitialized: new Promise(res=>system.events.gameInitialize.subscribe(res))
-
+    gameInitialized: new Promise(res=>system.events.gameInitialize.subscribe(res)),
+    tier: 3
 });
 
 console.logLike = console.log;
