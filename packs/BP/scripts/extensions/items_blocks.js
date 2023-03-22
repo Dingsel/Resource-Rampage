@@ -5,7 +5,10 @@ setProperties(ItemStack.prototype, {
     enchantments: {
         get() { return this.getComponent('enchantments').enchantments; },
         set(enchs) { return this.getComponent('enchantments').enchantments = enchs; }
-    }
+    },
+    setNameTag:{value(n){this.nameTag = n;return this;}},
+    setLockMode:{value(n){this.lockMode = n;return this;}},
+    setKeepOnDeath:{value(n){this.keepOnDeath = n;return this;}}
 });
 Enchantment.Custom = Enchantment.Custom??{};
 setProperties(Block.prototype, {

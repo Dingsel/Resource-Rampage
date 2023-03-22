@@ -1,3 +1,5 @@
+import { ItemLockMode, ItemStack } from "@minecraft/server";
+
 const TowerTypes = {
     IgniteImpulse:"ignite",
     ShootingOne:"shoot"
@@ -33,5 +35,10 @@ const InfoMapProperties = {
     level:"level",
     kills:"kills"
 }
-const SettingsItemId = 'minecraft:stick';
-export {TowerLevelDefinition,InfoMapProperties,TowerTypes,SettingsItemId};
+export const MenuItemNameTag = "§l§hMenu";
+export const MenuItemStacks = {
+    Menu:new ItemStack("dest:menu").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
+    TowerEditor:new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
+    WallBuilder:new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot)
+}
+export {TowerLevelDefinition,InfoMapProperties,TowerTypes};

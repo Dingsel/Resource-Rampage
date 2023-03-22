@@ -1,0 +1,17 @@
+{
+    "format_version": "1.19.50",
+    "minecraft:item": {
+        "description": {
+            "identifier": "dest:edit_pickaxe"
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "dest.edit_pickaxe"
+            },
+            "minecraft:foil": true,
+            "minecraft:hand_equipped": true,
+            "minecraft:max_stack_size": 1,
+            "minecraft:can_destroy_in_creative": false
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import { ItemLockMode, Player } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { Informations, Settings } from "gameplay/forms/import";
-import { InfoMapProperties, SettingsItemId } from "resources";
+import { InfoMapProperties, MenuItemNameTag } from "resources";
 
 Player.prototype.itemAction = defualtAction;
 
@@ -21,7 +21,7 @@ const onSettings = [
 async function defualtAction(){
     const {mainhand} = this;
     const item = mainhand.getItem();
-    if(item.typeId == SettingsItemId && item.lockMode == ItemLockMode.slot && item.keepOnDeath){
+    if(item.nameTag==MenuItemNameTag && item.lockMode == ItemLockMode.slot && item.keepOnDeath){
         const {output} = await Settings.show(this);
         await onSettings[output]?.(this);
     }
