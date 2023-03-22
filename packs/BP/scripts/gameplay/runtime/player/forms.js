@@ -1,6 +1,7 @@
 import { ItemLockMode, Player } from "@minecraft/server";
+import { ActionFormData } from "@minecraft/server-ui";
 import { Informations, Settings } from "gameplay/forms/import";
-import { SettingsItemId } from "resources";
+import { InfoMapProperties, SettingsItemId } from "resources";
 
 Player.prototype.itemAction = defualtAction;
 
@@ -26,11 +27,32 @@ async function defualtAction(){
     }
 }
 async function walls(player){
+}
+async function onTowerSelect(player,towerId){
 
 }
+async function buyTower(player){
+    console.log("buy tower")
+}
 async function towers(player){
+    const actions = [];
+    const towers = await global.session.getTowerIDsAsync(); 
+    towers.forEach(()=>actions.push(onTowerSelect));
+    const form = new ActionFormData().title('form.towers.title')
+    .body(`§hTowers: §7 ${towers.length}§8/§710`);
+    if(towers.length<10){
+        actions.push(buyTower)
+        form.button('§2§lBuy New')
+    }
+    form.button('form.close');
+    const {output} = await form.show(player);
+    actions[output]?.(player,towers[output]);
     player.sendMessage("towers page");
 }
 async function informations(player){
-    Informations.body(`${player.nameTag}`).show(player);
+    let text = "";
+    text += `§hCastel Level: §7${global.infoMap.get(InfoMapProperties.level)}\n`;
+    text += `§hCastel Coins: §g${global.infoMap.get(InfoMapProperties.coins).unitFormat(1)} §2$\n`;
+    text += `§hMob Kills: §7${global.infoMap.get(InfoMapProperties.kills)}\n`;
+    Informations.body(text).show(player);
 }

@@ -1,5 +1,3 @@
-import { ImpulseParticlePropertiesBuilder } from "utilities/import.js";
-
 const TowerTypes = {
     IgniteImpulse:"ignite",
     ShootingOne:"shoot"

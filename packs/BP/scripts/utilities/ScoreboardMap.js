@@ -34,7 +34,7 @@ export class ScoreboardMap extends Map{
     }
     /**@param {string} key @param {number?} score @returns {CommandResult}  */
     addAsyncNoUpdate(key, score = 0){
-        return overworld.runCommandAsync(`scoreboard players add "${key.replaceAll('"','\\"')}" "$${this.#objective.id}" ${score}`);
+        return overworld.runCommandAsync(`scoreboard players add "${key.replaceAll('"','\\"')}" "${this.#objective.id}" ${score}`);
     }
     update(){
         this.clear();

@@ -6,9 +6,9 @@ export const Settings = new ActionFormData()
 .button('Informations')
 .button('Towers',"textures/icons/mageTower_1.png")
 .button('Build wall')
-.button('§4Close')
+.button('form.close')
 
 
 export const Informations = new ActionFormData()
 .title('from.informations.title')
-.button('§4Close')
+.button('form.close')
