@@ -1,5 +1,5 @@
 import { GameMode, MinecraftEntityTypes, MolangVariableMap, Player, system, Vector, world, World } from "@minecraft/server";
-import { force1, force2 } from "resources/game";
+import { } from "resources/game";
 import { ImpulseParticlePropertiesBuilder, SquareParticlePropertiesBuilder } from "utilities/MolangVariableMaps";
 
 
@@ -16,6 +16,4 @@ events.entityDie.subscribe(async ({ deadEntity }) => {
     deadEntity.setSpawn(location, dimension);
     await sleep(10);
     // console.log(deadEntity.mainhand.getLore().length);
-    dimension.spawnParticle(`dest:ignite_impulse`, location, force1);
-    dimension.spawnParticle(`dest:ignite_impulse`, location, force2);
 }, { entityTypes: [MinecraftEntityTypes.player.id] })
