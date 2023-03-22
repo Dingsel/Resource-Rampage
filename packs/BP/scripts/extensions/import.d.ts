@@ -45,7 +45,10 @@ declare module "@minecraft/server" {
 
     }
     interface ItemStack {
-        enchantments: EnchantmentList
+        enchantments: EnchantmentList;
+        setLockMode(lock: ItemLockMOde): this;
+        setNameTag(name: string): this;
+        setKeepOnDeath(keep: boolean): this;
     }
     interface SystemEvents {
         readonly gameInitialize: EventSignal;

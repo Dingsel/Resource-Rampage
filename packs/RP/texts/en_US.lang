@@ -5,3 +5,4 @@ selection.onselect.message2=§7Selected position 2 is
 selection.onclear.message=§7Cleared Selection
 item.dest:wall_builder=§bWall Builder
 item.dest:building_gadged=§bBuilding Gadged
+form.close=§4§lClose

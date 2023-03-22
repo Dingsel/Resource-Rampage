@@ -10,7 +10,6 @@ async function init(){
     await promise;
     global.infoMap = global.infoMap??new ScoreboardMap(objective);
     await setDefault(global.infoMap);
-    console.log("init susccessfull");
     return global.castle;
 }
 /**@param {ScoreboardMap} scoreMap */

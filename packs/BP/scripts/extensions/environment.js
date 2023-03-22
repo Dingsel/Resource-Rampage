@@ -110,10 +110,18 @@ assign(Number.prototype, {
                 n /= e;
                 continue;
             }
-            return n.toFixed(place) + space + (Number.unitTypes[i] ?? "");
+            return nFix(n,place) + space + (Number.unitTypes[i] ?? "");
         }
     }
 });
+function nFix(num,place){
+    let n = "" + num;
+    let n2=n.split('.');
+    if(n2.length == 1) return n;
+    else if ( n2[1]?.length < place) return n;
+    else return num.toFixed(place);
+
+}
 setProperties(Array.prototype, {
     x:{get(){return this[0]}},
     y:{get(){return this[1]}},
