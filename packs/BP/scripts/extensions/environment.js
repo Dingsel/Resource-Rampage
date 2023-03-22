@@ -77,7 +77,6 @@ console.log = console.warn;
 setProperties(globalThis, {
     nextTick: { get() { return new Promise(res => setTimeout(() => res(system.currentTick + 1))); } },
     currentTick: { get() { return system.currentTick; } },
-    coins: { get() { return global.castle.getCoins(); }, set(v) { global.castle.setCoins(v); } },
     objectives: {
         get() {
             return new Proxy(scoreboard, {

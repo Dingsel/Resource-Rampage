@@ -1,3 +1,4 @@
+import { InfoMapProperties } from "resources";
 import { GameDatabase } from "utils";
 
 const {
@@ -12,11 +13,10 @@ system.events.gameInitialize.subscribe(() => {
 
             player.onScreenDisplay.setTitle([
                 ``,
-                `Coins: ${coins}`
+                `Coins: ${global.infoMap.get(InfoMapProperties.coins)}`
             ].join('\n'))
 
         }
-    }, 1)
+    }, 15)
 });
-
 export { };

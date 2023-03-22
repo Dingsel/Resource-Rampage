@@ -1,9 +1,9 @@
-export * from './castle.js';
+export * from './infomap.js';
 export * from './enchantments_load.js';
 export * from './database.js';
 export * from './towers.js';
 
-const modules = ["./database.js","./castle.js","./enchantments_load.js","./towers.js"];
+const modules = ["./database.js","./infomap.js","./enchantments_load.js","./towers.js"];
 async function Initialization(){
     const a = [];
     for (const m of modules) a.push((await import(m)).promise);
@@ -15,8 +15,8 @@ async function Initialization(){
         } else values.push(value);
     }
     global.initialized = true;
-    const [database, castle ] = values;
-    await system.events.gameInitialize.trigger(database,castle);
+    const [database ] = values;
+    await system.events.gameInitialize.trigger(database);
     console.log("Susccessfully Initialized");
 }
 export const promise = Initialization().catch(errorHandle);

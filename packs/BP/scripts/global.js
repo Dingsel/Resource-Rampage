@@ -1,6 +1,6 @@
-import { GameDatabase, SessionGameElement } from 'utils';
+import { GameDatabase, ScoreboardMap, SessionGameElement } from 'utils';
 
-/**@type {{castle:import('utilities/import').Castle,initialized:boolean, session:SessionGameElement,database:GameDatabase}}*/
+/**@type {{castle:import('utilities/import').Castle,initialized:boolean,infoMap: ScoreboardMap, session:SessionGameElement,database:GameDatabase}}*/
 const global = globalThis.global??{
     initialized:false
 };

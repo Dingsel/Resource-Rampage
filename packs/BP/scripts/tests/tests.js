@@ -2,7 +2,7 @@ import { MinecraftBlockTypes, MinecraftEnchantmentTypes, ScriptEventCommandMessa
 import { ActionFormData } from '@minecraft/server-ui';
 import { buildWall, path } from "gameplay/building/index.js";
 import { x_enchantments } from "gameplay/initializations/enchantments_load";
-import { level_1 } from "resources/wall_definitions";
+import { level_1 } from "resources";
 
 //please use sneak_case format for test names
 

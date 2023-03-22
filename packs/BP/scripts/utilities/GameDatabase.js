@@ -1,95 +1,8 @@
+import { ElementDatabase, Element } from './ElementDatabase.js';
 import { ScoreboardObjective } from '@minecraft/server';
-import {Database} from './ObjectiveDatabase.js';
 
 const gameKey = "session_id";
 const {scoreboard} = world;
-
-export class DisposableHandle{
-    #disposed;
-    #onUpdate;
-    #onDispose;
-    constructor(onUpdate, onDispose){
-        this.#disposed = false;
-        this.#onUpdate = onUpdate;
-        this.#onDispose = onDispose;
-    }
-    async update(){
-        if(this.isDisposed) throw new ReferenceError("This object handle is disposed, you can´t update it.");
-        else return await this.#onUpdate(this);
-    }
-    dispose(){
-        const close = this.#onDispose;
-        this.#disposed = true;
-        this.#onUpdate = undefined;
-        this.#onDispose = undefined; 
-        close?.(this);
-    }
-    get isDisposed(){return this.#disposed};
-}
-
-export class ElementDatabase extends Database{
-    #elements;
-    constructor(objective){
-        if(typeof objective == 'string') objective = scoreboard.getObjective(objective)??scoreboard.addObjective(objective,objective);
-        if(!objective instanceof ScoreboardObjective) throw new TypeError("Is not instanceof of ScoreboardObjective");
-        super(objective);
-        this.#elements = new Map();
-    }
-    async createElement(value,construct = Element){
-        const uid = Number.createUID();
-        await this.set(uid,value);
-        const element = new construct(this,uid);
-        this.#elements.set(uid,element);
-        return element;
-    }
-    getElement(elementId,construct = Element){
-        if(!this.has(elementId)) throw new ReferenceError(`Element for id: ${elementId} does not exist.`);
-        if(this.#elements.has(elementId)){return this.#elements.get(elementId);}
-        else{
-            this.#elements.set(elementId, new construct(this,elementId));
-            return this.#elements.get(elementId);
-        }
-    }
-    hasElement(elementId){return this.has(elementId);}
-    async delete(elementId){
-        if(this.#elements.has(key)) {
-            this.#elements.get(key).dispose();
-            this.#elements.delete(key);
-        }
-        return super.delete(elementId);
-    }
-    async deleteElement(elementId){return await this.delete(elementId);}
-}
-
-export class Element extends DisposableHandle{
-    #data;
-    #id;
-    #database;
-    /**@param {ElementDatabase} elementDatase @param {string} elementId */
-    constructor(elementDatase, elementId){
-        super(
-            async ()=>{await elementDatase.set(elementId,this.#data);},
-            ()=>{this.#database = undefined;}
-        );
-        this.#database = elementDatase;
-        this.#id = elementId;
-        this.#data = elementDatase.get(elementId);
-    }
-    get(key){return this.#data[key];}
-    has(key){return Object.prototype.hasOwnProperty.call(this.#data,key);}
-    async set(key,value){this.#data[key] = value; await this.update();}
-    async delete(key){this.#data[key] = undefined; await this.update();}
-
-    getId(){return this.#id;}
-    getDatabase(){return this.#database;}
-    async setData(value){this.#data = value; return await this.update(); }
-    getData(){return this.#data;}
-    async getDefault(property, defaultValue=0){
-        if(!this.has(property)) await this.set(property,defaultValue);
-        return this.get(property);
-    }
-}
-
 
 export class GameDatabase extends ElementDatabase{
     static async Start(objective){
@@ -197,28 +110,7 @@ export class TowerElement extends Element{
     }
 }
 export class SessionGameElement extends Element{
-    /**@returns {number} */
-    getCurrentLevel(){return this.get("level")??0;}
-    /** @param {number} number @returns {Promise<void>} */
-    async setCurrentLevelAsync(number){await this.set("level",number)}
-
-
-    /**@returns {number} */
-    getMobsKilled(){return this.get("killed")??0;}
-    /** @param {number} number @returns {Promise<void>} */
-    async setMobsKilledAsync(number){await this.set("killed",number)}
-
-    
-    /**@returns {number} */
-    getMobsKilled(){return this.get("killed")??0;}
-    /** @param {number} number @returns {Promise<void>} */
-    async setMobsKilledAsync(number){await this.set("killed",number)}
-
-
-
     /**@returns {Promise<number>} */
     async getTowerIDsAsync(){return [...await this.getDefault("towers",[])];}
     get time(){system.currentTick*50;}
 }
-
-

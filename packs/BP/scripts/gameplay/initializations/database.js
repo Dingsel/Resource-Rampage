@@ -3,7 +3,6 @@ import { promise } from './base.js';
 
 const {scoreboard} = world;
 const game_db_key = "world_db", loadPromise = GameDatabase.Start(game_db_key);
-let database = null;
 
 async function loadDB(){
     await promise;

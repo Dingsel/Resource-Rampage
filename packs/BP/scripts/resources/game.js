@@ -26,6 +26,10 @@ const TowerLevelDefinition = {
         maxInterval:3
     }
 }
+const InfoMapProperties = {
+    coins:"coins",
+    level:"level",
+    kills:"kills"
+}
 
-
-export {TowerLevelDefinition};
+export {TowerLevelDefinition,InfoMapProperties};
