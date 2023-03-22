@@ -1,5 +1,6 @@
 import { ScreenDisplay } from "@minecraft/server";
-import { TowerDefenition } from "gameplay/building";
+import { InfoMapProperties } from "resources";
+//import { TowerDefenition } from "gameplay/building";
 import { GameDatabase } from "utils";
 
 const {
@@ -14,7 +15,7 @@ system.events.gameInitialize.subscribe(() => {
 
             player.onScreenDisplay.setTitle([
                 ``,
-                `Coins: ${coins}`
+                `Coins: ${global.infoMap.get(InfoMapProperties.coins)}`
             ].join('\n'))
 
             const { onScreenDisplay, nameTag, scores, selectedTower } = player;
@@ -33,7 +34,7 @@ async function setDisplay(screen, playerInfo) {
     assign(this, {
         setTitle:[
             , ,
-            `§gCoin${coins > 1 ? 's' : ''}§8:§r ${coins.unitFormat(1, '§g')}`,
+            `§gCoin${global.infoMap.get(InfoMapProperties.coins) > 1 ? 's' : ''}§8:§r ${global.infoMap.get(InfoMapProperties.coins).unitFormat(1, '§g')}`,
             ``,
         ],
         setActionBar: [
@@ -43,7 +44,7 @@ async function setDisplay(screen, playerInfo) {
     for (const k in this) screen[k](this[k].join('\n'))
     return true;
 }
-const d = GameDatabase.getDatabase(objectives.gameplay).entries()
+///const d = GameDatabase.getDatabase(objectives.gameplay).entries() -> this could broke whole system please use global.infoMap or global.databse
 // print(stringify(d))
 
 export { };

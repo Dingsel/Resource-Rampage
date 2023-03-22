@@ -90,7 +90,6 @@ declare global {
     var nextTick: Promise;
     var currentTick: number;
     var run: PromiseConstructor['prototype']['then'];
-    var coins: number;
     var objectives: { [key: string]: mc.ScoreboardObjective };
     var sleep: (delay: number) => Promise<void>;
     var tier: number
