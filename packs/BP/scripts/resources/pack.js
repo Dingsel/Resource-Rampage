@@ -1,3 +1,8 @@
+export const Textures = {
+    IconTowers:"textures/icons/mageTower_1.png",
+    IconWall:"textures/icons/walls.png",
+}
+
 export const EntityIds = {
     coin: "dest:coin",
     database: "dest:database"
