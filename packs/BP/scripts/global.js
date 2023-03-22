@@ -1,4 +1,6 @@
-/**@type {{castle:import('utilities/import').Castle,initialized:boolean}}*/
+import { GameDatabase, SessionGameElement } from 'utils';
+
+/**@type {{castle:import('utilities/import').Castle,initialized:boolean, session:SessionGameElement,database:GameDatabase}}*/
 const global = globalThis.global??{
     initialized:false
 };

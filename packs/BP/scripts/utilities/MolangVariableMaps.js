@@ -72,15 +72,16 @@ export class DefaultParticlePropertiesBuilder extends DestParticleProperties{
     }
 }
 export class ImpulseParticlePropertiesBuilder extends DefaultParticlePropertiesBuilder{
-    constructor(radius = 5){
+    constructor(radius = 5, power = 1){
         super();
         this.setScale(0.2);
-        this.setRadius(radius);
+        this.setRadius(radius, power);
     }
     /**@param {number} radius @returns {this} */
-    setRadius(radius){
+    setRadius(radius,power = 1){
         this.setAmount(radius * 15);
-        this.setSpeed(radius);
+        this.setSpeed(radius * power);
+        this.setDynamicMotion(power)
         return this.setLifeTime(5 + radius/5);
     }
 }

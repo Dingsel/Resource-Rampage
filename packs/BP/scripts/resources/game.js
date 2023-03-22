@@ -1,7 +1,31 @@
 import { ImpulseParticlePropertiesBuilder } from "utilities/import.js";
 
-const map = new ImpulseParticlePropertiesBuilder(5);
-export const force1 = map.variableMap;
-export const force2 = map.setSpeed(20).setDynamicMotion(4).setLifeTime(3).variableMap;
+const TowerLevelDefinition = {
+    maxLevel: 3,
+    rangePerLevel: 5,
+    rangeOffset: 2,
+    intervalLevelInflation: 30,
+    baseIntervalDelay: 450,
+    impulseLevelDelay: 10,
+    1:{
+        maxPower:5,
+        maxKnockback:2,
+        maxDamage:0,
+        maxInterval:3
+    },
+    2:{
+        maxPower:6,
+        maxKnockback:3,
+        maxDamage:2,
+        maxInterval:3
+    },
+    3:{
+        maxPower:7,
+        maxKnockback:5,
+        maxDamage:4,
+        maxInterval:3
+    }
+}
 
-export {};
+
+export {TowerLevelDefinition};
