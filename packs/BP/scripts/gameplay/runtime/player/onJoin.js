@@ -1,6 +1,7 @@
 import { ItemLockMode, ItemStack } from "@minecraft/server";
+import { SettingsItemId } from "resources";
 
-const item = new ItemStack('stick');
+const item = new ItemStack(SettingsItemId);
 item.lockMode = ItemLockMode.slot;
 item.keepOnDeath = true;
 
