@@ -1,8 +1,10 @@
 import { GameDatabase, ScoreboardMap, SessionGameElement } from 'utils';
+import { config } from 'config';
 
-/**@type {{castle:import('utilities/import').Castle,initialized:boolean,infoMap: ScoreboardMap, session:SessionGameElement,database:GameDatabase}}*/
+/**@type {{castle:import('utilities/import').Castle,initialized:boolean,config:typeof config, infoMap: ScoreboardMap, session:SessionGameElement,database:GameDatabase}}*/
 const global = globalThis.global??{
-    initialized:false
+    initialized:false,
+    config
 };
 globalThis.global = global;
 export { global };

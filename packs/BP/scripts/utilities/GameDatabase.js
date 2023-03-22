@@ -1,9 +1,44 @@
+import { TowerTypes } from 'resources.js';
 import { ElementDatabase, Element } from './ElementDatabase.js';
 import { ScoreboardObjective } from '@minecraft/server';
 
 const gameKey = "session_id";
 const {scoreboard} = world;
 
+export class TowerElement extends Element{
+    getTowerId(){return this.getId();}
+    getTowerType(){return this.get("type")??TowerTypes.IgniteImpulse}
+    /**@returns {string} */
+    getTowerName(){ return this.get("name")??"";}
+    /**@param {string} name */
+    async setTowerNameAsync(name){ await this.set("name",name); }
+    /**@returns {import('@minecraft/server').Vector3?} */
+    getTowerLocation(){ return this.get("location")}
+    /**@param {import('@minecraft/server').Vector3} position */
+    async setTowerLocationAsync(position){ await this.set("location",position); }
+    /**@returns {number} */
+    getAttackInterval(){ return this.get("interval")??1;}
+    /**@param {number} interval */
+    async setTowerAttackIntervalAsync(interval){ await this.set("interval",interval); }
+    /**@returns {number} */
+    getTowerLevel(){ return this.get("level")??1;}
+    /**@param {number} level */
+    async setTowerLevelAsync(level){ await this.set("level",level); }
+    /**@returns {number} */
+    getTowerRadius(){ return this.get("radius")??1;}
+    /**@param {number} radius */
+    async setTowerLevelAsync(radius){ await this.set("radius",radius); }
+    /**@returns {number} */
+    getTowerDamage(){ return this.get("damage")??1;}
+    /**@param {number} damage */
+    async setTowerLevelAsync(damage){ await this.set("damage",damage); }
+    /**@returns {number} */
+    getTowerKnockback(){ return this.get("knockback")??0;}
+    /**@param {number} knockback */
+    async setTowerKnockbackAsync(knockback){ await this.set("knockback",knockback); }
+
+}
+export class IgniteTowerElement extends TowerElement{}
 export class GameDatabase extends ElementDatabase{
     static async Start(objective){
         if(typeof objective == 'string') objective = scoreboard.getObjective(objective)??scoreboard.addObjective(objective,objective);
@@ -44,7 +79,7 @@ export class GameDatabase extends ElementDatabase{
         await session.set("towers",towers);
         return tower;
     }
-    /**@param {Promise<TowerElement>} */
+    /**@returns {Promise<TowerElement>}*/
     async getTowerAsync(towerId){
         if(!await this.hasTower(towerId)) throw new ReferenceError("No tower found with id: " + towerId);
         else return this.getElement(towerId,TowerElement);
@@ -58,56 +93,6 @@ export class GameDatabase extends ElementDatabase{
         }
     }
     getSessionId(){return this.#id;}
-}
-export class TowerElement extends Element{
-    getTowerId(){return this.getId();}
-
-    /**@returns {string} */
-    getTowerName(){ return this.get("name")??"";}
-    /**@param {string} name */
-    async setTowerNameAsync(name){ await this.set("name",name); }
-
-
-    /**@returns {import('@minecraft/server').Vector3?} */
-    getTowerLocation(){ return this.get("location")}
-    /**@param {import('@minecraft/server').Vector3} position */
-    async setTowerLocationAsync(position){ await this.set("location",position); }
-
-    
-    /**@returns {number} */
-    getTowerPower(){ return this.get("power")??1;}
-    /**@param {number} power */
-    async setTowerPowerAsync(power){ await this.set("power",power); }
-
-
-    /**@returns {number} */
-    getTowerInstantDamage(){ return this.get("damage")??0;}
-    /**@param {number} damage */
-    async setTowerInstantDamageAsync(damage){ await this.set("damage",damage); }
-
-    /**@returns {number} */
-    getTowerLevel(){ return this.get("level")??1;}
-    /**@param {number} level */
-    async setTowerLevelAsync(level){ await this.set("level",level); }
-
-    
-    /**@returns {number} */
-    getTowerKnockback(){ return this.get("knockback")??0;}
-    /**@param {number} knockback */
-    async setTowerKnockbackAsync(knockback){ await this.set("knockback",knockback); }
-
-
-    /**@returns {number} */
-    getTowerInterval(){ return this.get("interval")??1;}
-    /**@param {number} interval */
-    async setTowerIntervalAsync(interval){ await this.set("interval",interval); }
-
-
-    /**@returns {{location:import('@minecraft/server').Vector3?,power:number,damage:number,knockback:number,level:number,interval:number}} */
-    getRawInfo(){
-        const {location, power = 1, damage = 0, knockback = 0, level = 1, interval = 1} = this.getData();
-        return {location, power,damage,knockback,level,interval};
-    }
 }
 export class SessionGameElement extends Element{
     /**@returns {Promise<number>} */

@@ -1,5 +1,9 @@
 import { ImpulseParticlePropertiesBuilder } from "utilities/import.js";
 
+const TowerTypes = {
+    IgniteImpulse:"ignite",
+    ShootingOne:"shoot"
+}
 const TowerLevelDefinition = {
     maxLevel: 3,
     rangePerLevel: 5,
@@ -32,4 +36,4 @@ const InfoMapProperties = {
     kills:"kills"
 }
 
-export {TowerLevelDefinition,InfoMapProperties};
+export {TowerLevelDefinition,InfoMapProperties,TowerTypes};

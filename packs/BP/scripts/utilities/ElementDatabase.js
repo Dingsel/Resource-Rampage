@@ -41,6 +41,7 @@ export class ElementDatabase extends Database{
         this.#elements.set(uid,element);
         return element;
     }
+    /**@returns {Element} */
     getElement(elementId,construct = Element){
         if(!this.has(elementId)) throw new ReferenceError(`Element for id: ${elementId} does not exist.`);
         if(this.#elements.has(elementId)){return this.#elements.get(elementId);}
