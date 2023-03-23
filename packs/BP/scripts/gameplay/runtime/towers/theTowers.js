@@ -3,7 +3,7 @@ import { TowerLevelDefinition, TowerTypes } from "resources";
 import { ImpulseParticlePropertiesBuilder, TowerElement } from "utils";
 
 export async function InitTowers(){
-    setInterval(onReload,90);
+    setInterval(()=>onReload().catch(errorHandle),90);
 }
 export const Towers = {
     towers: new Map()
@@ -71,5 +71,5 @@ class IgniteTower extends Tower{
 }
 
 const contrusctors = {
-    [TowerTypes.IgniteImpulse]:IgniteTower
+    [TowerTypes.Mage]:IgniteTower
 }

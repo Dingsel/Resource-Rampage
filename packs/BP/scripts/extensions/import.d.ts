@@ -52,6 +52,7 @@ declare module "@minecraft/server" {
         setLockMode(lock: ItemLockMOde): this;
         setNameTag(name: string): this;
         setKeepOnDeath(keep: boolean): this;
+        setCanDestroy(blockTypes: string[]): this;
     }
     interface SystemEvents {
         readonly gameInitialize: EventSignal;

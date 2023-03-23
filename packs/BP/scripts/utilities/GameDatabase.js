@@ -7,7 +7,7 @@ const {scoreboard} = world;
 
 export class TowerElement extends Element{
     getTowerId(){return this.getId();}
-    getTowerType(){return this.get("type")??TowerTypes.IgniteImpulse}
+    getTowerType(){return this.get("type")??TowerTypes.Mage}
     /**@returns {string} */
     getTowerName(){ return this.get("name")??"";}
     /**@param {string} name */

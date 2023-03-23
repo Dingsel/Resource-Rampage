@@ -1,4 +1,4 @@
-import { ItemLockMode, ItemStack } from "@minecraft/server";
+import { ItemLockMode, ItemStack, MinecraftBlockTypes } from "@minecraft/server";
 import { ArcherTowerLevelStructure, MageTowerLevelStructure } from "./pack";
 
 export const TowerTypes = {
@@ -58,8 +58,9 @@ export const uiFormat = {
     }
 }
 export const MenuItemNameTag = "§l§hMenu";
+export const CanDestroy = MinecraftBlockTypes.getAllBlockTypes().map(n=>n.id);
 export const MenuItemStacks = {
-    Menu: new ItemStack("dest:menu").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
-    TowerEditor: new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
-    WallBuilder: new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot)
+    Menu: new ItemStack("dest:menu").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy),
+    TowerEditor: new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy),
+    WallBuilder: new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy)
 }

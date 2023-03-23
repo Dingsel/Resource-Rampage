@@ -1,6 +1,7 @@
 import { Block, BlockPermutation, Enchantment, ItemStack } from '@minecraft/server';
 
 const { defineProperties: setProperties } = Object;
+const _setCanDestroy = ItemStack.prototype.setCanDestroy;
 setProperties(ItemStack.prototype, {
     enchantments: {
         get() { return this.getComponent('enchantments').enchantments; },
@@ -8,7 +9,8 @@ setProperties(ItemStack.prototype, {
     },
     setNameTag:{value(n){this.nameTag = n;return this;}},
     setLockMode:{value(n){this.lockMode = n;return this;}},
-    setKeepOnDeath:{value(n){this.keepOnDeath = n;return this;}}
+    setKeepOnDeath:{value(n){this.keepOnDeath = n;return this;}},
+    setCanDestroy:{value(canDestroy){_setCanDestroy.call(this,canDestroy); return this;}}
 });
 Enchantment.Custom = Enchantment.Custom??{};
 setProperties(Block.prototype, {

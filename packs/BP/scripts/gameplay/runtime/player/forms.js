@@ -2,8 +2,8 @@ import { Block, ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Ve
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, TowerPicker, WallBuildSettings } from "gameplay/forms/import";
-import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerLevelDefinition, TowerLevelsDefinitions } from "resources";
-import { SquareParticlePropertiesBuilder } from "utils";
+import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerLevelDefinition, TowerLevelsDefinitions, TowerNames } from "resources";
+import { SquareParticlePropertiesBuilder, TowerElement } from "utils";
 
 const actionSymbol = Symbol('action');
 const mainDelay = 15;
@@ -232,14 +232,18 @@ async function towerEnd(player){
 }
 async function towers(player){
     const actions = [];
-    const towers = await global.session.getTowerIDsAsync(); 
+    const towers = [];
+    const ids = await global.session.getTowerIDsAsync(); 
     const form = new ActionFormData().title('form.towers.title')
-    .body(`§hTowers: §7 ${towers.length}§8/§7` + maxTowers);
-    for (const id of towers) {
-        form.button(id);
+    .body(`§hTowers: §7 ${ids.length}§8/§7` + maxTowers);
+    for (const id of ids) {
+        const tower = await global.database.getTowerAsync(id);
+        towers.push(tower);
+        const {x,y,z} = tower.getTowerLocation();
+        form.button(`Mage Tower§8: §2${x} §4${y} §t${z}\n§r§jLevel§8: §2§l${tower.getTowerLevel()}`);
         actions.push(onTowerSelect);
     }
-    if(towers.length<maxTowers){
+    if(ids.length<maxTowers){
         actions.push(startPickLocation)
         form.button('§2§lBuy New')
     }
@@ -247,9 +251,57 @@ async function towers(player){
     const {output} = await form.show(player);
     actions[output]?.(player,towers[output]);
 }
+/**@param {Player} player @param {TowerElement} tower */
 async function onTowerSelect(player,tower){
-    console.log("selected Tower: " + tower);
+    try {
+        const n = getTowerData(tower);
+        const info = new ActionFormData();
+        info.title('§tTower Informations');
+        let text = "";
+        text += `§hType: §7%${TowerNames[n.type]} \n`;
+        text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
+        text += `§hInterval: §a${n.interval/TowerLevelDefinition.baseIntervalDelay}\n§r`;
+        text += `§hPower: §a${n.power}\n`;
+        text += `§hRadius: §a${n.radius}\n`;
+        text += `§hDamage: §a${n.damage}\n`;
+        text += `§hLevel: §a${n.level}\n§r`;
+        info.body(text);
+        const canUp = canUpgreade(n);
+        if(canUp) info.button('form.upgrade');
+        info.button("form.close");
+        const {output, canceled} = await info.show(player);
+        if(canceled || output == (canUp?1:0)) return;
+        await upgreade(player,tower);
+
+    } catch (error) {
+        errorHandle(error);
+    }
 }
+async function upgreade(player,tower,data){
+    const info = new ActionFormData();
+    info.title('§tTower Informations');
+    let text = "";
+    text += `§hType: §7%${TowerNames[n.type]} \n`;
+    text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
+    text += `§hInterval: §a${n.interval/TowerLevelDefinition.baseIntervalDelay}\n§r`;
+    text += `§hPower: §a${n.power}\n`;
+    text += `§hRadius: §a${n.radius}\n`;
+    text += `§hDamage: §a${n.damage}\n`;
+    text += `§hLevel: §a${n.level}\n§r`;
+    info.body(text);
+    console.warn('upgrade')
+}
+function canUpgreade(data = getTowerData(null)){
+return true;
+}
+function getTowerData(tower){
+    const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=TowerLevelDefinition.baseIntervalDelay,type=TowerTypes.Mage} = tower.getData();
+    return {location,damage,knockback,level,power,interval,radius,type};
+}
+
+
+
+
 
 
 
