@@ -3,7 +3,7 @@ import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, TowerPicker, WallBuildSettings } from "gameplay/forms/import";
 import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerLevelDefinition, TowerLevelsDefinitions, TowerNames } from "resources";
-import { SquareParticlePropertiesBuilder, TowerElement } from "utils";
+import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 
 const actionSymbol = Symbol('action');
 const mainDelay = 15;
@@ -278,10 +278,10 @@ async function onTowerSelect(player,tower){
     }
 }
 async function upgreade(player,tower,data){
-    const info = new ActionFormData();
-    info.title('§tTower Informations');
+    const info = new MenuFormData();
+    info.title('§tTower Upgrades');
+    info.addAction(()=>{},``);
     let text = "";
-    text += `§hType: §7%${TowerNames[n.type]} \n`;
     text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
     text += `§hInterval: §a${n.interval/TowerLevelDefinition.baseIntervalDelay}\n§r`;
     text += `§hPower: §a${n.power}\n`;
@@ -291,8 +291,11 @@ async function upgreade(player,tower,data){
     info.body(text);
     console.warn('upgrade')
 }
+function maxUpgrades(data = getTowerData(null)){
+
+}
 function canUpgreade(data = getTowerData(null)){
-return true;
+    return true;
 }
 function getTowerData(tower){
     const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=TowerLevelDefinition.baseIntervalDelay,type=TowerTypes.Mage} = tower.getData();
