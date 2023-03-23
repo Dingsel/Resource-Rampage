@@ -3,7 +3,7 @@
     "hud_actionbar_text": {
         "type": "panel",
         "offset": [
-            7,
+            0,
             0
         ],
         "anchor_from": "left_middle",
@@ -14,18 +14,18 @@
                 "sidebar": {
                     "type": "image",
                     "size": [
-                        "100%c + 20px",
-                        "100%c + 8px"
+                        "100%c + 10px",
+                        "100%c"
                     ],
                     "texture": "textures/ui/background",
-                    "alpha": 0.6,
+                    "alpha": 0.8,
                     "controls": [
                         {
                             "title": {
                                 "type": "label",
                                 "offset": [
                                     0,
-                                    -4
+                                    -5
                                 ],
                                 "text_alignment": "left",
                                 "text": "$actionbar_text",
