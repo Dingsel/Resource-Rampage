@@ -9,5 +9,6 @@ Object.defineProperties(Vector, {
     }},
     dot:{value(a,b){
         const{x,y,z}=this.multiply(a,b);return x+y+z;
-    }}
+    }},
+    equals:{value(l1,l2){return l1.x==l2.x&&l1.y==l2.y&&l1.z==l2.z}}
 });

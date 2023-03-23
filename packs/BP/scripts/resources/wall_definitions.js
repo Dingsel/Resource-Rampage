@@ -61,3 +61,6 @@ export const level_1 = new WallDefiniton()
 export const definitions = {
     level_1
 };
+export const WallLevels = [
+    level_1
+]

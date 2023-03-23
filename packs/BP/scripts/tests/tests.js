@@ -1,6 +1,6 @@
 import { MinecraftBlockTypes, MinecraftEnchantmentTypes, ScriptEventCommandMessageEvent } from "@minecraft/server";
 import { ActionFormData } from '@minecraft/server-ui';
-import { buildWall, path } from "gameplay/building/index.js";
+import { buildWall, path } from "gameplay/building/import.js";
 import { x_enchantments } from "gameplay/initializations/enchantments_load";
 import { level_1 } from "resources";
 

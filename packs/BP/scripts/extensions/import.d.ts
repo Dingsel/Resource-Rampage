@@ -21,7 +21,10 @@ declare module "@minecraft/server" {
     interface Player {
         mainhand: ContainerSlot;
         gamemode: GameMode;
-        selectedTower?: TowerDefenition
+        selectedTower?: TowerDefenition;
+        readonly isOnline: boolean;
+        confirm(body:string, title?:string): Promise<boolean>
+        info(body: string, title?: string): Promise<ActionFormResponse>
     }
     interface World {
         readonly overworld: Dimension;
@@ -58,6 +61,7 @@ declare module "@minecraft/server" {
         var from: (loc: Vector3) => Vector
         var normalized: (loc: Vector3) => Vector
         var dot: (loc1: Vector3, loc2: Vector3) => Vector3
+        var equals:(loc1: Vector3, loc2: Vector3) => boolean
     }
 }
 declare module "@minecraft/server-ui" {

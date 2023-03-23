@@ -1,4 +1,5 @@
 import { Entity, Player, MolangVariableMap, GameMode } from '@minecraft/server';
+import { ActionFormData, MessageFormData } from '@minecraft/server-ui';
 
 const applyDamage = Entity.prototype.applyDamage, map = new MolangVariableMap(), { scoreboard } = world,
     { defineProperties, values } = Object, { from } = Array;
@@ -43,5 +44,31 @@ defineProperties(Player.prototype, {
         set(mode) {
             this.runCommandAsync("gamemode " + mode);
         }
-    }
+    },
+    confirm:{async value(body,title="form.confirm.title"){
+        const confirm = new MessageFormData();
+        confirm.body(body??"")
+        confirm.title(title)
+        confirm.button2("form.close");
+        confirm.button1("form.confirm.button");
+        const {output, canceled} = await confirm.show(this);
+        return (!canceled)&&(output==1);
+    }},
+    info:{async value(body,title="form.info.title"){
+        const info = new ActionFormData();
+        info.body(body??"")
+        info.title(title)
+        info.button("form.ok");
+        return info.show(this);
+    }},
+    isOnline:{get(){return this[isJoined];}}
+});
+const isJoined = Symbol('joined');
+Player.prototype[isJoined] = true;
+const joinedPlayers = new Map();
+world.events.playerSpawn.subscribe(({player,initialSpawn})=>{if(initialSpawn) { player[isJoined] = true; joinedPlayers.set(player.id,player);}});
+world.events.playerLeave.subscribe(({playerId})=>{
+    const player = joinedPlayers.get(playerId);
+    player[isJoined] = false;
+    joinedPlayers.delete(playerId);
 });

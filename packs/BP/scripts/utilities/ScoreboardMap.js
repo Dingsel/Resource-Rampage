@@ -14,7 +14,7 @@ export class ScoreboardMap extends Map{
     /**@param {string} key @param {number?} score @returns {number}  */
     set(key, score = 0){
         if(this.has(key)) {
-            this.#objective.setScore(super.get(key),value);
+            this.#objective.setScore(super.get(key),score);
             return score;
         }
     }

@@ -1,8 +1,30 @@
 pack.name=Resource Rampage RP
 pack.description=Resource Rampage
-selection.onselect.message1=§7Selected position 1 is
-selection.onselect.message2=§7Selected position 2 is
-selection.onclear.message=§7Cleared Selection
+
 item.dest:wall_builder=§bWall Builder
 item.dest:building_gadged=§bBuilding Gadged
+
+selection.start.message=§h§lPick Your Locations! Sneak and Click for deselecting current positions.
+selection.focusLost.message=§nYou are no longer holding selection tool.
+selection.onselect.message1=§hSelected position 1 is
+selection.onselect.message2=§hSelected position 2 is
+selection.onclear.message=§hPositions are deselected...
+selection.same.message=§nYou cant set two same positions
+
+gameplay.notCoins=§mYou don't have enough money, you need another
+
+construction.progress=§hConstruction is still in progress...
+construction.started=§aConstruction of your wall has start...
+construction.done=§aConstruction of your wall has finish...
+
+
+form.wallBuild.dropdown=§hSelect Wall Level
+
+form.confirm.title=§l§tThe Confirmation
+form.confirm.button=§l§2Confirm
+
+form.info.title=§l§sThe Information
+
 form.close=§4§lClose
+form.back=§4§lBack
+form.ok=§u§lOK
