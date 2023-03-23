@@ -35,10 +35,18 @@ const InfoMapProperties = {
     level:"level",
     kills:"kills"
 }
+const uiFormat = {
+    reset: "§_,§_,ui",
+    Bold: "§l",
+    Italic: "§o",
+    Obfuscated: "§k",
+    Special: "§´",
+    color: { "§_§rNormal": "§_§r", "§1Dark Blue": "§1", "§9Blue": "§9", "§2Dark Green": "§2", "§aGreen": "§a", "§3Dark Aqua": "§3", "§bAqua": "§b", "§4Dark Red": "§4", "§cRed": "§c", "§5Purple": "§5", "§dMagenta": "§d", "§6Gold": "§6", "§eYellow": "§e", "§gMinecoin Gold": "§g","§nBrown":"§n", "§0Black": "§0", "§8Dark Gray": "§8", "§7Gray": "§7", "§fWhite": "§f" }
+}
 export const MenuItemNameTag = "§l§hMenu";
 export const MenuItemStacks = {
     Menu:new ItemStack("dest:menu").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
     TowerEditor:new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
     WallBuilder:new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot)
 }
-export {TowerLevelDefinition,InfoMapProperties,TowerTypes};
+export {TowerLevelDefinition,InfoMapProperties,TowerTypes, uiFormat};

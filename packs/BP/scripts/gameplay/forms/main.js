@@ -7,6 +7,7 @@ export const Settings = new ActionFormData()
 .button('Informations')
 .button('Towers',Textures.IconTowers)
 .button('Build New Wall', Textures.IconWall)
+.button('UI Settings', Textures.ColorPicker)
 .button('form.close')
 
 export const WallBuildSettings = new ModalFormData()

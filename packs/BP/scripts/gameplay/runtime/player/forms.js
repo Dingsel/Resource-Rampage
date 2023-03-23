@@ -1,8 +1,8 @@
 import { ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Vector } from "@minecraft/server";
-import { ActionFormData } from "@minecraft/server-ui";
+import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, WallBuildSettings } from "gameplay/forms/import";
-import { InfoMapProperties, MenuItemNameTag, MenuItemStacks, WallLevels } from "resources";
+import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels } from "resources";
 
 const actionSymbol = Symbol('action');
 const busy = Symbol('busy');
@@ -39,7 +39,8 @@ const EventTypes = {
 const onSettings = [
     informations,
     towers,
-    onWall
+    onWall,
+    uisettings
 ]
 /**@this {Player} */
 async function defualtAction(data,eventType){
@@ -175,4 +176,42 @@ async function towers(player){
     form.button('form.close');
     const {output} = await form.show(player);
     actions[output]?.(player,towers[output]);
+}
+
+/**@param {Player}player */
+async function uisettings(player) {
+    const reset = () => player.getTags().forEach(t => t.match(/,ui/) && player.removeTag(t))
+    const ui = player.getTags().find(t => t.match(/,ui/)) ?? ',,ui'
+    const [a, b] = ui.split(',')
+    new ActionFormData().title('pack.description')
+        .body(a + `Select an option below to customize this user interface as you please.`)
+        .button(a + `Titles & Buttons`, `textures/ui/mashup_PaintBrush`)
+        .button(a + `Content`, `textures/ui/text_color_paintbrush`)
+        .button(a.replace(/§k/g,'')+`Reset`, `textures/ui/recap_glyph_desaturated`)
+        .button(a + `Back`, `textures/ui/back_button_hover`)
+        .show(player).then(({ selection: S }) => {
+            if (S == 2) return reset(), player.addTag(uiFormat.reset)
+            if (S === 3) return player.itemAction(player)
+            return Apply(player, [a, b, 'ui'], S)
+        })
+
+}
+async function Apply(player, ui, num) {
+    const reset = () => player.getTags().forEach(t => t.match(/,ui/) && player.removeTag(t)),
+        [a,b]= ui, type = ui[num], Colours = uiFormat.color,
+        which = () => !num ? 'title & buttons' : 'content',
+        CLRS = Object.keys(Colours),
+        myClr = CLRS.findIndex(c => c.startsWith(type))
+    new ModalFormData().title(a.replace(/§k/g,'') + 'Customize ' + which())
+        .toggle(b + `§lBold`, type.includes('§l'))
+        .toggle(b + '§oItalic', type.includes('§o'))
+        .toggle(b + `§kObfuscated`, type.includes('§k'))
+        .toggle(b + '§´Special', type.includes('§´'))
+        .dropdown(b + 'Color', CLRS, myClr)
+        .show(player).then(({ formValues, canceled }) => {
+            if (canceled) return;
+            let [b, i, o, s, cl] = formValues, clr = Colours[CLRS[cl]];
+            ui[num] = (b ? '§l' : '') + (i ? '§o' : '') + (o ? '§k' : '') + (s ? '§´' : '') + clr;
+            reset(); player.addTag(ui.join(','));
+        })
 }

@@ -1,7 +1,12 @@
 export const Textures = {
     IconTowers:"textures/icons/mageTower_1.png",
     IconWall:"textures/icons/walls.png",
+    ColorPicker: "textures/ui/color_picker",
+    PaintBrush: "textures/ui/mashup_PaintBrush",
+    ColorBrush: "textures/ui/text_color_paintbrush",
+    Reset: "textures/ui/recap_glyph_desaturated",
 }
+
 
 export const EntityIds = {
     coin: "dest:coin",
