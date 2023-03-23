@@ -1,8 +1,9 @@
-import { ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Vector } from "@minecraft/server";
+import { Block, ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, WallBuildSettings } from "gameplay/forms/import";
 import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures } from "resources";
+import { SquareParticlePropertiesBuilder } from "utils";
 
 const actionSymbol = Symbol('action');
 const busy = Symbol('busy');
@@ -77,14 +78,14 @@ async function wallStart(player){
     while(player.isOnline){
         await nextTick;
         if(player.selectedSlot != 8){
-            player.sendMessage('%selection.focusLost.message');
+            player.sendMessage('%selection.focusLost.message1');
             return await wallEnd(player);
         }
         if(player[loc1Symbol] && player[loc2Symbol]){
             player.container.setItem(8,MenuItemStacks.Menu);
             const {output,canceled} = await WallBuildSettings.show(player);
             if(canceled) return await wallEnd(player);
-            const cost = (output[0]+1) * (Vector.subtract(player[loc1Symbol], player[loc2Symbol]).length()-2) * 10;
+            const cost = (output[0]+1) * Vector.subtract(player[loc1Symbol], player[loc2Symbol]).length() * 10;
             if(cost > global.infoMap.get(InfoMapProperties.coins)){
                 player.info("%gameplay.notCoins §g" + (~~(cost - global.infoMap.get(InfoMapProperties.coins))).unitFormat(1) + " §2$");
                 return await wallEnd(player);
@@ -93,7 +94,7 @@ async function wallStart(player){
             if(confirm){
                 player.sendMessage("%construction.started");
                 global.infoMap.set(InfoMapProperties.coins,global.infoMap.get(InfoMapProperties.coins) - (~~cost))
-                player[actionSymbol] = async function(){console.log("test");return this.info("construction.progress");}
+                player[actionSymbol] = async function(){return this.info("construction.progress");}
                 await buildWall(player[loc1Symbol],player[loc2Symbol],WallLevels[output[0]]);
                 player.sendMessage("%construction.done");
             }
@@ -133,6 +134,11 @@ async function onUse(player, block, eventType) {
         player.sendMessage(`%selection.same.message`);
         return await sleep(15);
     }
+    const {x:x1,z:z1} = (eventType==EventTypes.entityHit?player[loc2Symbol]:player[loc1Symbol])??{x:-9999,z:-99999};
+    if(Vector.subtract({x,y:0,z},{x:x1,y:0,z:z1}).length() < 5){
+        player.sendMessage(`%selection.small.message`);
+        return await sleep(15);
+    }
     blockInUse.add(key);
     const perm = permutation;
     world.playSound('bubble.pop', { location, pitch: 0.6, volume: 1 });
@@ -158,10 +164,46 @@ async function onTowerSelect(player,towerId){
     console.log("on tower select");
 
 }
+const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.05);
+const variableMaps = {
+    allow: vMap.setColor({red:0.2,green:0.70,blue:0.32}).variableMap,
+    deny: vMap.setColor({red:0.70,green:0.2,blue:0.1}).variableMap
+}
+const rayCast = {maxDistance:20,includeLiquidBlocks:false,includePassableBlocks:false};
+/**@param {Player} player */
+async function startPickLocation(player){
+    player.container.setItem(8,MenuItemStacks.TowerEditor);
+    buyTower(player);
+}
+/**@param {Player} player */
 async function buyTower(player){
-    global.session
-    global.database
-    console.log("buy tower");
+    while(true){
+        await sleep(2);
+        if(player.selectedSlot != 8){
+            player.sendMessage('%selection.focusLost.message2');
+            return await towerEnd(player);
+        }
+        const block = player.getBlockFromViewDirection(rayCast);
+        if(!block) continue;
+        const area = await checkArea(block);
+        overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), area?variableMaps.allow:variableMaps.deny);
+    }
+}
+/**@param {Block} centerBlock */
+async function checkArea(centerBlock){
+    const {x:baseX,y,z:baseZ,dimension} = centerBlock;
+    for (let x = baseX - 2; x < baseX+3; x++) {
+        for (let z = baseZ - 2; z < baseZ + 3; z++) {
+            const b1 = dimension.getBlock({x,y,z});
+            const b2 = dimension.getBlock({x,y:y+1,z});
+            if(!(b1.isSolid() && (!b2.isLiquid() && !b2.isSolid()))) return false;
+        }
+    }
+    return true;
+}
+async function towerEnd(player){
+    delete player[actionSymbol];
+    if(player.isOnline) player.container.setItem(8,MenuItemStacks.Menu);
 }
 async function towers(player){
     const actions = [];
@@ -170,7 +212,7 @@ async function towers(player){
     const form = new ActionFormData().title('form.towers.title')
     .body(`§hTowers: §7 ${towers.length}§8/§710`);
     if(towers.length<10){
-        actions.push(buyTower)
+        actions.push(startPickLocation)
         form.button('§2§lBuy New')
     }
     form.button('form.close');
