@@ -165,7 +165,7 @@ const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.05);
 const variableMaps = {
     allow: vMap.setColor({red:0.2,green:0.7,blue:0.32}).variableMap,
     deny: vMap.setColor({red:0.7,green:0.2,blue:0.1}).variableMap,
-    place: vMap.setColor({red:0.6,green:0.5,blue:0.1}).setLifeTime(5).variableMap
+    place: vMap.setColor({red:0.6,green:0.5,blue:0.1}).setLifeTime(7).setDirection({x:0,y:1,z:0}).setSpeed(1).setDynamicMotion(0.5).variableMap
 }
 const running = Symbol('place');
 const rayCast = {maxDistance:20,includeLiquidBlocks:false,includePassableBlocks:false};
@@ -178,9 +178,10 @@ async function onPlace(data, eventType){
     else if(eventType== EventTypes.beforeItemUseOn) block = this.dimension.getBlock(data.getBlockLocation());
     else if(eventType== EventTypes.entityHit) block = data.hitBlock;
     if(!block) return await sleep(mainDelay);
-    const area = await checkArea(block);
+    if(!await checkArea(block)) return await sleep(mainDelay);
     delete this[running];
     overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
+    console.warn('place');
     await sleep(15);
 }
 
