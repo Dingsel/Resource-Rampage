@@ -4,10 +4,10 @@ import { GameDatabase } from "utils";
 
 const {
     parse, stringify, Array: { from: map, isArray }, Object: { assign }, n_, u,
-    InfoMapProperties: { coins: c, kills: k, level: lvl },
+    InfoMapProperties: { coins, kills, level },
     uiFormat: { Bold: bold, Italic: italic, Obfuscated: obfus, Special: special, color }
 } = {
-    parse: JSON.parse.bind(JSON), stringify: JSON.stringify.bind(JSON), Array, Object, n_: '\n',
+    parse: JSON.parse.bind(JSON), stringify: JSON.stringify.bind(JSON), Array, Object, n_: '§r\n',
     InfoMapProperties,
     uiFormat, u: function (n, a, s) { return n.unitFormat(a, s) }
 };
@@ -20,15 +20,16 @@ const wa = (a, b = 6) => {
 
 system.events.gameInitialize.subscribe(() => {
     setInterval(async ({ infoMap } = global) => {
-        const [coins, kills, level] = [infoMap.get(c), infoMap.get(k), infoMap.get(lvl)]
+        const [c, k, lvl] = [infoMap.get(coins), infoMap.get(kills), infoMap.get(level)]
 
         // wa({ coins, kills, level })
 
         for (const player of world.getPlayers()) {
+            player.applyImpulse()
             const { onScreenDisplay, nameTag, scores, selectedTower } = player;
             const ui = player.getTags().find(t => t.match(/,ui/)) ?? ','
             const playerInfo = { nameTag, scores, selectedTower, ui }
-            await setDisplay(onScreenDisplay, playerInfo, { coins, kills, level })
+            await setDisplay(onScreenDisplay, playerInfo, { c, k, lvl })
         }
     }, 10)
 });
@@ -39,17 +40,26 @@ system.events.gameInitialize.subscribe(() => {
  * @param {otherInfo} info
  * */
 async function setDisplay(screen, playerInfo, info) {
-    const { nameTag, ui } = playerInfo, { coins, kills, level } = info;
+    const { nameTag, ui } = playerInfo, { c, k, lvl } = info;
     const [a, b] = ui.split(',')
-    screen.setTitle([,
-        `${a}Coin${coins > 1 ? 's' : ''}§8:§r ${u(coins, 1, b)}`,
-        `${a}Kills§8:§r ${u(kills, 1, b)}`,
-        `${a}Level§8:§r ${u(level, 1, b)}`,
+    //left screen
+    await screen.setTitle([,
+        `${b+nameTag}`,
+        `${a}Coin${c > 1 ? 's' : ''}§8:§r ${u(c, 1, b)}`,
+        `${a}Kills§8:§r ${u(k, 1, b)}`,
+        `${a}Level§8:§r ${u(lvl, 1, b)}`
     ].join(n_))
+
+    //right screen
+    // await screen.setActionBar([,
+    //     `${b+nameTag}`,
+    //     `${u(c, 1, b)} §8:§r${a}Coin${c > 1 ? 's' : ''}`,
+    //     `${u(k, 1, b)}§8:§r${a}Kills`,
+    //     `${u(lvl, 1, b)}§8:§r${a}Level`
+    // ].join(n_))
     return true;
 }
-///const d = GameDatabase.getDatabase(objectives.gameplay).entries() -> this could broke whole system please use global.infoMap or global.databse
-// print(stringify(d))
+
 
 export { };
 
@@ -65,8 +75,8 @@ export { };
 
 /**
  * @typedef {Object} otherInfo
- * @property {number} coins
- * @property {number} kills
- * @property {number} level
+ * @property {number} c
+ * @property {number} k
+ * @property {number} lvl
  */
 
