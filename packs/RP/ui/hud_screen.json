@@ -3,11 +3,19 @@
     "hud_actionbar_text": {
         "type": "panel",
         "offset": [
+<<<<<<< HEAD
             7,
             0
         ],
         "anchor_from": "left_middle",
         "anchor_to": "left_middle",
+=======
+            -5,
+            0
+        ],
+        "anchor_from": "right_middle",
+        "anchor_to": "right_middle",
+>>>>>>> 2c521124ebb1e2e1036310717aa0f9da36b0facb
         "alpha": 1,
         "controls": [
             {
@@ -27,7 +35,11 @@
                                     0,
                                     -4
                                 ],
+<<<<<<< HEAD
                                 "text_alignment": "left",
+=======
+                                "text_alignment": "right",
+>>>>>>> 2c521124ebb1e2e1036310717aa0f9da36b0facb
                                 "text": "$actionbar_text",
                                 "layer": 1
                             }
