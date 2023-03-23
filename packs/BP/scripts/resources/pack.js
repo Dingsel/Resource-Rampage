@@ -5,6 +5,7 @@ export const Textures = {
     PaintBrush: "textures/ui/mashup_PaintBrush",
     ColorBrush: "textures/ui/text_color_paintbrush",
     Reset: "textures/ui/recap_glyph_desaturated",
+    Back: "textures/ui/back_button_hover",
 }
 
 

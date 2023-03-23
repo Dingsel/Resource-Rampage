@@ -1,11 +1,13 @@
 {
     "namespace": "hud",
-    "hud_title_text": {
+    "hud_actionbar_text": {
         "type": "panel",
         "offset": [
-            10,
+            7,
             0
         ],
+        "anchor_from": "left_middle",
+        "anchor_to": "left_middle",
         "alpha": 1,
         "controls": [
             {
@@ -15,8 +17,6 @@
                         "100%c + 20px",
                         "100%c + 8px"
                     ],
-                    "anchor_from": "left_middle",
-                    "anchor_to": "left_middle",
                     "texture": "textures/ui/background",
                     "alpha": 0.6,
                     "controls": [
@@ -28,43 +28,6 @@
                                     -4
                                 ],
                                 "text_alignment": "left",
-                                "text": "$title_text",
-                                "layer": 1
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    },
-    "hud_actionbar_text": {
-        "type": "panel",
-        "offset": [
-            -5,
-            0
-        ],
-        "anchor_from": "right_middle",
-        "anchor_to": "right_middle",
-        "alpha": 1,
-        "controls": [
-            {
-                "sidebar": {
-                    "type": "image",
-                    "size": [
-                        "100%c + 20px",
-                        "100%c + 8px"
-                    ],
-                    "texture": "textures/ui/background",
-                    "alpha": 0.6,
-                    "controls": [
-                        {
-                            "title": {
-                                "type": "label",
-                                "offset": [
-                                    0,
-                                    -4
-                                ],
-                                "text_alignment": "right",
                                 "text": "$actionbar_text",
                                 "layer": 1
                             }

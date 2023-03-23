@@ -25,7 +25,6 @@ system.events.gameInitialize.subscribe(() => {
         // wa({ coins, kills, level })
 
         for (const player of world.getPlayers()) {
-            player.applyImpulse()
             const { onScreenDisplay, nameTag, scores, selectedTower } = player;
             const ui = player.getTags().find(t => t.match(/,ui/)) ?? ','
             const playerInfo = { nameTag, scores, selectedTower, ui }
@@ -43,20 +42,13 @@ async function setDisplay(screen, playerInfo, info) {
     const { nameTag, ui } = playerInfo, { c, k, lvl } = info;
     const [a, b] = ui.split(',')
     //left screen
-    await screen.setTitle([,
+    screen.setActionBar([,
         `${b+nameTag}`,
         `${a}Coin${c > 1 ? 's' : ''}§8:§r ${u(c, 1, b)}`,
         `${a}Kills§8:§r ${u(k, 1, b)}`,
         `${a}Level§8:§r ${u(lvl, 1, b)}`
     ].join(n_))
 
-    //right screen
-    // await screen.setActionBar([,
-    //     `${b+nameTag}`,
-    //     `${u(c, 1, b)} §8:§r${a}Coin${c > 1 ? 's' : ''}`,
-    //     `${u(k, 1, b)}§8:§r${a}Kills`,
-    //     `${u(lvl, 1, b)}§8:§r${a}Level`
-    // ].join(n_))
     return true;
 }
 
