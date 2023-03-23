@@ -7,6 +7,7 @@ import { SquareParticlePropertiesBuilder } from "utils";
 
 const actionSymbol = Symbol('action');
 const mainDelay = 15;
+const maxTowers = 5;
 const busy = Symbol('busy');
 Player.prototype[actionSymbol] = defualtAction;
 
@@ -233,12 +234,12 @@ async function towers(player){
     const actions = [];
     const towers = await global.session.getTowerIDsAsync(); 
     const form = new ActionFormData().title('form.towers.title')
-    .body(`§hTowers: §7 ${towers.length}§8/§710`);
+    .body(`§hTowers: §7 ${towers.length}§8/§7` + maxTowers);
     for (const id of towers) {
         form.button(id);
         actions.push(onTowerSelect);
     }
-    if(towers.length<10){
+    if(towers.length<maxTowers){
         actions.push(startPickLocation)
         form.button('§2§lBuy New')
     }
