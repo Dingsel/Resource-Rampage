@@ -182,11 +182,13 @@ async function towers(player){
 
 
 
+
+
 /**@param {Player}player */
 async function uisettings(player) {
     const reset = () => player.getTags().forEach(t => t.match(/,ui/) && player.removeTag(t)),
         ui = player.getTags().find(t => t.match(/,ui/)) ?? ',,ui',
-        [a, b] = ui.split(','), { PaintBrush, ColorBrush, ColorPicker, Reset, Back } = Textures,
+        [a, b] = ui.split(','), { PaintBrush, ColorBrush, Reset, Back } = Textures,
         { output: S, canceled } = await new ActionFormData()
             .title('pack.description')
             .body(a + `Select an option below to customize this user interface as you please.`)
