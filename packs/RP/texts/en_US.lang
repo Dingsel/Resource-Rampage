@@ -12,6 +12,7 @@ selection.onselect.message2=§hSelected position 2 is
 selection.onclear.message=§hPositions are deselected...
 selection.same.message=§nYou cant set two same positions
 selection.small.message=§nThe distance from the previous position is too small, try again.
+selection.cantBuil.message=§nYou cant build here...
 
 gameplay.notCoins=§mYou don't have enough money, you need another
 

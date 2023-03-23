@@ -6,6 +6,7 @@ import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevel
 import { SquareParticlePropertiesBuilder } from "utils";
 
 const actionSymbol = Symbol('action');
+const mainDelay = 15;
 const busy = Symbol('busy');
 Player.prototype[actionSymbol] = defualtAction;
 
@@ -117,7 +118,7 @@ async function wallPickLocation(data,eventType){
         this.playSound('mob.shulker.close', { pitch: 0.3, volume: 0.7 });
         await sleep(3);
         this.sendMessage(`%selection.onclear.message`);
-        await sleep(15);
+        await sleep(mainDelay);
     } else if(eventType == EventTypes.entityHit && data.hitBlock){
         await onUse(this, data.hitBlock, eventType);
     } else if (eventType == EventTypes.beforeItemUseOn){
@@ -160,34 +161,48 @@ function formatXYZ({ x, y, z }) {
 
 
 
-async function onTowerSelect(player,towerId){
-    console.log("on tower select");
-
-}
 const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.05);
 const variableMaps = {
-    allow: vMap.setColor({red:0.2,green:0.70,blue:0.32}).variableMap,
-    deny: vMap.setColor({red:0.70,green:0.2,blue:0.1}).variableMap
+    allow: vMap.setColor({red:0.2,green:0.7,blue:0.32}).variableMap,
+    deny: vMap.setColor({red:0.7,green:0.2,blue:0.1}).variableMap,
+    place: vMap.setColor({red:0.6,green:0.5,blue:0.1}).setLifeTime(5).variableMap
 }
+const running = Symbol('place');
 const rayCast = {maxDistance:20,includeLiquidBlocks:false,includePassableBlocks:false};
+
+
+/** @this {Player} */
+async function onPlace(data, eventType){
+    let block = null;
+    if(eventType == EventTypes.beforeItemUse) block = this.getBlockFromViewDirection(rayCast);
+    else if(eventType== EventTypes.beforeItemUseOn) block = this.dimension.getBlock(data.getBlockLocation());
+    else if(eventType== EventTypes.entityHit) block = data.hitBlock;
+    if(!block) return await sleep(mainDelay);
+    const area = await checkArea(block);
+    delete this[running];
+    overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
+    await sleep(15);
+}
+
 /**@param {Player} player */
 async function startPickLocation(player){
+    player[running] = true;
+    player[actionSymbol] = onPlace;
     player.container.setItem(8,MenuItemStacks.TowerEditor);
     buyTower(player);
 }
 /**@param {Player} player */
 async function buyTower(player){
-    while(true){
+    while(player[running]){
         await sleep(2);
         if(player.selectedSlot != 8){
             player.sendMessage('%selection.focusLost.message2');
             return await towerEnd(player);
         }
         const block = player.getBlockFromViewDirection(rayCast);
-        if(!block) continue;
-        const area = await checkArea(block);
-        overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), area?variableMaps.allow:variableMaps.deny);
+        if(block) overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), (await checkArea(block))?variableMaps.allow:variableMaps.deny);
     }
+    await towerEnd(player)
 }
 /**@param {Block} centerBlock */
 async function checkArea(centerBlock){
@@ -203,6 +218,7 @@ async function checkArea(centerBlock){
 }
 async function towerEnd(player){
     delete player[actionSymbol];
+    delete player[running];
     if(player.isOnline) player.container.setItem(8,MenuItemStacks.Menu);
 }
 async function towers(player){

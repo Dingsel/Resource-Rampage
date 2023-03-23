@@ -12,14 +12,8 @@ export const Settings = new ActionFormData()
 
 export const WallBuildSettings = new ModalFormData()
 .title("form.wallBuild.title")
-.dropdown("form.wallBuild.dropdown",WallLevels.map((a,i)=>"Level " + i),0)
+.dropdown("\n%form.wallBuild.dropdown \n§r\n",WallLevels.map((a,i)=>"Level " + i),0)
 
 export const Informations = new ActionFormData()
 .title('from.informations.title')
 .button('form.close')
-
-export const Confirm = new MessageFormData()
-.title('form.confirm.title')
-.body('')
-.button1('button1')
-.button2('button2');
