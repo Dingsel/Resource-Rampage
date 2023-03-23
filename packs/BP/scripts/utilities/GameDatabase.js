@@ -68,7 +68,7 @@ export class GameDatabase extends ElementDatabase{
         const session = await this.getSession();
         return (session.get("towers")??[]).includes(towerId);
     }
-    /**@param {Promise<TowerElement>} */
+    /**@returns {Promise<TowerElement>} */
     async addTowerAsync(){
         const session = await this.getSession();
         const id = Number.createUID();

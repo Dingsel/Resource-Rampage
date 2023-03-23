@@ -19,6 +19,28 @@ export const ItemIds = {
 export const BlockIds = {
 
 }
+export const StructureIds = {
+    Enchantments: "x_enchantments",
+    Mage1:"mage_1",
+    Mage2:"mage_2",
+    Mage3:"mage_3",
+    Archer1:"archer_1",
+    Archer2:"archer_2",
+    Castle1:"castle_1",
+    House1:"house_1"
+}
+export const StructureSizes = {
+    [StructureIds.Archer1]: [5,7,5],
+    [StructureIds.Archer2]: [5,9,5],
+    [StructureIds.Castle1]: [11,13,11],
+    [StructureIds.Enchantments]: [1,1,1],
+    [StructureIds.House1]:[20,12,20],
+    [StructureIds.Mage1]:[5,5,5],
+    [StructureIds.Mage2]:[5,10,5],
+    [StructureIds.Mage3]:[11,12,11]
+}
+export const MageTowerLevelStructure = [StructureIds.Mage1,StructureIds.Mage2,StructureIds.Mage3];
+export const ArcherTowerLevelStructure = [StructureIds.Archer1,StructureIds.Archer2];
 
 export const towers = [
     {

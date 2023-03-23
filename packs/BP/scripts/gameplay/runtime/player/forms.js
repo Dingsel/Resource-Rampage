@@ -1,8 +1,8 @@
 import { Block, ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
-import { Informations, Settings, WallBuildSettings } from "gameplay/forms/import";
-import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures } from "resources";
+import { Informations, Settings, TowerPicker, WallBuildSettings } from "gameplay/forms/import";
+import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerLevelDefinition, TowerLevelsDefinitions } from "resources";
 import { SquareParticlePropertiesBuilder } from "utils";
 
 const actionSymbol = Symbol('action');
@@ -180,8 +180,15 @@ async function onPlace(data, eventType){
     if(!block) return await sleep(mainDelay);
     if(!await checkArea(block)) return await sleep(mainDelay);
     delete this[running];
+    const {output, canceled} = await TowerPicker.show(this);
+    if(canceled) return await sleep(mainDelay);
     overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
-    console.warn('place');
+    const towerType = TowerTypes[Object.getOwnPropertyNames(TowerTypes)[output[0]]];
+    const {x,y,z} = block;
+    const {successCount} = await overworld.runCommandAsync(`structure load ${TowerLevelsDefinitions[towerType][0]} ${x-2} ${y + 1} ${z-2} 0_degrees none`);
+    const tower = await global.database.addTowerAsync();
+    await tower.setTowerLocationAsync({x,y:y+1,z});
+    console.log(successCount);
     await sleep(15);
 }
 
@@ -225,9 +232,12 @@ async function towerEnd(player){
 async function towers(player){
     const actions = [];
     const towers = await global.session.getTowerIDsAsync(); 
-    towers.forEach(()=>actions.push(onTowerSelect));
     const form = new ActionFormData().title('form.towers.title')
     .body(`§hTowers: §7 ${towers.length}§8/§710`);
+    for (const id of towers) {
+        form.button(id);
+        actions.push(onTowerSelect);
+    }
     if(towers.length<10){
         actions.push(startPickLocation)
         form.button('§2§lBuy New')
@@ -235,6 +245,9 @@ async function towers(player){
     form.button('form.close');
     const {output} = await form.show(player);
     actions[output]?.(player,towers[output]);
+}
+async function onTowerSelect(player,tower){
+    console.log("selected Tower: " + tower);
 }
 
 

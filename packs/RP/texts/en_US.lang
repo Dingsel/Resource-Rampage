@@ -14,6 +14,9 @@ selection.same.message=§nYou cant set two same positions
 selection.small.message=§nThe distance from the previous position is too small, try again.
 selection.cantBuil.message=§nYou cant build here...
 
+tower.type.mage.name=Mage Tower
+tower.type.archer.name=Archer Tower
+
 gameplay.notCoins=§mYou don't have enough money, you need another
 
 construction.progress=§hConstruction is still in progress...
@@ -22,6 +25,7 @@ construction.done=§aConstruction of your wall has finish...
 
 
 form.wallBuild.dropdown=§hSelect Wall Level
+form.pickTower.title
 
 form.confirm.title=§l§tThe Confirmation
 form.confirm.button=§l§2Confirm

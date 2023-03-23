@@ -1,10 +1,19 @@
 import { ItemLockMode, ItemStack } from "@minecraft/server";
+import { ArcherTowerLevelStructure, MageTowerLevelStructure } from "./pack";
 
-const TowerTypes = {
-    IgniteImpulse: "ignite",
-    ShootingOne: "shoot"
+export const TowerTypes = {
+    Mage: "mage",
+    Archer: "archer"
 }
-const TowerLevelDefinition = {
+export const TowerNames = {
+    [TowerTypes.Mage]: "tower.type.mage.name",
+    [TowerTypes.Archer]: "tower.type.archer.name"
+}
+export const TowerLevelsDefinitions = {
+    [TowerTypes.Mage]: MageTowerLevelStructure,
+    [TowerTypes.Archer]: ArcherTowerLevelStructure
+}
+export const TowerLevelDefinition = {
     maxLevel: 3,
     rangePerLevel: 5,
     rangeOffset: 2,
@@ -30,12 +39,12 @@ const TowerLevelDefinition = {
         maxInterval: 3
     }
 }
-const InfoMapProperties = {
+export const InfoMapProperties = {
     coins: "coins",
     level: "level",
     kills: "kills"
 }
-const uiFormat = {
+export const uiFormat = {
     reset: "§_,§_,ui",
     Bold: "§l",
     Italic: "§o",
@@ -54,4 +63,3 @@ export const MenuItemStacks = {
     TowerEditor: new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot),
     WallBuilder: new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot)
 }
-export { TowerLevelDefinition, InfoMapProperties, TowerTypes, uiFormat };
