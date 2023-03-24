@@ -33,6 +33,7 @@ declare module "@minecraft/server" {
         time: number;
         find(entity: Entity, query: EntityQueryOptions): Entity | false;
         db: Array<structureEntry>;
+        round : number
     }
     interface System {
         readonly nextTick: Promise

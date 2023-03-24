@@ -1,3 +1,5 @@
+import { DynamicPropertiesDefinition } from '@minecraft/server';
+
 export * from './infomap.js';
 export * from './enchantments_load.js';
 export * from './database.js';
@@ -20,3 +22,10 @@ async function Initialization(){
     console.log("Susccessfully Initialized");
 }
 export const promise = Initialization().catch(errorHandle);
+
+
+world.events.worldInitialize.subscribe(({propertyRegistry}) =>{
+    const def = new DynamicPropertiesDefinition()
+    def.defineNumber("round")
+    propertyRegistry.registerWorldDynamicProperties(def)
+})

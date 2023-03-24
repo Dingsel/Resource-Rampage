@@ -1,0 +1,38 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:start_round",
+			"materials": {
+				"default": "wandering_trader"
+			},
+			"textures": {
+				"default": "textures/entity/start_round"
+			},
+			"geometry": {
+				"default": "geometry.start_round"
+			},
+			"scripts": {
+				"scale": "0.9375"
+			},
+			"animations": {
+				"general": "animation.start_round.general",
+				"look_at_target": "animation.common.look_at_target",
+				"move": "animation.start_round.move"
+			},
+			"animation_controllers": [
+				{
+					"general": "controller.animation.villager.general"
+				},
+				{
+					"move": "controller.animation.villager.move"
+				}
+			],
+			"render_controllers": ["controller.render.default"],
+			"spawn_egg": {
+				"base_color": "#ffffff",
+				"overlay_color": "#000000"
+			}
+		}
+	}
+}

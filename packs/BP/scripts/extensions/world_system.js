@@ -20,7 +20,8 @@ setProperties(World.prototype, {
             return false;
         }
     },
-    db: { get() { return db; }, set(val) { db = val; } }
+    db: { get() { return db; }, set(val) { db = val; } },
+    round: { get() { return this.getDynamicProperty("round") ?? 0 }, set(n) { this.setDynamicProperty("round", n) } }
 });
 
 setProperties(Dimension.prototype, {
@@ -29,12 +30,12 @@ setProperties(Dimension.prototype, {
 
 setProperties(System.prototype, {
     nextTick: { get() { return new Promise(res => this.run(res)); } },
-    deltaTime: {get() { return deltaTime; }}
+    deltaTime: { get() { return deltaTime; } }
 });
 
 let deltaTime = 0;
 let lastTime = 0;
-system.runInterval(()=>{
-    deltaTime = (Date.now() - lastTime)/5;
+system.runInterval(() => {
+    deltaTime = (Date.now() - lastTime) / 5;
     lastTime = Date.now();
-},5);
+}, 5);
