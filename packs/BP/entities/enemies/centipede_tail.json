@@ -40,7 +40,7 @@
 			}
 		},
 		"events": {
-			"despawn": {
+			"dest:despawn": {
 				"add": {
 					"component_groups": [
 						"despawn"

@@ -1,18 +1,24 @@
 {
-    "format_version": "1.19.0",
-    "minecraft:entity": {
-        "description": {
-            "identifier": "dest:ladybug",
-            "is_spawnable": true,
-            "is_summonable": true
-        },
-        "component_groups": {},
-        "components": {
-            "minecraft:health": {
-                "value": 20,
-                "max": 20
-            },
-            "minecraft:behavior.nearest_attackable_target": {
+	"format_version": "1.19.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "dest:ladybug",
+			"is_spawnable": true,
+			"is_summonable": true
+		},
+		"component_groups": {
+			"dest:despawn": {
+				"minecraft:instant_despawn": {
+					"remove_child_entities": false
+				}
+			}
+		},
+		"components": {
+			"minecraft:health": {
+				"value": 20,
+				"max": 20
+			},
+			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"within_radius": 1024.0,
 				"entity_types": [
@@ -30,11 +36,11 @@
 					}
 				]
 			},
-            "minecraft:physics": {
-                "has_collision": true,
-                "has_gravity": true
-            },
-            "minecraft:navigation.walk": {
+			"minecraft:physics": {
+				"has_collision": true,
+				"has_gravity": true
+			},
+			"minecraft:navigation.walk": {
 				"can_path_over_water": true,
 				"avoid_water": true,
 				"avoid_damage_blocks": false
@@ -46,7 +52,7 @@
 			"minecraft:behavior.melee_attack": {
 				"priority": 3
 			},
-            "minecraft:scale": {
+			"minecraft:scale": {
 				"value": 1.0
 			},
 			"minecraft:is_hidden_when_invisible": {},
@@ -64,11 +70,18 @@
 				"never_despawn": true,
 				"radius": 2
 			},
-            "minecraft:movement.basic": {
-                "max_turn": 30
-            }
-        },
-        "events": {
-        }
-    }
+			"minecraft:movement.basic": {
+				"max_turn": 30
+			}
+		},
+		"events": {
+			"dest:despawn": {
+				"add": {
+					"component_groups": [
+						"dest:despawn"
+					]
+				}
+			}
+		}
+	}
 }
