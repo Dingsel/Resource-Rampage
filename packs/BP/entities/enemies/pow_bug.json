@@ -17,6 +17,9 @@
 				},
 				"minecraft:skin_id": {
 					"value": 1
+				},
+				"minecraft:movement": {
+					"value": 0.0
 				}
 			},
 			"dest:despawn": {
@@ -54,14 +57,6 @@
 				"must_see": true,
 				"on_inside_range": {
 					"event": "dest:start_exploding",
-					"target": "self"
-				},
-				"on_outside_range": {
-					"event": "dest:stop_exploding",
-					"target": "self"
-				},
-				"on_vision_lost_inside_range": {
-					"event": "dest:stop_exploding",
 					"target": "self"
 				}
 			},
@@ -117,13 +112,6 @@
 		"events": {
 			"dest:start_exploding": {
 				"add": {
-					"component_groups": [
-						"dest:exploding"
-					]
-				}
-			},
-			"dest:stop_exploding": {
-				"remove": {
 					"component_groups": [
 						"dest:exploding"
 					]
