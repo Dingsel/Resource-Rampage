@@ -49,7 +49,6 @@ class Tower{
 }
 class IgniteTower extends Tower{
     async onImpulse(data){
-        console.log('tower type:', data.type)
         for (let i = 0; i < data.level; i++) {
             this.doImpulse(data,data.level*rangePerLevel + rangeOffset).catch(errorHandle);
             await sleep(impulseLevelDelay / data.power);
@@ -58,7 +57,7 @@ class IgniteTower extends Tower{
     async doImpulse({location,radius,power,knockback,damage},range){
         overworld.spawnParticle('dest:ignite_impulse',  Vector.add(location,{x:0,y:0.2,z:0}) ,new ImpulseParticlePropertiesBuilder(range,power).variableMap);
         await nextTick;
-        for (const e of overworld.getEntities({location,maxDistance:range})) {
+        for (const e of overworld.getEntities({location,maxDistance:range,excludeTypes:["player"]})) {
             e.setOnFire(power*3);
             await null;
             const vec = Vector.subtract(e.location,location);
