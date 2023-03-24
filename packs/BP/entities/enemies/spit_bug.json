@@ -2,7 +2,7 @@
 	"format_version": "1.17.0",
 	"minecraft:entity": {
 		"description": {
-			"identifier": "dest:enemy_sprinter",
+			"identifier": "dest:spit_bug",
 			"is_summonable": true,
 			"is_spawnable": true
 		},
@@ -31,7 +31,7 @@
 				]
 			},
 			"minecraft:attack": {
-				"damage": 1
+				"damage": 2
 			},
 			"minecraft:navigation.walk": {
 				"can_path_over_water": true,
@@ -50,11 +50,14 @@
 				"height": 1.0
 			},
 			"minecraft:health": {
-				"value": 10
+				"value": 15
 			},
 			"minecraft:movement": {
-				"value": 0.35
+				"value": 0.25
 			},
+			"minecraft:movement.basic": {},
+			"minecraft:jump.static": {},
+			"minecraft:can_climb": {},
 			"minecraft:scale": {
 				"value": 1.0
 			},
@@ -66,7 +69,7 @@
 			"minecraft:type_family": {
 				"family": [
 					"enemy",
-					"speed"
+					"ghost"
 				]
 			},
 			"minecraft:tick_world": {

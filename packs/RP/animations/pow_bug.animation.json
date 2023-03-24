@@ -134,12 +134,12 @@
 			},
 			"sound_effects": {
 				"0.125": {
-					"effect": "dest:explode_sound"
+					"effect": "explode_sound"
 				}
 			},
 			"particle_effects": {
 				"0.125": {
-					"effect": "dest:explosion"
+					"effect": "explosion"
 				}
 			}
 		}

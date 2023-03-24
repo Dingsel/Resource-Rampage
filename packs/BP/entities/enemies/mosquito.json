@@ -2,7 +2,7 @@
 	"format_version": "1.17.0",
 	"minecraft:entity": {
 		"description": {
-			"identifier": "dest:enemy_guard",
+			"identifier": "dest:mosquito",
 			"is_summonable": true,
 			"is_spawnable": true
 		},
@@ -33,10 +33,10 @@
 			"minecraft:attack": {
 				"damage": 2
 			},
-			"minecraft:navigation.walk": {
-				"can_path_over_water": true,
-				"avoid_water": true,
-				"avoid_damage_blocks": false
+			"minecraft:navigation.hover": {
+				"can_path_from_air": true,
+				"can_path_over_lava": true,
+				"can_path_over_water": true
 			},
 			"minecraft:follow_range": {
 				"value": 1024,
@@ -50,11 +50,17 @@
 				"height": 1.0
 			},
 			"minecraft:health": {
-				"value": 40
+				"value": 20
 			},
 			"minecraft:movement": {
-				"value": 0.15
+				"value": 0.25
 			},
+			"minecraft:flying_speed": {
+				"value": 0.25
+			},
+			"minecraft:movement.hover": {},
+			"minecraft:jump.static": {},
+			"minecraft:can_fly": {},
 			"minecraft:scale": {
 				"value": 1.0
 			},
@@ -66,7 +72,7 @@
 			"minecraft:type_family": {
 				"family": [
 					"enemy",
-					"tank"
+					"flying"
 				]
 			},
 			"minecraft:tick_world": {

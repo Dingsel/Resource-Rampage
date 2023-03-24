@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:crawler",
+			"materials": {
+				"default": "bat"
+			},
+			"textures": {
+				"default": "textures/entity/enemies/crawler"
+			},
+			"geometry": {
+				"default": "geometry.crawler"
+			},
+			"animations": {
+				"walk": "animation.crawler.walk"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"base_color": "#d6aa5e",
+				"overlay_color": "#53493c"
+			},
+			"animation_controllers": [
+				{
+					"walk": "controller.animation.enemy.walk"
+				}
+			]
+		}
+	}
+}

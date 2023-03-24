@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:ant",
+			"materials": {
+				"default": "bat"
+			},
+			"textures": {
+				"default": "textures/entity/enemies/ant"
+			},
+			"geometry": {
+				"default": "geometry.ant"
+			},
+			"animations": {
+				"walk": "animation.ant.walk"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"base_color": "#1a3955",
+				"overlay_color": "#11203c"
+			},
+			"animation_controllers": [
+				{
+					"walk": "controller.animation.enemy.walk"
+				}
+			]
+		}
+	}
+}

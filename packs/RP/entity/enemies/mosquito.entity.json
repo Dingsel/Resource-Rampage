@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:mosquito",
+			"materials": {
+				"default": "bat"
+			},
+			"textures": {
+				"default": "textures/entity/enemies/mosquito"
+			},
+			"geometry": {
+				"default": "geometry.mosquito"
+			},
+			"animations": {
+				"walk": "animation.mosquito.fly"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"base_color": "#855c32",
+				"overlay_color": "#534e44"
+			},
+			"animation_controllers": [
+				{
+					"walk": "controller.animation.enemy.walk"
+				}
+			]
+		}
+	}
+}

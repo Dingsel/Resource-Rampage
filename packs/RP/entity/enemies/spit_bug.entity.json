@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:spit_bug",
+			"materials": {
+				"default": "bat"
+			},
+			"textures": {
+				"default": "textures/entity/enemies/spit_bug"
+			},
+			"geometry": {
+				"default": "geometry.spit_bug"
+			},
+			"animations": {
+				"walk": "animation.spit_bug.walk"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"base_color": "#6f9d72",
+				"overlay_color": "#43604b"
+			},
+			"animation_controllers": [
+				{
+					"walk": "controller.animation.enemy.walk"
+				}
+			]
+		}
+	}
+}

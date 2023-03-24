@@ -1,0 +1,28 @@
+{
+	"format_version": "1.19.0",
+	"animation_controllers": {
+		"controller.animation.pow_bug.explode": {
+			"states": {
+				"default": {
+					"blend_transition": 0.2,
+					"transitions": [
+						{
+							"explode": "q.skin_id == 1"
+						}
+					]
+				},
+				"explode": {
+					"blend_transition": 0.2,
+					"animations": [
+						"explode"
+					],
+					"transitions": [
+						{
+							"default": "q.skin_id == 0"
+						}
+					]
+				}
+			}
+		}
+	}
+}

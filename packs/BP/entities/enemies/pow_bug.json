@@ -2,16 +2,31 @@
 	"format_version": "1.17.0",
 	"minecraft:entity": {
 		"description": {
-			"identifier": "dest:enemy_ghost",
+			"identifier": "dest:pow_bug",
 			"is_summonable": true,
 			"is_spawnable": true
 		},
 		"component_groups": {
+			"dest:exploding": {
+				"minecraft:timer": {
+					"time": 0.5,
+					"looping": false,
+					"time_down_event": {
+						"event": "dest:despawn"
+					}
+				},
+				"minecraft:skin_id": {
+					"value": 1
+				}
+			},
 			"dest:despawn": {
 				"minecraft:instant_despawn": {}
 			}
 		},
 		"components": {
+			"minecraft:skin_id": {
+				"value": 0
+			},
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"within_radius": 1024.0,
@@ -31,7 +46,24 @@
 				]
 			},
 			"minecraft:attack": {
-				"damage": 2
+				"damage": 1
+			},
+			"minecraft:target_nearby_sensor": {
+				"inside_range": 3.0,
+				"outside_range": 6.0,
+				"must_see": true,
+				"on_inside_range": {
+					"event": "dest:start_exploding",
+					"target": "self"
+				},
+				"on_outside_range": {
+					"event": "dest:stop_exploding",
+					"target": "self"
+				},
+				"on_vision_lost_inside_range": {
+					"event": "dest:stop_exploding",
+					"target": "self"
+				}
 			},
 			"minecraft:navigation.walk": {
 				"can_path_over_water": true,
@@ -50,11 +82,14 @@
 				"height": 1.0
 			},
 			"minecraft:health": {
-				"value": 15
+				"value": 10
 			},
 			"minecraft:movement": {
-				"value": 0.25
+				"value": 0.35
 			},
+			"minecraft:movement.basic": {},
+			"minecraft:jump.static": {},
+			"minecraft:can_climb": {},
 			"minecraft:scale": {
 				"value": 1.0
 			},
@@ -66,7 +101,7 @@
 			"minecraft:type_family": {
 				"family": [
 					"enemy",
-					"ghost"
+					"speed"
 				]
 			},
 			"minecraft:tick_world": {
@@ -80,6 +115,20 @@
 			}
 		},
 		"events": {
+			"dest:start_exploding": {
+				"add": {
+					"component_groups": [
+						"dest:exploding"
+					]
+				}
+			},
+			"dest:stop_exploding": {
+				"remove": {
+					"component_groups": [
+						"dest:exploding"
+					]
+				}
+			},
 			"dest:despawn": {
 				"add": {
 					"component_groups": [

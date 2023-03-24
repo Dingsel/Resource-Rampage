@@ -1,0 +1,43 @@
+{
+	"format_version": "1.8.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "dest:pow_bug",
+			"materials": {
+				"default": "bat"
+			},
+			"textures": {
+				"default": "textures/entity/enemies/pow_bug"
+			},
+			"geometry": {
+				"default": "geometry.pow_bug"
+			},
+			"animations": {
+				"walk": "animation.pow_bug.roll",
+				"charge": "animation.pow_bug.charge",
+				"explode": "animation.pow_bug.explode"
+			},
+			"particle_effects": {
+				"explosion": "minecraft:huge_explosion_emitter"
+			},
+			"sound_effects": {
+				"explode_sound": "random.explode"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			],
+			"spawn_egg": {
+				"base_color": "#444d55",
+				"overlay_color": "#2f343d"
+			},
+			"animation_controllers": [
+				{
+					"walk": "controller.animation.enemy.walk"
+				},
+				{
+					"explode": "controller.animation.pow_bug.explode"
+				}
+			]
+		}
+	}
+}
