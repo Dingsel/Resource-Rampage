@@ -1,0 +1,12 @@
+{
+  "namespace": "death",
+  "background_gradient": {
+    "color1": [ 0.313, 0.1, 0.05, 0.37 ],
+    "color2": [ 0.5, 0.388, 0.188, 0.627 ]
+  },
+  "you_died_panel/you_died_label": {
+    "font_scale_factor": 3.5,
+    "color": [0.9,0.3,0.1,0.75]
+  },
+  "death_reason_panel/death_reason_label":{"visible":false}
+}

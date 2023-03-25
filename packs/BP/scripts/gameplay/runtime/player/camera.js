@@ -18,11 +18,23 @@ events.entityDie.subscribe(async ({ deadEntity }) => {
     await deadEntity.setGameMode(global.config.defualt_game_mode);
     await deadEntity.setMovementPermission(true);
     await deadEntity.setCameraPermission(true);
-    await deadEntity.runCommandAsync('fog @s remove fog');
     deadEntity.teleportFacing(world.getDefaultSpawnPosition(),overworld,center);
+    await sleep(10);
+    await deadEntity.runCommandAsync('fog @s remove fog');
+    await shield(deadEntity,120);
 }, { entityTypes: [MinecraftEntityTypes.player.id] })
 
+/** @param {Player} player */
+async function shield(player, ticks = 20){
+    player.addEffect(MinecraftEffectTypes.instantHealth,ticks,255,false);
+    while(ticks--){
+        await nextTick;
+        for (const e of player.dimension.getEntities({location:player.location, families:["enemy"],maxDistance:5})) e.applyImpulse(Vector.multiply(Vector.subtract(e.location,player.location),0.5));
+    }
+}
+
 function* deathScreen(r=175,angle = 15){
+    angle *= 1 + Math.random()*3;
     while(true) for (let loc of MovingPath(r * (Math.random()+0.5),angle * 15,angle,Math.random()*360,(Math.random()-0.5)/20,(Math.random()>=0.5)?1:-1).offSet(Vector.add(center,{x:0,y:Math.random()*20,z:0}))) yield loc;
 }
 
