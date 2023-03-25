@@ -23,7 +23,7 @@ export const TowerAbilityInformations = {
     [TowerTypes.Archer]:{
         getInterval(i){return 60 - (i * 8)},
         getDamage(d){return d * 4},
-        getRange(r){return r * 5 + 5},
+        getRange(r){return r * 6 + 6},
         getKnockback(k){return k * 0.3},
         getPower(p){return p * 0.5}
     }
@@ -59,4 +59,8 @@ export const TowerMaxAbilityDefinition = {
         power: 4,
         range:3
     }
+}
+export const TowerCost = {
+    [TowerTypes.Mage]: 250,
+    [TowerTypes.Archer]: 230
 }

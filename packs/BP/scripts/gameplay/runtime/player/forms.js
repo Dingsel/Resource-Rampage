@@ -2,7 +2,7 @@ import { Block, ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Ve
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, TowerPicker, WallBuildSettings } from "gameplay/forms/import";
-import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities } from "resources";
+import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 
 const actionSymbol = Symbol('action');
@@ -183,14 +183,18 @@ async function onPlace(data, eventType){
     delete this[running];
     const {output, canceled} = await TowerPicker.show(this);
     if(canceled) return await sleep(mainDelay);
-    overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
     const towerType = TowerTypes[Object.getOwnPropertyNames(TowerTypes)[output[0]]];
+    const cost = TowerCost[towerType];
+    if (cost > global.infoMap.get(InfoMapProperties.coins)) return await this.info("%gameplay.notCoins §g" + (~~(cost - global.infoMap.get(InfoMapProperties.coins))).unitFormat(1) + " §2$");
+    else if(!await this.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for ${cost.unitFormat(1)} §2$`)) return;
     const {x,y,z} = block;
+    overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
     const {successCount} = await overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x-2} ${y + 1} ${z-2} 0_degrees none`);
     const tower = await global.database.addTowerAsync();
     console.log(tower,towerType);
     await tower.set("type",towerType);
     await tower.setTowerLocationAsync({x,y:y+1,z});
+    global.infoMap.relative(InfoMapProperties.coins,-cost);
     await sleep(15);
 }
 
@@ -259,13 +263,14 @@ async function onTowerSelect(player,tower){
         const n = getTowerData(tower);
         const info = new ActionFormData();
         info.title('§tTower Informations');
+        const a = TowerAbilityInformations[n.type];
         let text = "";
         text += `§hType: §7%${TowerNames[n.type]} \n`;
         text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
-        text += `§hInterval: §a${n.interval/255}\n§r`;
-        text += `§hPower: §a${n.power}\n`;
-        text += `§hRadius: §a${n.radius}\n`;
-        text += `§hDamage: §a${n.damage}\n`;
+        text += `§hInterval: §a${(a.getInterval(n.interval)/20).toFixed(1)} s\n§r`;
+        text += `§hPower: §a${a.getPower(n.power)}\n`;
+        text += `§hRadius: §a${a.getRange(n.range)}\n`;
+        text += `§hDamage: §a${a.getDamage(n.damage)}\n`;
         text += `§hLevel: §a${n.level}\n§r`;
         info.body(text);
         const canUp = canUpgreade(n);
@@ -301,8 +306,8 @@ function canUpgreade(data = getTowerData(null)){
 }
 function getTowerData(tower){
     tower.get('type')
-    const {location={x:0,y:0,z:0},damage,knockback,radius,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
-    return {location,damage,knockback,level,power,interval,radius,type};
+    const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
+    return {location,damage,knockback,level,power,interval,range,type};
 }
 
 
