@@ -1,5 +1,5 @@
 {
-	"format_version": "1.8.0",
+	"format_version": "1.10.0",
 	"minecraft:client_entity": {
 		"description": {
 			"identifier": "dest:spit_bug",
@@ -13,7 +13,18 @@
 				"default": "geometry.spit_bug"
 			},
 			"animations": {
-				"walk": "animation.spit_bug.walk"
+				"walk": "animation.spit_bug.walk",
+				"spit_cover": "animation.spit_bug.emit_spit",
+				"main": "controller.animation.enemy.walk"
+			},
+			"scripts": {
+				"animate": [
+					"spit_cover",
+					"main"
+				]
+			},
+			"particle_effects": {
+				"spit": "dest:foam"
 			},
 			"render_controllers": [
 				"controller.render.default"
@@ -21,12 +32,7 @@
 			"spawn_egg": {
 				"base_color": "#6f9d72",
 				"overlay_color": "#43604b"
-			},
-			"animation_controllers": [
-				{
-					"walk": "controller.animation.enemy.walk"
-				}
-			]
+			}
 		}
 	}
 }

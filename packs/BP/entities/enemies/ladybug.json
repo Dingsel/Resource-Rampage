@@ -46,8 +46,8 @@
 				"priority": 3
 			},
 			"minecraft:collision_box": {
-				"width": 1.0,
-				"height": 1.0
+				"width": 2.5,
+				"height": 2.0
 			},
 			"minecraft:health": {
 				"value": 40

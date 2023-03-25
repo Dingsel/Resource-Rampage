@@ -9,7 +9,7 @@
 		"component_groups": {
 			"dest:exploding": {
 				"minecraft:timer": {
-					"time": 0.5,
+					"time": 0.75,
 					"looping": false,
 					"time_down_event": {
 						"event": "dest:despawn"
@@ -73,8 +73,8 @@
 				"priority": 3
 			},
 			"minecraft:collision_box": {
-				"width": 1.0,
-				"height": 1.0
+				"width": 0.75,
+				"height": 0.75
 			},
 			"minecraft:health": {
 				"value": 10

@@ -1,6 +1,16 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.spit_bug.emit_spit": {
+			"loop": true,
+			"animation_length": 0.1,
+			"particle_effects": {
+				"0.0": {
+					"effect": "spit",
+					"locator": "body"
+				}
+			}
+		},
 		"animation.spit_bug.walk": {
 			"loop": true,
 			"animation_length": 1.5,
