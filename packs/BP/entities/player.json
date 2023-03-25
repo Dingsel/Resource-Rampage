@@ -47,7 +47,9 @@
 			}
 		},
 		"components": {
-			"minecraft:scale":{},
+			"minecraft:scale":{
+				"value":0.75
+			},
 			"minecraft:health":{
 				"value":40,
 				"max":40

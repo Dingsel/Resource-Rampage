@@ -25,7 +25,8 @@ construction.done=§aConstruction of your wall has finish...
 
 
 form.wallBuild.dropdown=§hSelect Wall Level
-form.pickTower.title
+form.pickTower.title=§tSelect Tower To Build
+form.pickTower.dropdown=§hTower Type
 
 form.confirm.title=§l§tThe Confirmation
 form.confirm.button=§l§2Confirm

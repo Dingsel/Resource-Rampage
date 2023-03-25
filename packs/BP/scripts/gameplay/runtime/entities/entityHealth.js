@@ -10,12 +10,9 @@ function updateName(entity) {
     const nameStr = "§2|".repeat(emptyChars) + "§c|".repeat(fullChars)
     entity.nameTag = nameStr
 }
-
-setInterval(async () => {
-    for (const entity of getEntities({ families: ["enemy"] })) {
-        try {
-            updateName(entity);
-            await null;
-        } catch (error) { }
-    }
-}, 5)
+events.entitySpawn.subscribe(({entity})=>{
+    if(entity.id.startsWith("dest")) updateName(entity);
+})
+events.entityHurt.subscribe(({hurtEntity})=>{
+    if(hurtEntity.id.startsWith("dest")) updateName(hurtEntity);
+});

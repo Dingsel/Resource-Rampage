@@ -57,6 +57,7 @@ export const uiFormat = {
         "§nBrown": "§n", "§0Black": "§0", "§8Dark Gray": "§8", "§7Gray": "§7", "§fWhite": "§f"
     }
 }
+export const centerLocation = Object.create({x:82,y:100,z:52});
 export const MenuItemNameTag = "§l§hMenu";
 export const CanDestroy = MinecraftBlockTypes.getAllBlockTypes().map(n=>n.id);
 export const MenuItemStacks = {

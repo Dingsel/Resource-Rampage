@@ -36,13 +36,24 @@ defineProperties(Player.prototype, {
         get() { return this.armor.getEquipmentSlot("mainhand"); },
         set(s) { this.armor.setEquipment("mainhand", s); return s; }
     },
-    gamemode: {
-        get(name) {
-            return (name = this.name),
-                values(GameMode).find(gameMode => world.getPlayers({ name, gameMode }).length) ?? 'default';
-        },
-        set(mode) {
-            this.runCommandAsync("gamemode " + mode);
+    getGameMode: {
+        value() {
+            return Object.getOwnPropertyNames(GameMode).find(gameMode => world.getPlayers({ name:this.name, gameMode }).length)??"defualt"
+        }
+    },
+    setGameMode:{
+        value(mode) {
+            return this.runCommandAsync("gamemode " + mode);
+        }
+    },
+    setCameraPermission:{
+        value(bool) {
+            return this.runCommandAsync("inputpermission set @s camera " + (bool?"enabled":"disabled"));
+        }
+    },
+    setMovementPermission:{
+        value(bool) {
+            return this.runCommandAsync("inputpermission set @s movement  " + (bool?"enabled":"disabled"));
         }
     },
     confirm:{async value(body,title="form.confirm.title"){

@@ -40,8 +40,8 @@ class Tower{
         await this.onImpulse(data);
     }
     getData(){
-        const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=baseIntervalDelay} = this.#element.getData();
-        return {location,damage,knockback,level,power,interval,radius};
+        const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=baseIntervalDelay,type=TowerTypes.Mage} = this.#element.getData();
+        return {location,damage,knockback,level,power,interval,radius,type};
     }
     async onImpulse(){}
     getTowerElement(){return this.#element;}
@@ -55,7 +55,7 @@ class IgniteTower extends Tower{
         }
     }
     async doImpulse({location,radius,power,knockback,damage},range){
-        overworld.spawnParticle('dest:ignite_impulse',  location ,new ImpulseParticlePropertiesBuilder(range,power).variableMap);
+        overworld.spawnParticle('dest:ignite_impulse',  Vector.add(location,{x:0,y:0.2,z:0}) ,new ImpulseParticlePropertiesBuilder(range,power).variableMap);
         await nextTick;
         for (const e of overworld.getEntities({location,maxDistance:range,excludeTypes:["player"]})) {
             e.setOnFire(power*3);

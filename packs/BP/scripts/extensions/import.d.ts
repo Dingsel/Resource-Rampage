@@ -20,7 +20,8 @@ declare module "@minecraft/server" {
     }
     interface Player {
         mainhand: ContainerSlot;
-        gamemode: GameMode;
+        getGameMode(): GameMode;
+        setGameMode(gamemode: Gamemode): Promise<CommandResult>;
         selectedTower?: TowerDefenition;
         readonly isOnline: boolean;
         confirm(body:string, title?:string): Promise<boolean>
