@@ -25,13 +25,13 @@ export class TowerElement extends Element{
     /**@param {number} level */
     async setTowerLevelAsync(level){ await this.set("level",level); }
     /**@returns {number} */
-    getTowerRadius(){ return this.get("radius")??1;}
-    /**@param {number} radius */
-    async setTowerLevelAsync(radius){ await this.set("radius",radius); }
+    getTowerRange(){ return this.get("range")??1;}
+    /**@param {number} range */
+    async setTowerRangeAsync(range){ await this.set("range",range); }
     /**@returns {number} */
     getTowerDamage(){ return this.get("damage")??1;}
     /**@param {number} damage */
-    async setTowerLevelAsync(damage){ await this.set("damage",damage); }
+    async setTowerDamageAsync(damage){ await this.set("damage",damage); }
     /**@returns {number} */
     getTowerKnockback(){ return this.get("knockback")??0;}
     /**@param {number} knockback */

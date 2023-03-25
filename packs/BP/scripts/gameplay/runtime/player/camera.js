@@ -1,6 +1,6 @@
-import { Effect, GameMode, MinecraftEffectTypes, MinecraftEntityTypes, MolangVariableMap, Player, system, Vector, world, World } from "@minecraft/server";
-import { ArcherTowerLevelStructure, centerLocation } from "resources";
-import { ImpulseParticlePropertiesBuilder, SquareParticlePropertiesBuilder } from "utilities/MolangVariableMaps";
+import { GameMode, MinecraftEffectTypes, MinecraftEntityTypes,Player,Vector } from "@minecraft/server";
+import { centerLocation } from "resources";
+
 
 const center = centerLocation;
 events.entityDie.subscribe(async ({ deadEntity }) => {
@@ -27,6 +27,7 @@ events.entityDie.subscribe(async ({ deadEntity }) => {
 /** @param {Player} player */
 async function shield(player, ticks = 20){
     player.addEffect(MinecraftEffectTypes.instantHealth,ticks,255,false);
+    player.addEffect(MinecraftEffectTypes.saturation,99999999,255,false);
     while(ticks--){
         await nextTick;
         for (const e of player.dimension.getEntities({location:player.location, families:["enemy"],maxDistance:5})) e.applyImpulse(Vector.multiply(Vector.subtract(e.location,player.location),0.5));

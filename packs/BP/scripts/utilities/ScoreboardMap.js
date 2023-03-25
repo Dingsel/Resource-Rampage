@@ -26,6 +26,13 @@ export class ScoreboardMap extends Map{
         this.#objective.removeParticipant(p);
         return sus;
     }
+    relative(key, score=0){
+        if(this.has(key)) {
+            const c = this.get(key) + score;
+            this.#objective.setScore(super.get(key),c);
+            return c;
+        }
+    }
     /**@param {string} key @param {number?} score @returns {CommandResult}  */
     async addAsync(key, score = 0){
         const n = await overworld.runCommandAsync(`scoreboard players add "${key.replaceAll('"','\\"')}" "$${this.#objective.id}" ${score}`);

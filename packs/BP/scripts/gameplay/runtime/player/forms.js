@@ -2,7 +2,7 @@ import { Block, ItemLockMode, MinecraftBlockTypes, MolangVariableMap, Player, Ve
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { buildWall } from "gameplay/building/import.js";
 import { Informations, Settings, TowerPicker, WallBuildSettings } from "gameplay/forms/import";
-import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerLevelDefinition, TowerLevelsDefinitions, TowerNames } from "resources";
+import { InfoMapProperties, uiFormat, MenuItemNameTag, MenuItemStacks, WallLevels, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 
 const actionSymbol = Symbol('action');
@@ -162,7 +162,7 @@ function formatXYZ({ x, y, z }) {
 
 
 
-const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.05);
+const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.07);
 const variableMaps = {
     allow: vMap.setColor({red:0.2,green:0.7,blue:0.32}).variableMap,
     deny: vMap.setColor({red:0.7,green:0.2,blue:0.1}).variableMap,
@@ -186,10 +186,11 @@ async function onPlace(data, eventType){
     overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
     const towerType = TowerTypes[Object.getOwnPropertyNames(TowerTypes)[output[0]]];
     const {x,y,z} = block;
-    const {successCount} = await overworld.runCommandAsync(`structure load ${TowerLevelsDefinitions[towerType][0]} ${x-2} ${y + 1} ${z-2} 0_degrees none`);
+    const {successCount} = await overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x-2} ${y + 1} ${z-2} 0_degrees none`);
     const tower = await global.database.addTowerAsync();
+    console.log(tower,towerType);
+    await tower.set("type",towerType);
     await tower.setTowerLocationAsync({x,y:y+1,z});
-    console.log(successCount);
     await sleep(15);
 }
 
@@ -203,7 +204,7 @@ async function startPickLocation(player){
 /**@param {Player} player */
 async function buyTower(player){
     while(player[running]){
-        await sleep(2);
+        await nextTick;
         if(player.selectedSlot != 8){
             player.sendMessage('%selection.focusLost.message2');
             return await towerEnd(player);
@@ -240,7 +241,8 @@ async function towers(player){
         const tower = await global.database.getTowerAsync(id);
         towers.push(tower);
         const {x,y,z} = tower.getTowerLocation();
-        form.button(`Mage Tower§8: §2${x} §4${y} §t${z}\n§r§jLevel§8: §2§l${tower.getTowerLevel()}`);
+        const towerType = tower.getTowerType();
+        form.button(`%${TowerNames[towerType]}§8: §2${x} §4${y} §t${z}\n§r§jLevel§8: §2§l${tower.getTowerLevel()}`);
         actions.push(onTowerSelect);
     }
     if(ids.length<maxTowers){
@@ -260,7 +262,7 @@ async function onTowerSelect(player,tower){
         let text = "";
         text += `§hType: §7%${TowerNames[n.type]} \n`;
         text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
-        text += `§hInterval: §a${n.interval/TowerLevelDefinition.baseIntervalDelay}\n§r`;
+        text += `§hInterval: §a${n.interval/255}\n§r`;
         text += `§hPower: §a${n.power}\n`;
         text += `§hRadius: §a${n.radius}\n`;
         text += `§hDamage: §a${n.damage}\n`;
@@ -283,7 +285,7 @@ async function upgreade(player,tower,data){
     info.addAction(()=>{},``);
     let text = "";
     text += `§hPostion: ${formatXYZ(n.location)}\n§r`;
-    text += `§hInterval: §a${n.interval/TowerLevelDefinition.baseIntervalDelay}\n§r`;
+    text += `§hInterval: §a${n.interval/255}\n§r`;
     text += `§hPower: §a${n.power}\n`;
     text += `§hRadius: §a${n.radius}\n`;
     text += `§hDamage: §a${n.damage}\n`;
@@ -298,7 +300,8 @@ function canUpgreade(data = getTowerData(null)){
     return true;
 }
 function getTowerData(tower){
-    const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=TowerLevelDefinition.baseIntervalDelay,type=TowerTypes.Mage} = tower.getData();
+    tower.get('type')
+    const {location={x:0,y:0,z:0},damage,knockback,radius,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
     return {location,damage,knockback,level,power,interval,radius,type};
 }
 

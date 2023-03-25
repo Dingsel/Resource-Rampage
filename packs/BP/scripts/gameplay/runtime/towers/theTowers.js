@@ -1,5 +1,5 @@
-import { Vector } from "@minecraft/server";
-import { TowerLevelDefinition, TowerTypes } from "resources";
+import { EntityDamageCause, Vector } from "@minecraft/server";
+import { TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
 import { ImpulseParticlePropertiesBuilder, TowerElement } from "utils";
 
 export async function InitTowers(){
@@ -22,8 +22,6 @@ async function onReload(){
     towers.clear();
     Towers.towers = nMap;
 }
-const {rangePerLevel,rangeOffset,baseIntervalDelay,intervalLevelInflation,impulseLevelDelay} = TowerLevelDefinition;
-
 class Tower{
     #element;
     /** @param {TowerElement} towerElement*/
@@ -36,40 +34,78 @@ class Tower{
         const element = this.#element;
         if(element.isDisposed) return onDispose();
         const data = this.getData();
-        setTimeout(()=>this.#onImpulse().catch(errorHandle),data.interval);
+        setTimeout(()=>this.#onImpulse().catch(errorHandle),TowerAbilityInformations[data.type].getInterval(data.interval));
         await this.onImpulse(data);
     }
     getData(){
-        const {location={x:0,y:0,z:0},damage=0,knockback=0,radius=5,level=1,power=1,interval=baseIntervalDelay,type=TowerTypes.Mage} = this.#element.getData();
-        return {location,damage,knockback,level,power,interval,radius,type};
+        const type = this.#element.get('type')??TowerTypes.Mage;
+        const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval} = Object.setPrototypeOf(this.#element.getData(),TowerDefaultAbilities[type]);
+        return {location,damage,knockback,level,power,interval,range,type};
     }
     async onImpulse(){}
     getTowerElement(){return this.#element;}
     onDispose(){this.#element = undefined;}
 }
 class IgniteTower extends Tower{
+    static INFO =  TowerAbilityInformations[TowerTypes.Mage];
     async onImpulse(data){
         for (let i = 0; i < data.level; i++) {
-            this.doImpulse(data,data.level*rangePerLevel + rangeOffset).catch(errorHandle);
-            await sleep(impulseLevelDelay / data.power);
+            this.doImpulse(data).catch(errorHandle);
+            await sleep(15/data.power);
         }
     }
-    async doImpulse({location,radius,power,knockback,damage},range){
-        overworld.spawnParticle('dest:ignite_impulse',  Vector.add(location,{x:0,y:0.2,z:0}) ,new ImpulseParticlePropertiesBuilder(range,power).variableMap);
-        await nextTick;
-        for (const e of overworld.getEntities({location,maxDistance:range,excludeTypes:["player"]})) {
-            e.setOnFire(power*3);
-            await null;
-            const vec = Vector.subtract(e.location,location);
-            vec.y = 0;
-            const {x,z} = vec.normalized();
-            const vec2 = Vector.multiply({x,y:1,z},knockback/10);
-            e.applyDamage(damage)
-            e.applyImpulse(vec2);
+    async doImpulse({location,range,power,knockback,damage}){
+        const r = IgniteTower.INFO.getRange(range);
+        const p = IgniteTower.INFO.getPower(power);
+        const k = IgniteTower.INFO.getKnockback(knockback);
+        const d = IgniteTower.INFO.getDamage(damage);
+        location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
+        overworld.spawnParticle('dest:ignite_impulse',  location ,new ImpulseParticlePropertiesBuilder(r,p).variableMap);
+        for (const e of overworld.getEntities({location,maxDistance:r,excludeTypes:["player"]})) {
+            try {
+                e.setOnFire(p*8);
+                const vec = Vector.subtract(e.location,location);
+                vec.y = 0;
+                const {x,z} = vec.normalized();
+                const vec2 = Vector.multiply({x,y:1,z},k);
+                e.applyDamage(d,{cause:EntityDamageCause.fire})
+                e.applyImpulse(vec2);
+                await nextTick;
+            } catch (error) {}
         }
     }
 }
 
+class ArcherTower extends Tower{
+    static INFO =  TowerAbilityInformations[TowerTypes.Mage];
+    async onImpulse(data){
+        for (let i = 0; i < data.level; i++) {
+            this.doImpulse(data).catch(errorHandle);
+            await sleep(15/data.power);
+        }
+    }
+    async doImpulse({location,range,power,knockback,damage}){
+        const r = IgniteTower.INFO.getRange(range);
+        const p = IgniteTower.INFO.getPower(power);
+        const k = IgniteTower.INFO.getKnockback(knockback);
+        const d = IgniteTower.INFO.getDamage(damage);
+        location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
+        overworld.spawnParticle('dest:ignite_impulse',  location ,new ImpulseParticlePropertiesBuilder(r,p).variableMap);
+        for (const e of overworld.getEntities({location,maxDistance:r,excludeTypes:["player"]})) {
+            try {
+                e.setOnFire(p*8);
+                const vec = Vector.subtract(e.location,location);
+                vec.y = 0;
+                const {x,z} = vec.normalized();
+                const vec2 = Vector.multiply({x,y:1,z},k);
+                e.applyDamage(d,{cause:EntityDamageCause.fire})
+                e.applyImpulse(vec2);
+                await nextTick;
+            } catch (error) {}
+        }
+    }
+}
 const contrusctors = {
-    [TowerTypes.Mage]:IgniteTower
+    [TowerTypes.Mage]:IgniteTower,
+    [TowerTypes.Archer]:ArcherTower
 }

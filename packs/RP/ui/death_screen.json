@@ -6,7 +6,7 @@
   },
   "you_died_panel/you_died_label": {
     "font_scale_factor": 3.5,
-    "color": [0.9,0.3,0.1,0.75]
+    "color": [1,0.9,0.8,0.85]
   },
   "death_reason_panel/death_reason_label":{"visible":false}
 }

@@ -1,43 +1,7 @@
 import { ItemLockMode, ItemStack, MinecraftBlockTypes } from "@minecraft/server";
-import { ArcherTowerLevelStructure, MageTowerLevelStructure } from "./pack";
 
-export const TowerTypes = {
-    Mage: "mage",
-    Archer: "archer"
-}
-export const TowerNames = {
-    [TowerTypes.Mage]: "tower.type.mage.name",
-    [TowerTypes.Archer]: "tower.type.archer.name"
-}
-export const TowerLevelsDefinitions = {
-    [TowerTypes.Mage]: MageTowerLevelStructure,
-    [TowerTypes.Archer]: ArcherTowerLevelStructure
-}
-export const TowerLevelDefinition = {
-    maxLevel: 3,
-    rangePerLevel: 5,
-    rangeOffset: 2,
-    intervalLevelInflation: 30,
-    baseIntervalDelay: 450,
-    impulseLevelDelay: 10,
-    1: {
-        maxPower: 5,
-        maxKnockback: 2,
-        maxDamage: 0,
-        maxInterval: 3
-    },
-    2: {
-        maxPower: 6,
-        maxKnockback: 3,
-        maxDamage: 2,
-        maxInterval: 3
-    },
-    3: {
-        maxPower: 7,
-        maxKnockback: 5,
-        maxDamage: 4,
-        maxInterval: 3
-    }
+export const EntityKillReward = {
+    "dest:centipede_head": 3
 }
 export const InfoMapProperties = {
     coins: "coins",
