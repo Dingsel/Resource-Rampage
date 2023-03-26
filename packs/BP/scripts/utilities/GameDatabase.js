@@ -62,7 +62,7 @@ export class GameDatabase extends ElementDatabase{
             return await this.getSession();
         }
     }
-    async getTowerIDsAsync(){return (await this.getSession()).getTowerIDs()}
+    async getTowerIDsAsync(){return (await this.getSession()).getTowerIDsAsync()}
     /**@param {string} @returns {Promise<boolean>} */
     async hasTower(towerId){
         const session = await this.getSession();

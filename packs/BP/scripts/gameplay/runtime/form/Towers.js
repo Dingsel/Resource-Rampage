@@ -1,82 +1,40 @@
 import { Block, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
-import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations } from "resources";
+import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
-import { EventTypes, MainMenu, clearAction, setAction, setItem } from "./default";
+import { EventTypes, MainMenu, clearAction, defualtSlot, setAction, setItem } from "./default";
 
-
-const mainDelay = 15;
-const maxTowers = 5;
 
 MainMenu.towers = {
-    action:towers,
+    action:onStart,
     content:"The Towers",
     icon: Textures.IconTowers
 }
-
-
-const TowerPicker = new ModalFormData()
-.title("form.pickTower.title")
-.dropdown("\n%form.pickTower.dropdown \n§r\n",Object.getOwnPropertyNames(TowerTypes).map(k=>TowerNames[TowerTypes[k]]),0)
+const Texts = {
+    FormPickTitle:"%form.pickTower.title",
+    FormPickDropdown:"%form.pickTower.dropdown",
+    FormTowersTitle:"%form.towers.title",
+    FocusLost:"%selection.focusLost.message2",
+    NoCions:"%gameplay.notCoins",
+}
+const actionDelay = 15;
+const maxTowers = 8;
+const _doing = Symbol('doing');
+const rayCast = {maxDistance:25,includeLiquidBlocks:false,includePassableBlocks:false};
 const vMap = new SquareParticlePropertiesBuilder(2.5).setLifeTime(0.07);
+const particleOffSet = { x: 0.50, y: 1.25, z: 0.50 }
+const TowerPicker = new ModalFormData();
 const variableMaps = {
     allow: vMap.setColor({red:0.2,green:0.7,blue:0.32}).variableMap,
     deny: vMap.setColor({red:0.7,green:0.2,blue:0.1}).variableMap,
     place: vMap.setColor({red:0.6,green:0.5,blue:0.1}).setLifeTime(7).setDirection({x:0,y:1,z:0}).setSpeed(1).setDynamicMotion(0.5).variableMap
 }
-const running = Symbol('place');
-const rayCast = {maxDistance:20,includeLiquidBlocks:false,includePassableBlocks:false};
-
-
-/** @param {Player} player */
-async function onPlace(player,data, eventType){
-    let block = null;
-    if(eventType == EventTypes.beforeItemUse) block = player.getBlockFromViewDirection(rayCast);
-    else if(eventType== EventTypes.beforeItemUseOn) block = player.dimension.getBlock(data.getBlockLocation());
-    else if(eventType== EventTypes.entityHit) block = data.hitBlock;
-    if(!block) return await sleep(mainDelay);
-    if(!await checkArea(block)) return await sleep(mainDelay);
-    delete player[running];
-    const {output, canceled} = await TowerPicker.show(player);
-    if(canceled) return await sleep(mainDelay);
-    const towerType = TowerTypes[Object.getOwnPropertyNames(TowerTypes)[output[0]]];
-    const cost = TowerCost[towerType];
-    if (cost > global.infoMap.get(InfoMapProperties.coins)) return await player.info("%gameplay.notCoins §g" + (~~(cost - global.infoMap.get(InfoMapProperties.coins))).unitFormat(1) + " §2$");
-    else if(!await player.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for ${cost.unitFormat(1)} §2$`)) return;
-    const {x,y,z} = block;
-    overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), variableMaps.place);
-    const {successCount} = await overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x-2} ${y + 1} ${z-2} 0_degrees none`);
-    const tower = await global.database.addTowerAsync();
-    console.log(tower,towerType);
-    await tower.set("type",towerType);
-    await tower.setTowerLocationAsync({x,y:y+1,z});
-    global.infoMap.relative(InfoMapProperties.coins,-cost);
-    await sleep(15);
-}
-
-/**@param {Player} player */
-async function startPickLocation(player){
-    player[running] = true;
-    setAction(player,onPlace);
-    setItem(player,MenuItemStacks.TowerEditor);
-    buyTower(player);
-}
-/**@param {Player} player */
-async function buyTower(player){
-    while(player[running]){
-        await nextTick;
-        if(player.selectedSlot != 8){
-            player.sendMessage('%selection.focusLost.message2');
-            return await towerEnd(player);
-        }
-        const block = player.getBlockFromViewDirection(rayCast);
-        if(block) overworld.spawnParticle("dest:square", Vector.add(block, { x: 0.50, y: 1.25, z: 0.50 }), (await checkArea(block))?variableMaps.allow:variableMaps.deny);
-    }
-    await towerEnd(player)
-}
-/**@param {Block} centerBlock */
-async function checkArea(centerBlock){
-    const {x:baseX,y,z:baseZ,dimension} = centerBlock;
+TowerPicker.title(Texts.FormPickTitle)
+TowerPicker.dropdown(Texts.FormPickDropdown + "\n\n§r\n",Object.getOwnPropertyNames(TowerTypes).map(k=>TowerNames[TowerTypes[k]]),0)
+function getTowers(){return global.database.getTowerIDsAsync();}
+function getTower(id){return global.database.getTowerAsync(id);}
+function getTowerType(index){return TowerTypes[Object.getOwnPropertyNames(TowerTypes)[index]];}
+function isValidArea({x:baseX,y,z:baseZ,dimension}){
     for (let x = baseX - 2; x < baseX+3; x++) {
         for (let z = baseZ - 2; z < baseZ + 3; z++) {
             const b1 = dimension.getBlock({x,y,z});
@@ -86,33 +44,87 @@ async function checkArea(centerBlock){
     }
     return true;
 }
-async function towerEnd(player){
+
+
+
+async function onStart(player){
+    const towerIds = await getTowers(),
+    menu = new MenuFormData(); menu.title(Texts.FormTowersTitle).body(`§hTowers: §7 ${towerIds.length}§8/§7` + maxTowers);
+    for (const towerId of towerIds) {
+        const tower = await getTower(towerId), {x,y,z} = tower.getTowerLocation()??{}, towerType = tower.getTowerType();
+        const content = `%${TowerNames[towerType]}§8: §2${x} §4${y} §t${z}\n§r§jLevel§8: §2§l${tower.getTowerLevel()}`;
+        menu.addAction(()=>onTowerSelected(player,tower),content);
+    }
+    if(towerIds.length < maxTowers) menu.addAction(onBuyNew,"§2Buy New");
+    menu.button("form.close");
+    await menu.show(player);
+}
+
+
+async function onBuyNew(player){
+    player[_doing] = true;
+    setAction(player,onAction);
+    setItem(player,MenuItemStacks.TowerEditor);
+    onLoop(player);
+}
+async function onTowerSelected(player, tower){
+    console.log("info");
+}
+
+
+
+/** @param {Player} player */
+async function onLoop(player){
+    while(player[_doing] && player.isOnline){ await nextTick;
+        if(player.selectedSlot != defualtSlot) return onBuyEnd(player), player.sendMessage(Texts.FocusLost);
+        const block = player.getBlockFromViewDirection(rayCast);
+        if(block)
+            block.dimension.spawnParticle(
+                "dest:square", 
+                Vector.add(block, particleOffSet), 
+                isValidArea(block)?variableMaps.allow:variableMaps.deny
+            );
+    }
+    onBuyEnd(player);
+}
+
+/** @param {Player} player */
+function onBuyEnd(player){
+    delete player[_doing];
     clearAction(player);
-    delete player[running];
-    if(player.isOnline) player.container.setItem(8,MenuItemStacks.Menu);
+    setItem(player,MenuItemStacks.Menu);
 }
-async function towers(player){
-    const actions = [];
-    const towers = [];
-    const ids = await global.session.getTowerIDsAsync(); 
-    const form = new ActionFormData().title('form.towers.title')
-    .body(`§hTowers: §7 ${ids.length}§8/§7` + maxTowers);
-    for (const id of ids) {
-        const tower = await global.database.getTowerAsync(id);
-        towers.push(tower);
-        const {x,y,z} = tower.getTowerLocation();
-        const towerType = tower.getTowerType();
-        form.button(`%${TowerNames[towerType]}§8: §2${x} §4${y} §t${z}\n§r§jLevel§8: §2§l${tower.getTowerLevel()}`);
-        actions.push(onTowerSelect);
-    }
-    if(ids.length<maxTowers){
-        actions.push(startPickLocation)
-        form.button('§2§lBuy New')
-    }
-    form.button('form.close');
-    const {output} = await form.show(player);
-    actions[output]?.(player,towers[output]);
+
+/** @param {Player} player */
+async function onAction(player, data, eventType){ let block, infoMap = global.infoMap;
+    const delay = sleep(actionDelay);
+    switch (eventType) {
+        case EventTypes.beforeItemUse: block = player.getBlockFromViewDirection(rayCast); break;
+        case EventTypes.beforeItemUseOn: block = player.dimension.getBlock(data.getBlockLocation()); break;
+        case EventTypes.entityHit: block = data.hitBlock; break;
+    } if (!block || !isValidArea(block)) return delay;
+    delete player[_doing];
+    const {output, canceled} = await TowerPicker.show(player); if(canceled) return delay;
+    const towerType = getTowerType(output[0]), towerCost = TowerCost[towerType], coins = infoMap.get(InfoMapProperties.coins);
+    if(towerCost > coins) return await player.info(Texts.NoCions + " §g" + (towerCost - coins).floor().unitFormat(1) + " §2$");
+    else if (!await player.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for ${towerCost.unitFormat(1)} §2$`)) return delay;
+    const {x,y,z} = block, towerSize = StructureSizes[MageTowerLevelStructure[0]];
+    overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x - (towerSize.x-1)/2} ${y + 1} ${z - (towerSize.z-1)/2} 0_degrees none`);
+    await onCreateTower(player, towerType, {x,y:y+1,z});
+    infoMap.relative(InfoMapProperties,-towerCost);
 }
+async function onCreateTower(player, towerType, location){
+    const tower = await global.database.addTowerAsync();
+    await tower.set('type', towerType);
+    await tower.setTowerLocationAsync(location)
+    return tower;
+}
+
+
+
+
+
+
 /**@param {Player} player @param {TowerElement} tower */
 async function onTowerSelect(player,tower){
     try {
