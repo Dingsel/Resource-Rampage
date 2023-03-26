@@ -33,7 +33,9 @@ export class EnemySpawner {
 class Wave {
 	/**@type {Mob[]} */
 	static enemies = [
-		new Mob("dest:ladybug", 1, 0),
+		new Mob("dest:ant", 20, 0),
+		new Mob("dest:pow_bug", 5, 3),
+		new Mob("dest:ladybug", 1, 10)
 		//new Mob("minecraft:skeleton", 1, 2)
 	]
 	/** @param {number} waveNumber */

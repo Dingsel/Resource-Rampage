@@ -14,9 +14,11 @@
 		"components": {
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
+				"reselect_targets": true,
 				"within_radius": 1024.0,
 				"entity_types": [
 					{
+						"priority": 1,
 						"filters": {
 							"all_of": [
 								{
@@ -50,7 +52,7 @@
 				"height": 2.0
 			},
 			"minecraft:health": {
-				"value": 40
+				"value": 400
 			},
 			"minecraft:movement": {
 				"value": 0.15

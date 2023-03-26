@@ -28,7 +28,7 @@ world.events.worldInitialize.subscribe(() => {
             for (const [enemy, location] of wave.generateEnemies()) {
                 //console.warn(enemy, location.x)
                 world.overworld.runCommand(`summon ${enemy} ${location.x} ${location.y} ${location.z}`)
-                world.overworld.runCommand(`execute as @e[type=${enemy},x=${location.x},y=${location.y},z=${location.z},c=1] at @s run spreadplayers ~ ~ 10 11 @s`)
+                world.overworld.runCommand(`execute as @e[type=${enemy},x=${location.x},y=${location.y},z=${location.z},c=1] at @s run spreadplayers ~ ~ 30 31 @s`)
             }
             world.round++
         } catch (error) {
