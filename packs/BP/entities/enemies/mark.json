@@ -1,0 +1,36 @@
+{
+    "format_version": "1.19.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "dest:mark",
+            "is_spawnable": true,
+            "is_summonable": true
+        },
+        "component_groups": {},
+        "components": {
+            "minecraft:knockback_resistance": {
+                "value": 1
+            },
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "cause": "all",
+                        "deals_damage": false
+                    }
+                ]
+            },
+            "minecraft:physics": {
+                "has_collision": false,
+                "has_gravity": false
+            },
+            "minecraft:collision_box": {
+                "height": 0,
+                "width": 0
+            },
+            "minecraft:scale": {
+                "value": 1.5
+            }
+        },
+        "events": {}
+    }
+}

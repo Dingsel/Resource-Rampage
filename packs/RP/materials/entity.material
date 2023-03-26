@@ -1,0 +1,8 @@
+{
+    "materials": {
+        "version": "1.0.0",
+        "mark:entity_emissive": {
+            "depthFunc": "Always"
+        }
+    }
+}

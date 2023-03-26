@@ -1,0 +1,32 @@
+{
+    "format_version": "1.19.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "dest:mark",
+            "materials": {
+                "default": "mark"
+            },
+            "textures": {
+                "default": "textures/entity/mark"
+            },
+            "geometry": {
+                "default": "geometry.mark"
+            },
+            "animations": {
+                "spin" : "animation.mark.spin"
+            },
+            "scripts": {
+                "animate": [
+                    "spin"
+                ]
+            },
+            "render_controllers": [
+                "controller.render.default"
+            ],
+            "spawn_egg": {
+                "base_color": "#288483",
+                "overlay_color": "#2B7135"
+            }
+        }
+    }
+}
