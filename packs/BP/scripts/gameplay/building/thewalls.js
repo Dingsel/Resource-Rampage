@@ -74,7 +74,8 @@ export function* path({ x: x1, y: y1, z: z1 }, { x: x2, y: y2, z: z2 }) {
     const key = maxs.x > maxs.z ? (maxs.x > maxs.y ? "x" : "y") : (maxs.z > maxs.y ? "z" : "y"), n = maxs[key];
     const xd = x / n, yd = y / n, zd = z / n;
     let xc = xd, yc = yd, zc = zd;
-    for (let i = 0; i < n-1; i++) {
+    yield { x: x1, y: y1, z: z1 };
+    for (let i = 0; i < n; i++) {
         yield { x: x1 + xc, y: y1 + yc, z: z1 + zc };
         xc += xd, yc += yd, zc += zd;
     }

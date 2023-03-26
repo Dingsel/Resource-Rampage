@@ -244,6 +244,7 @@ declare global {
         static clear<T extends object>(arg: T): T;
         static addPrototypeOf<T extends object>(arg: T, proto: object): T;
         static applyOwnGetters<T extends object>(ownGetters: object, source: T): T;
+        formatXYZ(): string;
     }
     interface Symbol {
         static isGenerator: Symbol
@@ -261,7 +262,8 @@ declare global {
         createUID(): number
     }
     interface Number {
-        unitFormat(place?: number, space?: string): string
+        unitFormat(place?: number, space?: string): string,
+        floor(): number
     }
     interface Array<T> {
         readonly randomElement: T,

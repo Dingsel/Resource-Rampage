@@ -10,7 +10,7 @@ export class MenuFormData extends ActionFormData{
     }
     onClose(onClose){this.#onClose = onClose;}
     addAction(action,content,icon = undefined){
-        this.#actions.push(action);
+        this.#actions.push(action??(()=>undefined));
         this.button(...[content,icon]);
     }
     async show(player){

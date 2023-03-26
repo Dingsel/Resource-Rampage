@@ -29,7 +29,9 @@ const {
 overworld = world.getDimension(MinecraftDimensionTypes.overworld),
 nether = world.getDimension(MinecraftDimensionTypes.nether),
 theEnd = world.getDimension(MinecraftDimensionTypes.theEnd)
-
+assign(Object.prototype,{
+    formatXYZ() {return `§2X§8:§a${this.z} §4Y§8:§c${this.z} §tZ§8:§9${this.z}`;}
+});
 assign(Object, {
     clone(object, newObject = create(getProto(object))) { return setProperties(newObject, getProperties(object)); },
     clear(object) { for (const key of Object.getOwnPropertyNames(object).concat(Object.getOwnPropertySymbols(object))) delete object[key]; return object; },
@@ -112,7 +114,8 @@ assign(Number.prototype, {
             }
             return nFix(n,place) + space + (Number.unitTypes[i] ?? "");
         }
-    }
+    },
+    floor(){return ~~this}
 });
 function nFix(num,place){
     let n = "" + num;
