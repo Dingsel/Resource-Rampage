@@ -12,6 +12,9 @@
 			}
 		},
 		"components": {
+			"minecraft:knockback_resistance": {
+				"value": 0.75
+			},
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"reselect_targets": true,
