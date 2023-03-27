@@ -19,6 +19,7 @@ const wa = (a, b = 6) => {
     const c = b ? stringify(a, 0, b) : a
     a.stack ? console.warn(a.message, a.stack) : console.warn(c);;
 }
+const interval = 15;
 
 
 system.events.gameInitialize.subscribe(() => {
@@ -32,13 +33,17 @@ system.events.gameInitialize.subscribe(() => {
         const towers = (await getTowers()).length
 
         for (const player of players) {
-            const { onScreenDisplay, nameTag, scores, selectedTower } = player;
+            await nextTick;
+            if(!player.isOnline) continue;
+            const { onScreenDisplay, nameTag, scores, selectedTower } = player, tips = player.getTips(); 
+            tips.forEach(tip=>tip.timeout-=interval);
             const ui = player.getTags().find(t => t.match(/,ui/)) ?? ',';
-            const playerInfo = { nameTag, scores, selectedTower, ui }
+            const playerInfo = { nameTag, scores, selectedTower, ui, tips:tips.map(tip=>tip.content) };
             const info = { c, k, lvl, online, all, enemies, towers }
-            await setDisplay(onScreenDisplay, playerInfo, info).catch(errorHandle)
+            await setDisplay(onScreenDisplay, playerInfo, info,).catch(errorHandle)
+            player.setTips(tips.filter(tip=>tip.timeout>0));
         }
-    }, 10)
+    }, interval)
 });
 const { wood, stone, coin } = {
     wood: '\uE110', stone: '\uE111', coin: '\uE112'
@@ -50,11 +55,12 @@ const { wood, stone, coin } = {
  * @param {otherInfo} info
  * */
 async function setDisplay(screen, playerInfo, info) {
-    const { nameTag, ui } = playerInfo,
+    const { nameTag, ui, tips } = playerInfo,
         { c, k, lvl, online, all, enemies, towers } = info;
     const [a, b] = ui.split(',')
     const indent = (/§´/.test(a) ? '§´' : '') + `§u-<(====: BAO JAM §r§u:====)>-`;
-    const ind2 = indent.replace(' BAO JAM ', '--');
+    const indent2 = (/§´/.test(a) ? '§´' : '') + `§u-<(====: Tips §r§u:====)>-`;
+    const ind2 = indent.replace(' BAO JAM ', '----');
     screen.setActionBar([
         , indent,
         `${b}Player§8:§r ${a + nameTag}`,
@@ -68,8 +74,7 @@ async function setDisplay(screen, playerInfo, info) {
         , ind2,
         `${b}Enemies§8:§r ${enemies}`,
         `${b}Towers§8:§r ${towers}`
-        , ind2,
-
+        , indent2, ...tips
     ].join(n_))
 
     return true;

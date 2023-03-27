@@ -52,9 +52,9 @@ export class ElementDatabase extends Database{
     }
     hasElement(elementId){return this.has(elementId);}
     async delete(elementId){
-        if(this.#elements.has(key)) {
-            this.#elements.get(key).dispose();
-            this.#elements.delete(key);
+        if(this.#elements.has(elementId)) {
+            this.#elements.get(elementId).dispose();
+            this.#elements.delete(elementId);
         }
         return super.delete(elementId);
     }

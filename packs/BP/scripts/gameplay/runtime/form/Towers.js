@@ -1,6 +1,6 @@
-import { Block, Player, Vector } from "@minecraft/server";
+import { Block, MinecraftBlockTypes, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
-import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure } from "resources";
+import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure, TowerUpgrades } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 import { EventTypes, MainMenu, clearAction, defualtSlot, setAction, setItem } from "./default";
 
@@ -16,6 +16,9 @@ const Texts = {
     FormTowersTitle:"%form.towers.title",
     FocusLost:"%selection.focusLost.message2",
     NoCions:"%gameplay.notCoins",
+    InfoTitle:"%form.tower.title",
+    Upgrade:"%form.upgrade",
+    DeleteTower:"%form.confirm.body.deleteTower"
 }
 const actionDelay = 15;
 const maxTowers = 8;
@@ -44,8 +47,10 @@ function isValidArea({x:baseX,y,z:baseZ,dimension}){
     }
     return true;
 }
-
-
+function getTowerData(tower){
+    const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
+    return {location,damage,knockback,level,power,interval,range,type};
+}
 
 async function onStart(player){
     const towerIds = await getTowers(),
@@ -67,9 +72,45 @@ async function onBuyNew(player){
     setItem(player,MenuItemStacks.TowerEditor);
     onLoop(player);
 }
+
+
 async function onTowerSelected(player, tower){
-    console.log("info");
+    const menu = new MenuFormData(), n = getTowerData(tower), a = TowerAbilityInformations[tower.get('type')??TowerTypes.Mage]; menu.title(Texts.InfoTitle);
+    let text = "";
+    text += `§hType: §7%${TowerNames[n.type]} \n`;
+    text += `§hPostion: ${n.location.formatXYZ()}\n§r`;
+    text += `§hInterval: §a${(a.getInterval(n.interval)/20).toFixed(1)} s\n§r`;
+    text += `§hPower: §a${a.getPower(n.power)}\n`;
+    text += `§hRadius: §a${a.getRange(n.range)}\n`;
+    text += `§hDamage: §a${a.getDamage(n.damage)}\n`;
+    text += `§hLevel: §a${n.level}\n§r`;
+    menu.body(text);
+    if(TowerUpgrades.canUpgrade(tower)) menu.addAction(()=>onUpgrade(player,tower),Texts.Upgrade);
+    menu.addAction(()=>onDelete(player,tower),"from.delete");
+    menu.button('form.close');
+    await menu.show(player);
 }
+/**@param {Player} player @param {TowerElement} tower */
+async function onDelete(player,tower){
+    if(!await player.confirm(Texts.DeleteTower)) return onTowerSelected(player,tower);
+    const towerType = tower.get('type')??TowerTypes.Mage;
+    const level = tower.getTowerLevel()??1;
+    const location = tower.getTowerLocation();
+    if(location){
+        const {x,y,z} = StructureSizes[TowerStructureDefinitions[towerType][level-1]];
+        const loc1 = Vector.subtract(location,{x:(x-1)/2,y:0,z:(z-1)/2}),
+        loc2 = Vector.add(loc1, {x,y,z});
+        overworld.fillBlocks(loc1,loc2,MinecraftBlockTypes.air);
+    }
+    const a = await global.database.removeTowerAsync(tower.getId());
+    global.coins+=TowerCost[towerType] * level * 0.75;
+}
+/**@param {Player} player @param {TowerElement} tower */
+async function onUpgrade(player, tower){
+    console.log("upgrade");
+}
+
+
 
 
 
@@ -116,66 +157,8 @@ async function onAction(player, data, eventType){ let block, infoMap = global.in
 async function onCreateTower(player, towerType, location){
     const tower = await global.database.addTowerAsync();
     tower.set('type', towerType);
-    tower.set('interval', 3);
-    tower.set('level',3);
     await tower.setTowerLocationAsync(location);
+    player.sendTip("§hYou created new tower?\nCool...");
     return tower;
 }
 
-
-
-
-
-
-/**@param {Player} player @param {TowerElement} tower */
-async function onTowerSelect(player,tower){
-    try {
-        const n = getTowerData(tower);
-        const info = new ActionFormData();
-        info.title('§tTower Informations');
-        const a = TowerAbilityInformations[n.type];
-        let text = "";
-        text += `§hType: §7%${TowerNames[n.type]} \n`;
-        text += `§hPostion: ${n.location.formatXYZ()}\n§r`;
-        text += `§hInterval: §a${(a.getInterval(n.interval)/20).toFixed(1)} s\n§r`;
-        text += `§hPower: §a${a.getPower(n.power)}\n`;
-        text += `§hRadius: §a${a.getRange(n.range)}\n`;
-        text += `§hDamage: §a${a.getDamage(n.damage)}\n`;
-        text += `§hLevel: §a${n.level}\n§r`;
-        info.body(text);
-        const canUp = canUpgreade(n);
-        if(canUp) info.button('form.upgrade');
-        info.button("form.close");
-        const {output, canceled} = await info.show(player);
-        if(canceled || output == (canUp?1:0)) return;
-        await upgreade(player,tower);
-
-    } catch (error) {
-        errorHandle(error);
-    }
-}
-async function upgreade(player,tower,data){
-    const info = new MenuFormData();
-    info.title('§tTower Upgrades');
-    info.addAction(()=>{},``);
-    let text = "";
-    text += `§hPostion: ${n.location.formatXYZ()}\n§r`;
-    text += `§hInterval: §a${n.interval/255}\n§r`;
-    text += `§hPower: §a${n.power}\n`;
-    text += `§hRadius: §a${n.radius}\n`;
-    text += `§hDamage: §a${n.damage}\n`;
-    text += `§hLevel: §a${n.level}\n§r`;
-    info.body(text);
-    console.warn('upgrade')
-}
-function maxUpgrades(data = getTowerData(null)){
-
-}
-function canUpgreade(data = getTowerData(null)){
-    return true;
-}
-function getTowerData(tower){
-    tower.get('type')
-    const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
-    return {location,damage,knockback,level,power,interval,range,type};
-}

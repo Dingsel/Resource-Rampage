@@ -44,6 +44,10 @@ export const TowerDefaultAbilities = {
         range:1
     }
 }
+export const MaxTowerLevels = {
+    [TowerTypes.Mage]: 3,
+    [TowerTypes.Archer]: 3
+}
 export const TowerMaxAbilityDefinition = {
     [TowerTypes.Mage]:{
         interval: 4,
@@ -63,4 +67,24 @@ export const TowerMaxAbilityDefinition = {
 export const TowerCost = {
     [TowerTypes.Mage]: 250,
     [TowerTypes.Archer]: 230
+}
+export class TowerUpgrades{
+    static getMenuDataTemplate(tower){
+
+    }
+    static canUpgrade(tower){
+        const type = tower.get('type')??TowerTypes.Mage;
+        const {interval,damage,knockback,power,range,level} = this.getTowerData(tower);
+        const maxAbilities = TowerMaxAbilityDefinition[type];
+        return level == MaxTowerLevels[type]
+        && maxAbilities.interval == interval
+        && maxAbilities.damage == damage
+        && maxAbilities.knockback == knockback
+        && maxAbilities.power == power
+        && maxAbilities.range == range;
+    }
+    static getTowerData(tower){
+        const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
+        return {location,damage,knockback,level,power,interval,range,type};
+    }
 }

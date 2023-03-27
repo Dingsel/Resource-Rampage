@@ -29,34 +29,12 @@ defineProperties(Entity.prototype, {
         }
     }
 });
-
-defineProperties(Player.prototype, {
-    toString: { value() { return `[Player: ${this.name}]`; } },
-    mainhand: {
-        get() { return this.armor.getEquipmentSlot("mainhand"); },
-        set(s) { this.armor.setEquipment("mainhand", s); return s; }
-    },
-    getGameMode: {
-        value() {
-            return Object.getOwnPropertyNames(GameMode).find(gameMode => world.getPlayers({ name:this.name, gameMode }).length)??"defualt"
-        }
-    },
-    setGameMode:{
-        value(mode) {
-            return this.runCommandAsync("gamemode " + mode);
-        }
-    },
-    setCameraPermission:{
-        value(bool) {
-            return this.runCommandAsync("inputpermission set @s camera " + (bool?"enabled":"disabled"));
-        }
-    },
-    setMovementPermission:{
-        value(bool) {
-            return this.runCommandAsync("inputpermission set @s movement  " + (bool?"enabled":"disabled"));
-        }
-    },
-    confirm:{async value(body,title="form.confirm.title"){
+Object.assign(Player.prototype,{
+    getGameMode() {return Object.getOwnPropertyNames(GameMode).find(gameMode => world.getPlayers({ name:this.name, gameMode }).length)??"defualt"},
+    setGameMode(mode) {return this.runCommandAsync("gamemode " + mode);},
+    setCameraPermission(bool) {return this.runCommandAsync("inputpermission set @s camera " + (bool?"enabled":"disabled"));},
+    setMovementPermission(bool) {return this.runCommandAsync("inputpermission set @s movement  " + (bool?"enabled":"disabled"));},
+    async confirm(body,title="form.confirm.title"){
         const confirm = new MessageFormData();
         confirm.body(body??"")
         confirm.title(title)
@@ -64,17 +42,32 @@ defineProperties(Player.prototype, {
         confirm.button1("form.confirm.button");
         const {output, canceled} = await confirm.show(this);
         return (!canceled)&&(output==1);
-    }},
-    info:{async value(body,title="form.info.title"){
+    },
+    async info(body,title="form.info.title"){
         const info = new ActionFormData();
         info.body(body??"")
         info.title(title)
         info.button("form.ok");
         return info.show(this);
-    }},
-    isOnline:{get(){return this[isJoined];}}
+    },
+    sendTip(message,timeout = 160){
+        if(!this[_tips]) this[_tips] = [];
+        this[_tips].push({content:message,timeout});
+    },
+    getTips(){return this[_tips]??[];},
+    setTips(tips){if(Array.isArray(tips)) this[_tips] = tips;}
 });
+defineProperties(Player.prototype, {
+    toString:{value() { return `[Player: ${this.name}]`;}},
+    mainhand: {
+        get() { return this.armor.getEquipmentSlot("mainhand"); },
+        set(s) { this.armor.setEquipment("mainhand", s); return s; }
+    },
+    isOnline:{get(){return this[isJoined];}},
+});
+
 const isJoined = Symbol('joined');
+const _tips = Symbol('tips');
 Player.prototype[isJoined] = true;
 const joinedPlayers = new Map();
 world.events.playerSpawn.subscribe(({player,initialSpawn})=>{if(initialSpawn) { player[isJoined] = true; joinedPlayers.set(player.id,player);}});

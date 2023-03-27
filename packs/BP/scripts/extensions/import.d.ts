@@ -26,6 +26,9 @@ declare module "@minecraft/server" {
         readonly isOnline: boolean;
         confirm(body:string, title?:string): Promise<boolean>
         info(body: string, title?: string): Promise<ActionFormResponse>
+        sendTip(message: string, timeout?: number): void
+        getTips(): ({content:string,timeout:number})[]
+        setTips(tips: ({content:string,timeout:number})[]): void
     }
     interface World {
         readonly overworld: Dimension;

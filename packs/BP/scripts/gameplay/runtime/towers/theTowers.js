@@ -32,7 +32,7 @@ class Tower{
     getRawInfo(){return this.#element.getRawInfo();}
     async #onImpulse(){
         const element = this.#element;
-        if(element.isDisposed) return onDispose();
+        if(element.isDisposed) return this.onDispose();
         const data = this.getData();
         setTimeout(()=>this.#onImpulse().catch(errorHandle),TowerAbilityInformations[data.type].getInterval(data.interval));
         await this.onImpulse(data);

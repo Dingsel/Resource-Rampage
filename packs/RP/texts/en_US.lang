@@ -24,15 +24,23 @@ construction.started=§aConstruction of your wall has start...
 construction.done=§aConstruction of your wall has finish...
 
 
+
 form.wallBuild.dropdown=§hSelect Wall Level
 form.pickTower.title=§tSelect Tower To Build
 form.pickTower.dropdown=§hTower Type
+form.tower.title=§tTower Informations
+form.towers.title=§tTowers
 
+form.settings.title=§tMenu
+form.settings.Body=§h
+
+form.confirm.body.deleteTower=§4Are you sure you want to delete this tower?
 form.confirm.title=§l§tThe Confirmation
 form.confirm.button=§l§2Confirm
 
 form.info.title=§l§sThe Information
 
+from.delete=§c§l-<(== Delete ==)>-
 form.upgrade=§2§lUpgrade
 form.close=§4§lClose
 form.back=§4§lBack
