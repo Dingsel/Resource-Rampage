@@ -105,18 +105,20 @@ async function onAction(player, data, eventType){ let block, infoMap = global.in
     } if (!block || !isValidArea(block)) return delay;
     delete player[_doing];
     const {output, canceled} = await TowerPicker.show(player); if(canceled) return delay;
-    const towerType = getTowerType(output[0]), towerCost = TowerCost[towerType], coins = infoMap.get(InfoMapProperties.coins);
-    if(towerCost > coins) return await player.info(Texts.NoCions + " §g" + (towerCost - coins).floor().unitFormat(1) + " §2$");
+    const towerType = getTowerType(output[0]), towerCost = TowerCost[towerType];
+    if(towerCost > global.coins) return await player.info(Texts.NoCions + " §g" + (towerCost - global.coins).floor().unitFormat(1) + " §2$");
     else if (!await player.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for ${towerCost.unitFormat(1)} §2$`)) return delay;
     const {x,y,z} = block, towerSize = StructureSizes[MageTowerLevelStructure[0]];
     overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x - (towerSize.x-1)/2} ${y + 1} ${z - (towerSize.z-1)/2} 0_degrees none`);
     await onCreateTower(player, towerType, {x,y:y+1,z});
-    infoMap.relative(InfoMapProperties,-towerCost);
+    global.coins -= towerCost;
 }
 async function onCreateTower(player, towerType, location){
     const tower = await global.database.addTowerAsync();
-    await tower.set('type', towerType);
-    await tower.setTowerLocationAsync(location)
+    tower.set('type', towerType);
+    tower.set('interval', 3);
+    tower.set('level',3);
+    await tower.setTowerLocationAsync(location);
     return tower;
 }
 

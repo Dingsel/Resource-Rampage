@@ -1,10 +1,18 @@
 import { GameDatabase, ScoreboardMap, SessionGameElement } from 'utils';
-import { config } from 'config';
+import config from 'config.js';
+import { InfoMapProperties } from 'resources';
 
-/**@type {{castle:import('utilities/import').Castle,initialized:boolean,config:typeof config, infoMap: ScoreboardMap, session:SessionGameElement,database:GameDatabase}}*/
-const global = globalThis.global??{
+const global = {
     initialized:false,
-    config
+    /**@type {SessionGameElement} */
+    session:null,
+    /**@type {GameDatabase} */
+    database:null,
+    config,
+    /**@type {ScoreboardMap} */
+    infoMap:null,
+    get coins(){return this.infoMap.get(InfoMapProperties.coins)},
+    set coins(v){return this.infoMap.set(InfoMapProperties.coins,v)}
 };
 globalThis.global = global;
 export { global };

@@ -4,6 +4,28 @@ const sets = new Map();
 const splitKey = '.\n$_';
 const matchRegex = /\.\n\$\_/g;
 const {scoreboard} = world;
+
+
+export class PromseHandle{
+    #promise = Promise.resolve();
+    #id = 0;
+    #map = new Map();
+    release(id){
+        if(!this.#map.has(id)) throw new ReferenceError("Invalid promise id resolved!");
+        const res = this.#map.get(id);
+        this.#map.delete(id);
+        res();
+        return true;
+    }
+    async lock(){
+        const promise = this.#promise;
+        const id = this.#id++;
+        this.#promise = new Promise((res)=>this.#map.set(id,res));
+        await promise;
+        return id;
+    }
+    then(callBack){return this.lock().then(callBack);}
+}
 /**
  * Database
  */
@@ -46,12 +68,14 @@ export class Database extends Map{
         this.#objective = objective;
         this.#id = objective.id;
         this.#participants = new Map();
+        this.#awaitHandles = new Map();
         for (const p of objective.getParticipants()) {
             if(p.type == ScoreboardIdentityType.fakePlayer){
                 const [key,value] = p.displayName.split(splitKey);
                 const v = JSON.parse(value.replaceAll("\\\"","\""));
                 super.set(key,v);
                 this.#participants.set(key,p);
+                this.#awaitHandles.set(key,new PromseHandle());
             }
         }
     }
@@ -65,12 +89,16 @@ export class Database extends Map{
         if (key.match(matchRegex)) throw new TypeError(`Database keys can't include "${splitKey}"`);
         const build = key + splitKey + JSON.stringify(value).replaceAll(/"/g, '\\"');
         if ((build.length + 1) > 32000) throw new Error(`Database setter to long... somehow`);
+        let handle = this.#awaitHandles.get(key) ?? new PromseHandle();
+        const handleKey = await handle.lock();
         if (this.has(key)) this.#objective.removeParticipant(this.#participants.get(key));
         await runCommand(`scoreboard players set "${build}" "${this.#id}" 0`);
         const p = this.#objective.getParticipants().find(pa=>pa.displayName.startsWith(key + splitKey));
         if(p == undefined) throw new Error("Value could be settet");
         this.#participants.set(key,p);
         super.set(key, value);
+        this.#awaitHandles.set(key,handle);
+        handle.release(handleKey);
     }
     /**
      * Delete a key from the database 
@@ -82,6 +110,7 @@ export class Database extends Map{
         if (!this.has(key)) return false;
         this.#objective.removeParticipant(this.#participants.get(key));
         this.#participants.delete(key);
+        this.#awaitHandles.delete(key);
         return super.delete(key);
     }
     clear() {
@@ -93,6 +122,7 @@ export class Database extends Map{
     #id;
     #objective;
     #participants;
+    #awaitHandles = new Map();
     /**@returns {string} */
     getId(){return this.#id;}
     /**@returns {ScoreboardObjective} */

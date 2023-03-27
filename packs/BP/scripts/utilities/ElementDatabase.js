@@ -14,7 +14,7 @@ export class DisposableHandle{
     }
     async update(){
         if(this.isDisposed) throw new ReferenceError("This object handle is disposed, you can´t update it.");
-        else return await this.#onUpdate(this);
+        return await this.#onUpdate(this);
     }
     dispose(){
         const close = this.#onDispose;
