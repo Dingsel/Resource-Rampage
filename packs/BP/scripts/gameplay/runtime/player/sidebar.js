@@ -8,7 +8,7 @@ const {
 } = {
     parse: JSON.parse.bind(JSON), stringify: JSON.stringify.bind(JSON), Array, Object, n_: '§r\n',
     InfoMapProperties,
-    u: function (n, a, s) { return n.unitFormat(a, s) }
+    u: function (n, a, s,e=3,c=1) { return n.unitFormat(a, s,e,c) }
 };
 const { scoreboard, overworld: ovw } = world;
 const obj = scoreboard.getObjective('online') ?? scoreboard.addObjective('online', 'online')

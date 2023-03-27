@@ -265,7 +265,7 @@ declare global {
         createUID(): number
     }
     interface Number {
-        unitFormat(place?: number, space?: string): string,
+        unitFormat(place?: number, space?: string,exponent:?number,component?:number): string,
         floor(): number
     }
     interface Array<T> {
