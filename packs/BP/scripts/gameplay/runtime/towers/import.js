@@ -1,3 +1,2 @@
 //export * from './defenceAttack.js';
-//export * from './fireAoe.js';
-export {}
+export * from './house.js';

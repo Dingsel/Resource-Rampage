@@ -25,12 +25,12 @@ const {
     getOwnPropertyDescriptors: getProperties,
     defineProperties: setProperties,
 } = Object,
-{ scoreboard, events } = world,
-overworld = world.getDimension(MinecraftDimensionTypes.overworld),
-nether = world.getDimension(MinecraftDimensionTypes.nether),
-theEnd = world.getDimension(MinecraftDimensionTypes.theEnd)
-assign(Object.prototype,{
-    formatXYZ() {return `§2X§8:§a${this.z} §4Y§8:§c${this.z} §tZ§8:§9${this.z}`;}
+    { scoreboard, events } = world,
+    overworld = world.getDimension(MinecraftDimensionTypes.overworld),
+    nether = world.getDimension(MinecraftDimensionTypes.nether),
+    theEnd = world.getDimension(MinecraftDimensionTypes.theEnd)
+assign(Object.prototype, {
+    formatXYZ() { return `§2X§8:§a${this.z} §4Y§8:§c${this.z} §tZ§8:§9${this.z}`; }
 });
 assign(Object, {
     clone(object, newObject = create(getProto(object))) { return setProperties(newObject, getProperties(object)); },
@@ -66,12 +66,11 @@ assign(globalThis, {
     clearTimeout: system.clearRun.bind(system),
     run: function (callBack) { return Promise.resolve().then(callBack) },
     runCommand: ovw.runCommandAsync.bind(ovw),
-    sleep: (n)=>new Promise(res=>setTimeout(res,n)),
-    errorHandle: er=>console.error(er?.name??er,er?.message??'',er?.stack??""),
+    sleep: (n) => new Promise(res => setTimeout(res, n)),
+    errorHandle: er => console.error(er?.name ?? er, er?.message ?? '', er?.stack ?? ""),
     system, world, events,
-    worldInitialized: new Promise(res=>events.worldInitialize.subscribe(res)), overworld, nether, theEnd,
-    gameInitialized: new Promise(res=>system.events.gameInitialize.subscribe(res)),
-    tier: 3
+    worldInitialized: new Promise(res => events.worldInitialize.subscribe(res)), overworld, nether, theEnd,
+    gameInitialized: new Promise(res => system.events.gameInitialize.subscribe(res))
 });
 
 console.logLike = console.log;
@@ -85,6 +84,14 @@ setProperties(globalThis, {
                 get(sb, obj) { return sb.getObjective(obj) },
                 set(sb, obj, display) { return sb.addObjective(obj, display) }
             })
+        }
+    },
+    tier: {
+        get() {
+            return (world.getDynamicProperty("tier") ?? 0)
+        },
+        set(n){
+            world.setDynamicProperty("tier", n)
         }
     }
 })
@@ -103,7 +110,7 @@ assign(Math, {
 });
 
 Number.unitTypes = ['', 'k', 'M', 'G', 'T', 'E'];
-Number.createUID = function(){return `${~~(__date_clock()/1000000)}-${system.currentTick}-${~~(Math.random()*900 + 100)}`;}
+Number.createUID = function () { return `${~~(__date_clock() / 1000000)}-${system.currentTick}-${~~(Math.random() * 900 + 100)}`; }
 // 56,485 -> 56.4k
 assign(Number.prototype, {
     unitFormat: function (place = 1, space = "", exponent = 3, component = 1) {
@@ -112,32 +119,32 @@ assign(Number.prototype, {
                 n /= e;
                 continue;
             }
-            return nFix(n,place) + space + (Number.unitTypes[i] ?? "");
+            return nFix(n, place) + space + (Number.unitTypes[i] ?? "");
         }
     },
-    floor(){return ~~this}
+    floor() { return ~~this }
 });
-function nFix(num,place){
+function nFix(num, place) {
     let n = "" + num;
-    let n2=n.split('.');
-    if(n2.length == 1) return n;
-    else if ( n2[1]?.length < place) return n;
+    let n2 = n.split('.');
+    if (n2.length == 1) return n;
+    else if (n2[1]?.length < place) return n;
     else return num.toFixed(place);
 
 }
 setProperties(Array.prototype, {
-    x:{get(){return this[0]}},
-    y:{get(){return this[1]}},
-    z:{get(){return this[2]}},
+    x: { get() { return this[0] } },
+    y: { get() { return this[1] } },
+    z: { get() { return this[2] } },
     randomElement: { get() { return this[Math.floor(Math.random() * this.length)]; } },
-    remove:{
+    remove: {
         value(value) {
             let i = this.indexOf(value);
             if (i > -1) this.splice(i, 1);
             return this;
         }
     },
-    removeAll:{
+    removeAll: {
         value(value) {
             let i = 0;
             while (i < this.length) {

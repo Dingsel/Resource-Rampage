@@ -27,5 +27,6 @@ export const promise = Initialization().catch(errorHandle);
 world.events.worldInitialize.subscribe(({propertyRegistry}) =>{
     const def = new DynamicPropertiesDefinition()
     def.defineNumber("round")
+    def.defineNumber("tier")
     propertyRegistry.registerWorldDynamicProperties(def)
 })
