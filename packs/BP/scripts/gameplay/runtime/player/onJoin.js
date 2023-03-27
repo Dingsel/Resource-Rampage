@@ -1,5 +1,4 @@
-import { EntityScaleComponent, ItemLockMode, ItemStack } from "@minecraft/server";
-import { ModalFormData } from "@minecraft/server-ui";
+import { EntityScaleComponent } from "@minecraft/server";
 import { MenuItemStacks, centerLocation } from "resources";
 
 const { scoreboard } = world, now =()=> `§${Date.now().toString().split('').join('§')}`;

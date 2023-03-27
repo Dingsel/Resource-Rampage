@@ -1,4 +1,4 @@
-import { MinecraftBlockTypes, MinecraftEnchantmentTypes, ScriptEventCommandMessageEvent } from "@minecraft/server";
+import { MinecraftBlockTypes, MinecraftEnchantmentTypes, ScriptEventCommandMessageEvent, Enchantment, EnchantmentList, ItemStack } from "@minecraft/server";
 import { ActionFormData } from '@minecraft/server-ui';
 import { buildWall, path } from "gameplay/building/import.js";
 import { x_enchantments } from "gameplay/initializations/enchantments_load";
@@ -25,11 +25,11 @@ export const tests = {
         return true;
     },
     add_enchantment(data) {
-        const { sourceEntity } = data, item = sourceEntity.mainhand.getItem(), { enchantments: ench } = item, results = {}, lvl = 7;
-        for (const key in x_enchantments) {
-            if (ench.addEnchantment(x_enchantments[key][lvl])) results['§aadded§r'] ? results['§aadded§r'] += `, ${key} ${lvl}` : results['§aadded§r'] = `${key} ${lvl}`;
-            else results['§cinvalid§r'] ? results['§cinvalid§r'] += `, ${key} ${lvl}` : results['§cinvalid§r'] = `${key} ${lvl}`;
-        } print(JSON.stringify(results, 0, 3))
+        const { sourceEntity } = data, item = sourceEntity.mainhand.getItem();
+        /**@type {ItemStack} */ 
+        const { enchantments: ench } = item;
+        ench.removeEnchantment(MinecraftEnchantmentTypes.sharpness);
+        console.log(ench.addEnchantment(Enchantment.Custom[MinecraftEnchantmentTypes.sharpness.id][10]));
         item.enchantments = ench;
         sourceEntity.mainhand = item;
         return true;
