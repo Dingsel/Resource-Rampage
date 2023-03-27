@@ -4,10 +4,10 @@
         "type": "panel",
         "offset": [
             0,
-            0
+            -25
         ],
-        "anchor_from": "left_middle",
-        "anchor_to": "left_middle",
+        "anchor_from": "right_middle",
+        "anchor_to": "right_middle",
         "alpha": 1,
         "controls": [
             {
