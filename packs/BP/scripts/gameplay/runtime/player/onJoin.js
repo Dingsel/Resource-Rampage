@@ -23,7 +23,7 @@ events.playerSpawn.subscribe(async ({ player, initialSpawn }) => {
     await player.runCommandAsync('fog @s remove test');
     await player.runCommandAsync('fog @s remove fog');
     await player.runCommandAsync('fog @s push dest:custom_fog test');
-    if (!obj.getParticipants()?.find(({displayName:n})=>n.endsWith(`§ ${name}`))){
-        await player.runCommandAsync(`scoreboard players set "${now()}§ ${name}" ${obj.displayName} 0`);
+    if (!obj.getParticipants()?.find(({displayName:n})=>n.endsWith(`§r${name}`))){
+        await player.runCommandAsync(`scoreboard players set "${now()}§r${name}" ${obj.id} 0`);
     }
 });
