@@ -12,7 +12,7 @@ MainMenu.UI = {
 /**@param {Player}player */
 async function uisettings(player) {
     const reset = () => player.getTags().forEach(t => t.match(/,ui/) && player.removeTag(t)),
-        ui = player.getTags().find(t => t.match(/,ui/)) ?? ',,ui',
+        ui = player.getTags().find(t => t.match(/,ui/)) ?? uiFormat.reset,
         [a, b] = ui.split(','), { PaintBrush, ColorBrush, Reset, Back } = Textures,
         { output: S, canceled } = await new ActionFormData()
             .title('pack.description')

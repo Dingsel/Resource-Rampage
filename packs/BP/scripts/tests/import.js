@@ -9,7 +9,13 @@ system.events.scriptEventReceive.subscribe(async (any) => {
         try {
             var a = await tests[test](any);
         } catch (error) {
-            console.error(`§cTest "${id}" failed with error: \n${error}\n${error.stack}`);
+            if (error instanceof Error) (({ name, message, stack }) => {
+                console.error(`§cTest "${id}" failed with error:\n    [${name}]: ${message}\n${stack}`)
+            })(error)
+            else {
+                console.error(`§cTest "${id}" failed with error:\n    ${error}`);
+
+            }
         }
         if (a) console.warn(`§2Test "${id}" was susccessfully executed.`)
         else console.error(`§cTest "${id}" failed.`);

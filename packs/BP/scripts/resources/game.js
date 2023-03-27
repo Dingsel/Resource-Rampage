@@ -15,7 +15,7 @@ export const uiFormat = {
     Obfuscated: "§k",
     Special: "§´",
     color: {
-        "§_§rNormal": "§_§r", "§1Dark Blue": "§1", "§9Blue": "§9", "§2Dark Green": "§2",
+        "§_§rNormal": "§_", "§1Dark Blue": "§1", "§9Blue": "§9", "§2Dark Green": "§2",
         "§aGreen": "§a", "§3Dark Aqua": "§3", "§bAqua": "§b", "§4Dark Red": "§4", "§cRed": "§c",
         "§5Purple": "§5", "§dMagenta": "§d", "§6Gold": "§6", "§eYellow": "§e", "§gMinecoin Gold": "§g",
         "§nBrown": "§n", "§0Black": "§0", "§8Dark Gray": "§8", "§7Gray": "§7", "§fWhite": "§f"
