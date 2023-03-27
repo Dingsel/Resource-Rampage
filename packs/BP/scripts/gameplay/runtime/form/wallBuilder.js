@@ -28,7 +28,8 @@ const Texts = {
     Clear:"%selection.onclear.message",
     Same:"%selection.same.message",
     Small:"%selection.small.message",
-    OnSelect:"%selection.onselect.message"
+    OnSelect:"%selection.onselect.message",
+    CantBuild:"%selection.cantBuild.message"
 }
 export const WallTypeForm = new ModalFormData().title(Texts.FormTitle)
 .slider(Texts.FormSlider,3,15,3,4)
@@ -112,6 +113,7 @@ async function onSelect(player, block, eventType) {
     if(Vector.subtract({x,y:0,z},{x:x1,y:0,z:z1}).length() < 5){
         player.sendMessage(Texts.Small);return true;
     }
+    if(!global.safeArea.isValid(location)) return true, player.sendMessage(Texts.CantBuild);
     blockInUse.add(key);
     world.playSound('bubble.pop', { location, pitch: 0.6, volume: 1 });
     player.sendMessage(`${Texts.OnSelect}${eventType == EventTypes.entityHit ? 1 : 2}    ${block.formatXYZ()}`);
