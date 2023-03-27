@@ -10,11 +10,11 @@ const {
     InfoMapProperties,
     u: function (n, a, s) { return n.unitFormat(a, s) }
 };
-const { scoreboard,overworld:ovw } = world;
+const { scoreboard, overworld: ovw } = world;
 const obj = scoreboard.getObjective('online') ?? scoreboard.addObjective('online', 'online')
 const getAllPlayers = world.getAllPlayers.bind(world);
 const getEntities = ovw.getEntities.bind(ovw);
-function getTowers(){return global.database.getTowerIDsAsync();}
+function getTowers() { return global.database.getTowerIDsAsync(); }
 const wa = (a, b = 6) => {
     const c = b ? stringify(a, 0, b) : a
     a.stack ? console.warn(a.message, a.stack) : console.warn(c);;
@@ -36,12 +36,13 @@ system.events.gameInitialize.subscribe(() => {
             const ui = player.getTags().find(t => t.match(/,ui/)) ?? ',';
             const playerInfo = { nameTag, scores, selectedTower, ui }
             const info = { c, k, lvl, online, all, enemies, towers }
-            await setDisplay(onScreenDisplay, playerInfo, info ).catch(errorHandle)
+            await setDisplay(onScreenDisplay, playerInfo, info).catch(errorHandle)
         }
     }, 10)
 });
-
-wa(map(obj.getParticipants(),({displayName:n})=>n))
+const { wood, stone, coin } = {
+    wood: '\uE110', stone: '\uE111', coin: '\uE112'
+}
 
 /**
  * @param {ScreenDisplay} screen
@@ -50,23 +51,25 @@ wa(map(obj.getParticipants(),({displayName:n})=>n))
  * */
 async function setDisplay(screen, playerInfo, info) {
     const { nameTag, ui } = playerInfo,
-    { c, k, lvl, online, all, enemies, towers } = info;
+        { c, k, lvl, online, all, enemies, towers } = info;
     const [a, b] = ui.split(',')
-    const indent = (/§´/.test(a)?'§´':'')+`§u-<(====: BAO JAM §r§u:====)>-`;
-    const ind2 = indent.replace(' BAO JAM ','--');
+    const indent = (/§´/.test(a) ? '§´' : '') + `§u-<(====: BAO JAM §r§u:====)>-`;
+    const ind2 = indent.replace(' BAO JAM ', '--');
     screen.setActionBar([
-        ,indent,
-        `${b}Player§8:§r ${a+nameTag}`,
-        `${b}Coin${c > 1 ? 's' : ''}§8:§r ${u(c, 1, a)}`,
+        , indent,
+        `${b}Player§8:§r ${a + nameTag}`,
+        `${b}Coin${c > 1 ? 's' : ''}§8:§r ${u(c, 1, a)}${coin}`,
+        // `${b}Wood§8:§r ${u(w, 1, a)}`,
+        // `${b}Stone§8:§r ${u(s, 1, a)}`,
         `${b}Kills§8:§r ${u(k, 1, a)}`,
         `${b}Level§8:§r ${u(lvl, 1, a)}`,
-        ,ind2,
+        , ind2,
         `${b}Online Players§8:§r §a${online}§r/§2${all}`,
-        ,ind2,
+        , ind2,
         `${b}Enemies§8:§r ${enemies}`,
         `${b}Towers§8:§r ${towers}`
-        ,ind2,
-        
+        , ind2,
+
     ].join(n_))
 
     return true;
