@@ -37,11 +37,11 @@ async function Apply(player, ui, num) {
         myClr = Object.values(Colours).findIndex(c => type.endsWith(c)),
         { formValues, canceled } = await new ModalFormData()
             .title(a.replace(/§k/g, '') + 'Customize ' + which())
-            .toggle(b + `§lBold`, type.includes('§l'))
-            .toggle(b + '§oItalic', type.includes('§o'))
-            .toggle(b + `§kObfuscated`, type.includes('§k'))
-            .toggle(b + '§´Special', type.includes('§´'))
-            .dropdown(b + 'Color', CLRS, myClr)
+            .toggle(`§lBold`, type.includes('§l'))
+            .toggle('§oItalic', type.includes('§o'))
+            .toggle(`§kObfuscated`, type.includes('§k'))
+            .toggle('§´Special', type.includes('§´'))
+            .dropdown('Color', CLRS, myClr)
             .show(player);
     if (canceled) return;
     let [B, i, o, s, cl] = formValues, clr = Colours[CLRS[cl]];

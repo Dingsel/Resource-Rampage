@@ -97,5 +97,5 @@ export class GameDatabase extends ElementDatabase{
 export class SessionGameElement extends Element{
     /**@returns {Promise<string[]>} */
     async getTowerIDsAsync(){return [...await this.getDefault("towers",[])];}
-    get time(){system.currentTick*50;}
+    get time(){return system.currentTick*50;}
 }

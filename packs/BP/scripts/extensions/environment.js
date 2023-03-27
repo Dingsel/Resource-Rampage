@@ -122,7 +122,8 @@ assign(Number.prototype, {
             return nFix(n, place) + space + (Number.unitTypes[i] ?? "");
         }
     },
-    floor() { return ~~this }
+    floor(){return ~~this},
+    toHHMMSS() { return new Date(this).toHHMMSS(); }
 });
 function nFix(num, place) {
     let n = "" + num;
