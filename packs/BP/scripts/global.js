@@ -1,4 +1,4 @@
-import { GameDatabase, ScoreboardMap, SessionGameElement } from 'utils';
+import { GameDatabase, ScoreboardMap, SessionGameElement, SafeAreas, RadiusArea } from 'utils';
 import config from 'config.js';
 import { InfoMapProperties } from 'resources';
 
@@ -11,6 +11,7 @@ const global = {
     config,
     /**@type {ScoreboardMap} */
     infoMap:null,
+    safeArea: new SafeAreas(),
     get coins(){return this.infoMap.get(InfoMapProperties.coins)},
     set coins(v){return this.infoMap.set(InfoMapProperties.coins,v)}
 };

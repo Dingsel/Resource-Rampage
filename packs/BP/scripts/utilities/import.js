@@ -6,3 +6,4 @@ export * from './ObjectiveDatabase.js';
 export * from './ElementDatabase.js';
 export * from './GameDatabase.js';
 export * from './Forms.js';
+export * from './Area.js';
