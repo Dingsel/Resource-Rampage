@@ -107,7 +107,12 @@ async function onDelete(player,tower){
 }
 /**@param {Player} player @param {TowerElement} tower */
 async function onUpgrade(player, tower){
-    console.log("upgrade");
+    const menu = new MenuFormData();
+    for (const {action,content,cost} of TowerUpgrades.getMenuDataTemplate(tower)) {
+        menu.addAction(action,content +"\n" + cost);
+    }
+    menu.button('form.close');
+    await menu.show(player);
 }
 
 
