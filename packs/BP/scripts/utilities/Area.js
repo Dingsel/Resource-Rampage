@@ -1,8 +1,13 @@
 export class SafeAreas extends Set{
-    add(area){if(!area instanceof Area) throw new TypeError('Is not type of area'); super.add(area);}
+    add(area){
+        if(!(area instanceof Area)) throw new TypeError('Is not type of area');
+        super.add(area);
+    }
     remove(area){return this.delete(area);}
-    inArea(loc){
-        for (const o of this) if(o.inArea(loc)) return false;
+    isValid(loc){
+        for (const o of this) {
+            if(o.inArea(loc)) return false;
+        }
         return true;
     }
 }
@@ -34,7 +39,7 @@ export class CubeRadiusArea extends Area{
 export class RadiusArea extends Area{
     constructor(center,radius){
         super(center);
-        this.radius = radius**2;
+        this.radius = radius;
     }
     get pR(){return this.radius**2;}
     inArea(loc1){

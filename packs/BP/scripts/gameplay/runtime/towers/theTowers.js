@@ -1,6 +1,6 @@
 import { EntityDamageCause, Vector } from "@minecraft/server";
 import { TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
-import { ImpulseParticlePropertiesBuilder, TowerElement } from "utils";
+import { ImpulseParticlePropertiesBuilder, RadiusArea, TowerElement } from "utils";
 
 export async function InitTowers(){
     setInterval(()=>onReload().catch(errorHandle),90);
@@ -23,10 +23,12 @@ async function onReload(){
     Towers.towers = nMap;
 }
 class Tower{
-    #element;
+    #element;#safeArea;
     /** @param {TowerElement} towerElement*/
     constructor(towerElement){
         this.#element = towerElement;
+        this.#safeArea = new RadiusArea(this.#element.get('location'),10);
+        global.safeArea.add(this.#safeArea);
         this.#onImpulse();
     }
     getRawInfo(){return this.#element.getRawInfo();}
@@ -44,7 +46,11 @@ class Tower{
     }
     async onImpulse(){}
     getTowerElement(){return this.#element;}
-    onDispose(){this.#element = undefined;}
+    onDispose(){
+        this.#element = undefined;
+        global.safeArea.delete(this.#safeArea);
+        console.log('dispose');
+    }
 }
 class IgniteTower extends Tower{
     static INFO =  TowerAbilityInformations[TowerTypes.Mage];

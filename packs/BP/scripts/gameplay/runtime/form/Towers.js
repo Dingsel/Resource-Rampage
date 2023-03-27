@@ -45,7 +45,7 @@ function isValidArea({x:baseX,y,z:baseZ,dimension}){
             if(!(b1.isSolid() && (!b2.isLiquid() && !b2.isSolid()))) return false;
         }
     }
-    return true;
+    return global.safeArea.isValid({x:baseX,y,z:baseZ});
 }
 function getTowerData(tower){
     const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
