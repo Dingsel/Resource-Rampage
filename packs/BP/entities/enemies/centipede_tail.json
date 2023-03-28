@@ -20,7 +20,7 @@
 				"value": 100000000
 			},
 			"minecraft:scale": {
-				"value": 1.0
+				"value": 4.0
 			},
 			"minecraft:is_hidden_when_invisible": {},
 			"minecraft:type_family": {

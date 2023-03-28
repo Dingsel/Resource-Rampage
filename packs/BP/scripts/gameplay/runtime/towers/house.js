@@ -1,5 +1,17 @@
 class Home {
-    static structures = ["house_1", "house_2", "house_3"]
+    static structures = {
+        "house_1": {
+            coins : 1000,
+            wood : 250
+        },
+        "house_2": {
+            coins : 2000,
+            wood : 500,
+            stone : 250
+        },
+        "house_3": {
+        }
+    }
     /**@private */
     static upgradeCallbacks = []
     /** @param {function(number):void} callback */
@@ -14,5 +26,7 @@ class Home {
 
 
 Home.onUpgrade((level) => {
-
+    const entries = Object.entries(Home.structures)
+    const structureId = entries[level][0]
+    if (!structureId) return
 })
