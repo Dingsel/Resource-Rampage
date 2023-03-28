@@ -3,10 +3,6 @@ import { EnemySpawner } from "./waveSystem"
 
 const starterId = "dest:start_round"
 
-function asyncTimeout(){
-    
-}
-
 world.events.worldInitialize.subscribe(() => {
     const spawner = new EnemySpawner()
     spawner.waveNumber = world.round
