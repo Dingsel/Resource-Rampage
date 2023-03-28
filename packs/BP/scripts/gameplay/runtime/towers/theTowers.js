@@ -1,4 +1,4 @@
-import { EntityDamageCause, Vector } from "@minecraft/server";
+import { Entity, EntityDamageCause, Player, Vector } from "@minecraft/server";
 import { TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
 import { ImpulseParticlePropertiesBuilder, RadiusArea, TowerElement } from "utils";
 
@@ -83,32 +83,43 @@ class IgniteTower extends Tower{
 }
 
 class ArcherTower extends Tower{
-    static INFO =  TowerAbilityInformations[TowerTypes.Mage];
+    static INFO =  TowerAbilityInformations[TowerTypes.Archer];
     async onImpulse(data){
         for (let i = 0; i < data.level; i++) {
-            this.doImpulse(data).catch(errorHandle);
+            await this.doImpulse(data).catch(errorHandle);
             await sleep(15/data.power);
         }
     }
-    async doImpulse({location,range,power,knockback,damage}){
-        const r = IgniteTower.INFO.getRange(range);
-        const p = IgniteTower.INFO.getPower(power);
-        const k = IgniteTower.INFO.getKnockback(knockback);
-        const d = IgniteTower.INFO.getDamage(damage);
+    async doImpulse({location,range,power,level,knockback,damage}){
+        const r = ArcherTower.INFO.getRange(range);
+        const p = ArcherTower.INFO.getPower(power);
+        const k = ArcherTower.INFO.getKnockback(knockback);
+        const d = ArcherTower.INFO.getDamage(damage);
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
-        overworld.spawnParticle('dest:ignite_impulse',  location ,new ImpulseParticlePropertiesBuilder(r,p).variableMap);
-        for (const e of overworld.getEntities({location,maxDistance:r,excludeTypes:["player"]})) {
+        const loc2 = Vector.add(location,{x:0.5,y:10,z:0.5});
+        console.log("archer",r);
+        for (const e of overworld.getEntities({location,maxDistance:r,closest:5,excludeTypes:[/*"player",*/"arrow","item"]})) {
             try {
-                e.setOnFire(p*8);
-                const vec = Vector.subtract(e.location,location);
-                vec.y = 0;
-                const {x,z} = vec.normalized();
-                const vec2 = Vector.multiply({x,y:1,z},k);
-                e.applyDamage(d,{cause:EntityDamageCause.fire})
-                e.applyImpulse(vec2);
-                await nextTick;
+                const headLocation = e.getHeadLocation();
+                const arrow = overworld.spawnEntity("arrow",loc2);
+                const x = headLocation.x - location.x, z = headLocation.z - location.z, l = (x**2 + z**2)**0.5;
+                arrow.applyImpulse({x:x/l,y:0.2,z:z/l});
+                this.targetEntity(e,arrow,damage,knockback).catch(errorHandle);
+                await sleep(3);
             } catch (error) {}
         }
+    }
+    /**@param {Entity} e @param {Entity} arrow */
+    async targetEntity(e,arrow,data){
+        await sleep(5);
+        while(e.isValidHandle && arrow.isValidHandle){
+            const loc1 = Vector.subtract(Vector.add(e.getHeadLocation(),{x:0,y:0,z:0}),arrow.location).normalized();
+            const velocity = Vector.add(Vector.multiply(Vector.from(arrow.getVelocity()).normalized(),0.5),loc1).normalized();
+            arrow.clearVelocity();
+            arrow.applyImpulse(Vector.multiply(velocity,1.5));
+            await nextTick;
+        }
+        if(arrow.isValidHandle) arrow.kill();
     }
 }
 const contrusctors = {

@@ -15,6 +15,7 @@ defineProperties(Entity.prototype, {
     viewBlock: { get() { return this.getBlockFromViewDirection({ maxDisatnce: 10, includePassableBlocks: true }); } },
     viewEntities: { get() { return this.getEntitiesFromViewDirection({ maxDisatnce: 10 }); } },
     applyDamage: { value(amount, source) { applyDamage.call(this, amount, source); } },
+    isValidHandle: {get(){ try { this.id; return true; } catch {return false;}}},
     // cd:{value: 0,enumerable: true},
     scores: {
         get() {

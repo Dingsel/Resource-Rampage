@@ -12,11 +12,12 @@ declare module "@minecraft/server" {
         readonly container?: Container;
         readonly armor?: EntityEquipmentInventoryComponent;
         health: number;
-        cd: number
+        cd: number;
         readonly maxHealth?: number;
         readonly viewBlock?: Block;
         readonly viewEntities: Entity[];
         readonly scores: { [key: string]: number };
+        readonly isValidHandle: boolean
     }
     interface Player {
         mainhand: ContainerSlot;
