@@ -14,8 +14,6 @@ class ToolSlot{
     static axe = "axe";
     /**@readonly */
     static pickaxe = "pickaxe";
-    /**@readonly */
-    static shield = "shield";
 }
 const ToolSlots = {
     [ToolSlot.sword]:0,
@@ -25,7 +23,19 @@ const ToolSlots = {
 const pickaxeCanDestroy = ["minecraft:stone"];
 const axeCanDestroy = ["wood",...MinecraftBlockTypes.getAllBlockTypes().filter(n=>n.id.includes('log')).map(n=>n.id)];
 events.playerSpawn.subscribe(toolsReload);
-
+events.blockBreak.subscribe(async ({player})=>{
+    const {armor,container} = player;
+    await nextTick;
+    for(const key of Object.keys(items)){
+        const itemStack = (key in EquipmentSlot)?armor.getEquipment(key):container.getItem(ToolSlots[key]);
+        if((!itemStack) || itemStack?.damage == 0) continue;
+        itemStack.damage = 0;
+        (key in EquipmentSlot)?armor.setEquipment(key,itemStack):container.setItem(ToolSlots[key],itemStack);
+    }
+})
+Player.prototype.playerInteraction = function(){
+    toolsReload({player:this});
+}
 /**@param {{player:Player}} */
 function toolsReload({player}){
     const {armor,container} = player;

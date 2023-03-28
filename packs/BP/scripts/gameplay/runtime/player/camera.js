@@ -3,6 +3,7 @@ import { centerLocation } from "resources";
 
 
 const center = centerLocation;
+events.playerSpawn.subscribe(({player})=>shield(player));
 events.entityDie.subscribe(async ({ deadEntity }) => {
     deadEntity.runCommandAsync('fog @s push dest:death_fog fog');
     deadEntity.setGameMode(GameMode.spectator);

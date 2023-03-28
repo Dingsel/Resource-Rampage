@@ -9,6 +9,11 @@ export class ScoreboardMap extends Map{
         this.#objective = objective;
         this.update();
     }
+    getAll(){
+        const o  = {};
+        for (const k of this.keys()) o[k] = this.get(k);
+        return o;
+    }
     /** @param {string} key @returns {number} */
     get(key){if(this.has(key)) return this.#objective.getScore(super.get(key));}
     /**@param {string} key @param {number?} score @returns {number}  */

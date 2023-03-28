@@ -6,7 +6,9 @@ export const EntityKillReward = {
 export const InfoMapProperties = {
     coins: "coins",
     level: "level",
-    kills: "kills"
+    kills: "kills",
+    woods: "woods",
+    stones: "stones"
 }
 export const uiFormat = {
     reset: "§_,§_,ui",
