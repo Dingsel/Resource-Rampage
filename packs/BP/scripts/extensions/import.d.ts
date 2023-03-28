@@ -54,6 +54,7 @@ declare module "@minecraft/server" {
     }
     interface ItemStack {
         enchantments: EnchantmentList;
+        damage: number;
         setLockMode(lock: ItemLockMOde): this;
         setNameTag(name: string): this;
         setKeepOnDeath(keep: boolean): this;

@@ -1,4 +1,4 @@
-import { Block, BlockPermutation, Enchantment, ItemStack } from '@minecraft/server';
+import { Block, BlockPermutation, Enchantment, ItemDurabilityComponent, ItemStack } from '@minecraft/server';
 
 const { defineProperties: setProperties } = Object;
 const _setCanDestroy = ItemStack.prototype.setCanDestroy;
@@ -6,6 +6,10 @@ setProperties(ItemStack.prototype, {
     enchantments: {
         get() { return this.getComponent('enchantments').enchantments; },
         set(enchs) { return this.getComponent('enchantments').enchantments = enchs; }
+    },
+    damage:{
+        get(){return this.getComponent(ItemDurabilityComponent.componentId).damage;},
+        set(value){return this.getComponent(ItemDurabilityComponent.componentId).damage = value;}
     },
     setNameTag:{value(n){this.nameTag = n;return this;}},
     setLockMode:{value(n){this.lockMode = n;return this;}},
