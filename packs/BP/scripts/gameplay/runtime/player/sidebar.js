@@ -3,7 +3,7 @@ import { InfoMapProperties } from "resources";
 
 const {
     parse, stringify, Array: { from: map, isArray }, Object: { assign }, n_, u,
-    InfoMapProperties: { coins, kills, level }, Date: { now }
+    InfoMapProperties: { coins, kills, level, stones, woods }, Date: { now }
 } = {
     parse: JSON.parse.bind(JSON), stringify: JSON.stringify.bind(JSON), Array, Object, n_: '§r\n',
     InfoMapProperties, Date,
@@ -55,7 +55,7 @@ system.events.gameInitialize.subscribe(() => {
             session: {
                 time: (session.time).toHHMMSS()
             },
-            iMap: [infoMap.get(coins), infoMap.get(kills), infoMap.get(level)],
+            iMap: infoMap.getAll(),
             online: players.length,
             all: participants.length,
             enemies: mobs.length,
@@ -84,7 +84,7 @@ const { wood, stone, coin, colon } = {
 /** @param {ScreenDisplay} screen @param {playerInfo} playerInfo @param {otherInfo} info */
 async function setDisplay(screen,
     { ui, myTime: [myTime, name], tips },
-    { session, iMap: [c, k, lvl], online, all, enemies, towers }
+    { session, iMap: {coins:c, kills:k, level:lvl,stones:s,woods:w}, online, all, enemies, towers }
 ) {
     const [a, b] = ui.split(',')
     const mini = /§´/.test(a) ? '§´' : '';
@@ -103,8 +103,8 @@ async function setDisplay(screen,
             `${S + b}Session${colon + session.time}`,
             , ind2,
             `${S + b}Coin${c > 1 ? 's' : ''}${colon + u(c, 1, S)}${coin}`,
-            // `${St+b}Wood${colon + u(w, 1, S)}`,
-            // `${St+b}Stone${colon + u(s, 1, S)}`,
+            `${S + b}Wood${c > 1 ? 's' : ''}${colon + u(w, 1, S)}${wood}`,
+            `${S + b}Stone${c > 1 ? 's' : ''}${colon + u(s, 1, S)}${stone}`,
             `${S + b}Kills${colon + u(k, 1, S)}`,
             `${S + b}Level${colon + u(lvl, 1, S)}`,
             , ind2,

@@ -2,3 +2,4 @@ export * from './camera.js';
 export * from './sidebar.js';
 export * from './onJoin.js';
 export * from './inventory.js';
+export * from './onbreak.js';

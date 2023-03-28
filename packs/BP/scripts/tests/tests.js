@@ -28,7 +28,7 @@ export const tests = {
         const { sourceEntity } = data, item = sourceEntity.mainhand.getItem();
         /**@type {ItemStack} */ 
         const { enchantments: ench } = item;
-        ench.removeEnchantment(MinecraftEnchantmentTypes.sharpness);
+        ench.removeEnchantment(MinecraftEnchantmentTypes.sharpness);    
         console.log(ench.addEnchantment(Enchantment.Custom[MinecraftEnchantmentTypes.sharpness.id][10]));
         item.enchantments = ench;
         sourceEntity.mainhand = item;
