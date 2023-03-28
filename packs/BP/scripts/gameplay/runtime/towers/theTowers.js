@@ -85,9 +85,8 @@ class IgniteTower extends Tower{
 class ArcherTower extends Tower{
     static INFO =  TowerAbilityInformations[TowerTypes.Archer];
     async onImpulse(data){
-        for (let i = 0; i < data.level; i++) {
+        for (let i = 0; i < data.level + 50; i++) {
             await this.doImpulse(data).catch(errorHandle);
-            await sleep(15/data.power);
         }
     }
     async doImpulse({location,range,power,level,knockback,damage}){
@@ -97,8 +96,7 @@ class ArcherTower extends Tower{
         const d = ArcherTower.INFO.getDamage(damage);
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
         const loc2 = Vector.add(location,{x:0.5,y:10,z:0.5});
-        console.log("archer",r);
-        for (const e of overworld.getEntities({location,maxDistance:r,closest:5,excludeTypes:[/*"player",*/"arrow","item"]})) {
+        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,excludeTypes:["player","arrow","item"]})) {
             try {
                 const headLocation = e.getHeadLocation();
                 const arrow = overworld.spawnEntity("arrow",loc2);
@@ -114,14 +112,15 @@ class ArcherTower extends Tower{
         await sleep(5);
         while(e.isValidHandle && arrow.isValidHandle){
             const loc1 = Vector.subtract(Vector.add(e.getHeadLocation(),{x:0,y:0,z:0}),arrow.location).normalized();
-            const velocity = Vector.add(Vector.multiply(Vector.from(arrow.getVelocity()).normalized(),0.5),loc1).normalized();
+            const velocity = Vector.add(Vector.multiply(Vector.from(arrow.getVelocity()).normalized(),0.3),loc1).normalized();
             arrow.clearVelocity();
-            arrow.applyImpulse(Vector.multiply(velocity,1.5));
+            arrow.applyImpulse(Vector.multiply(velocity,1.75));
             await nextTick;
         }
         if(arrow.isValidHandle) arrow.kill();
     }
 }
+events.projectileHit.subscribe(async ({projectile})=>{ await nextTick; projectile.kill();})
 const contrusctors = {
     [TowerTypes.Mage]:IgniteTower,
     [TowerTypes.Archer]:ArcherTower
