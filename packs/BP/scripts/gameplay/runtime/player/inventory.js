@@ -25,7 +25,9 @@ const ToolSlots = {
 const pickaxeCanDestroy = ["minecraft:stone"];
 const axeCanDestroy = ["wood",...MinecraftBlockTypes.getAllBlockTypes().filter(n=>n.id.includes('log')).map(n=>n.id)];
 events.playerSpawn.subscribe(toolsReload);
-
+Player.prototype.playerInteraction = function(){
+    toolsReload({player:this});
+}
 /**@param {{player:Player}} */
 function toolsReload({player}){
     const {armor,container} = player;
