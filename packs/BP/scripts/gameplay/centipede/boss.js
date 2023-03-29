@@ -51,7 +51,8 @@ const bossbar = new BossBarBuilder("Centipide")
 
 system.runInterval(() => {
     for (const player of world.getPlayers()) {
-        bossbar.setFill(system.currentTick % 100)
-        bossbar.show(player)
+        bossbar
+            .setFill(system.currentTick % 100)
+            .show(player)
     }
 })
