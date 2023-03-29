@@ -13,7 +13,11 @@ const global = {
     infoMap: null,
     safeArea: new SafeAreas(),
     get coins() { return this.infoMap.get(InfoMapProperties.coins) },
-    set coins(v) { return this.infoMap.set(InfoMapProperties.coins, v) }
+    set coins(v) { return this.infoMap.set(InfoMapProperties.coins, v) },
+    get stone() { return this.infoMap.get(InfoMapProperties.stones) },
+    set stone(v) { return this.infoMap.set(InfoMapProperties.stones, v) },
+    get wood() { return this.infoMap.get(InfoMapProperties.woods) },
+    set wood(v) { return this.infoMap.set(InfoMapProperties.woods, v) }
 };
 globalThis.global = global;
 export { global };

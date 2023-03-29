@@ -1,12 +1,12 @@
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { MainMenu } from "./default";
 import { Textures, uiFormat } from "resources";
-
+/*
 MainMenu.UI = {
     action:uisettings,
     content:"UI Settings",
     icon:Textures.ColorPicker
-}
+}*/
 
 
 /**@param {Player}player */

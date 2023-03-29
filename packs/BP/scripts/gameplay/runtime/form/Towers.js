@@ -1,6 +1,6 @@
 import { Block, MinecraftBlockTypes, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
-import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure } from "resources";
+import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure, ArcherTowerAbilities, MageTowerAbilities, TowerAbilities } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 import { EventTypes, MainMenu, clearAction, defualtSlot, setAction, setItem } from "./default";
 
@@ -47,10 +47,7 @@ function isValidArea({x:baseX,y,z:baseZ,dimension}){
     }
     return global.safeArea.isValid({x:baseX,y,z:baseZ});
 }
-function getTowerData(tower){
-    const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
-    return {location,damage,knockback,level,power,interval,range,type};
-}
+function getAbility(towerType,level){return towerType==TowerTypes.Archer?new ArcherTowerAbilities(level):new MageTowerAbilities(level);}
 
 async function onStart(player){
     const towerIds = await getTowers(),
@@ -75,17 +72,24 @@ async function onBuyNew(player){
 
 
 async function onTowerSelected(player, tower){
-    const menu = new MenuFormData(), n = getTowerData(tower), a = TowerAbilityInformations[tower.get('type')??TowerTypes.Mage]; menu.title(Texts.InfoTitle);
+    const menu = new MenuFormData(), level = tower.get('level')??1, type = tower.get('type')??TowerTypes.Mage, location = tower.get('location'),
+    /**@type {TowerAbilities} */
+    ability = getAbility(type,level);
+    menu.title(Texts.InfoTitle);
     let text = "";
-    text += `§hType: §7%${TowerNames[n.type]} \n`;
-    text += `§hPostion: ${n.location.formatXYZ()}\n§r`;
-    text += `§hInterval: §a${(a.getInterval(n.interval)/20).toFixed(1)} s\n§r`;
-    text += `§hPower: §a${a.getPower(n.power)}\n`;
-    text += `§hRadius: §a${a.getRange(n.range)}\n`;
-    text += `§hDamage: §a${a.getDamage(n.damage)}\n`;
-    text += `§hLevel: §a${n.level}\n§r`;
-    menu.body(text);
-    if(false) menu.addAction(()=>onUpgrade(player,tower),Texts.Upgrade); ///////////////------------------------Here-----------
+    text += `§hType: §7%${TowerNames[type]} \n`;
+    text += `§hPosition: ${location?.formatXYZ()}\n§r`;
+    let text2 = `§hInterval: §a${(ability.getInterval()/20).toFixed(1)}§2s\n§r`;
+    text2 += `§hRadius: §a${ability.getRange().toFixed(1)} §2(blocks)\n`;
+    text2 += `§hDamage: §a${ability.getDamage().toFixed(1)} §2hp\n`;
+    text2 += `§hCritical Chance: §a${(ability.getCriticalDamageChance()/100).toFixed(3)}%%\n`;
+    text2 += `§hCritical Factor: §a${(ability.getCriticalDamageFactor()/100).toFixed(3)}%%\n`;
+    if(type==TowerTypes.Mage) text2 += `§hPower: §a${ability.getPower().toFixed(1)}\n`;
+    else if(type==TowerTypes.Archer) text2 += `§hMax Targets: §a${ability.getMaxTargets()}\n`;
+    text2 += `§hLevel: §a${ability.level}/${ability.maxLevel}\n§r`;
+    if(ability.level >= ability.maxLevel) text2 = text2.replaceAll('§a','§g').replaceAll('§2','§6')
+    menu.body(text + text2);
+    if(ability.level < ability.maxLevel) menu.addAction(()=>onUpgrade(player,tower,ability,type,location),Texts.Upgrade);
     menu.addAction(()=>onDelete(player,tower),"from.delete");
     menu.button('form.close');
     await menu.show(player);
@@ -96,23 +100,39 @@ async function onDelete(player,tower){
     const towerType = tower.get('type')??TowerTypes.Mage;
     const level = tower.getTowerLevel()??1;
     const location = tower.getTowerLocation();
+    const ability = getAbility(towerType,level);
     if(location){
-        const {x,y,z} = StructureSizes[TowerStructureDefinitions[towerType][level-1]];
+        const {x,y,z} = StructureSizes[TowerStructureDefinitions[towerType][ability.getStructureLevel()]];
         const loc1 = Vector.subtract(location,{x:(x-1)/2,y:0,z:(z-1)/2}),
         loc2 = Vector.add(loc1, {x,y,z});
         overworld.fillBlocks(loc1,loc2,MinecraftBlockTypes.air);
     }
     const a = await global.database.removeTowerAsync(tower.getId());
-    global.coins+=TowerCost[towerType] * level * 0.75;
 }
-/**@param {Player} player @param {TowerElement} tower */
-async function onUpgrade(player, tower){
-    const menu = new MenuFormData();
-    for (const {action,content,cost} of []) {  ///////////////------------------------Here-----------
-        menu.addAction(action,content +"\n" + cost);
+/**@param {Player} player @param {TowerElement} tower @param {TowerAbilities} abilities @param {keyof TowerTypes} type  @param {import("@minecraft/server").Vector3} location */
+async function onUpgrade(player, tower, abilities, type, location){ let ability2 = new abilities.constructor(abilities.level+1), {coins,stone,wood} = abilities.getUpgradeCost()
+    let text = "";
+    console.log(location);
+    text += `§hCost: §r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")} \n`;
+    text += `§hInterval: §a${((ability2.getInterval() - abilities.getInterval())/20).toFixed(1)}§2s\n§r`;
+    text += `§hRadius: §a+${(ability2.getRange() - abilities.getRange()).toFixed(1)} §2(blocks)\n `;
+    text += `§hDamage: §a+${(ability2.getDamage() - abilities.getDamage()).toFixed(1)} §2hp\n`;
+    text += `§hCritical Chance: §a+${((ability2.getCriticalDamageChance() - abilities.getCriticalDamageChance())/100).toFixed(3)}%%%\n`;
+    text += `§hCritical Factor: §a+${((ability2.getCriticalDamageFactor() - abilities.getCriticalDamageFactor())/100).toFixed(3)}%%%\n`;
+    if(type==TowerTypes.Mage) text += `§hPower: §a+${(ability2.getPower() - abilities.getPower()).toFixed(1)}\n`;
+    else if(type==TowerTypes.Archer) text += `§hMax Targets: §a+${(ability2.getMaxTargets() - abilities.getMaxTargets())}\n`;
+    if(coins > global.coins ||stone > global.stone ||wood > global.wood){
+        await player.info('§4You dont have anouth materials, you need\n\n' + `§r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")} \n`);
+    }else if(await player.confirm(text,"form.tower.upgrade.title")){
+        await tower.set('level',ability2.level);
+        console.log(ability2.getStructureLevel());
+        console.log(location);
+        await placeStructure(location,TowerStructureDefinitions[type][ability2.getStructureLevel()  ]);
+        global.coins-=coins;
+        global.stone-=stone;
+        global.wood-=wood;
     }
-    menu.button('form.close');
-    await menu.show(player);
+    onTowerSelected(player,tower);
 }
 
 
@@ -151,13 +171,18 @@ async function onAction(player, data, eventType){ let block, infoMap = global.in
     } if (!block || !isValidArea(block)) return delay;
     delete player[_doing];
     const {output, canceled} = await TowerPicker.show(player); if(canceled) return delay;
-    const towerType = getTowerType(output[0]), towerCost = TowerCost[towerType];
-    if(towerCost > global.coins) return await player.info(Texts.NoCions + " §g" + (towerCost - global.coins).floor().unitFormat(1) + " §2$");
-    else if (!await player.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for ${towerCost.unitFormat(1)} §2$`)) return delay;
-    const {x,y,z} = block, towerSize = StructureSizes[MageTowerLevelStructure[0]];
-    overworld.runCommandAsync(`structure load ${TowerStructureDefinitions[towerType][0]} ${x - (towerSize.x-1)/2} ${y + 1} ${z - (towerSize.z-1)/2} 0_degrees none`);
+    const towerType = getTowerType(output[0]), ability =  getAbility(towerType,0), {coins, stone, wood} = ability.getUpgradeCost();
+    if(coins > global.coins ||stone > global.stone ||wood > global.wood){
+        return await player.info('§4You dont have anouth materials, you need\n\n' + `§r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")} \n`);
+    }
+    else if (!await player.confirm(`§hDo you want to buy new %${TowerNames[towerType]} for \n\n§r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")}`)) return delay;
+    
+    const {x,y,z} = block;
+    placeStructure({x,y:y+1,z},TowerStructureDefinitions[towerType][0]);
     await onCreateTower(player, towerType, {x,y:y+1,z});
-    global.coins -= towerCost;
+    global.coins -= coins;
+    global.stone -= stone;
+    global.wood -= wood;
 }
 async function onCreateTower(player, towerType, location){
     const tower = await global.database.addTowerAsync();
@@ -167,3 +192,7 @@ async function onCreateTower(player, towerType, location){
     return tower;
 }
 
+function placeStructure(location,structureId){
+    const {x,y,z} = location, towerSize = StructureSizes[structureId];
+    return overworld.runCommandAsync(`structure load ${structureId} ${x - (towerSize.x-1)/2} ${y} ${z - (towerSize.z-1)/2} 0_degrees none`);
+}

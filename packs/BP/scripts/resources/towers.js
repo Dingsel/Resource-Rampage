@@ -106,10 +106,11 @@ export class TowerAbilities{
     getInterval(){return 250;}
     getDamage(){return 5;}
     getRange(){return 15;}
-    getPower(){return 1;}
     getKnockback(){return (this.level / this.maxLevel) / 2; }
     getCriticalDamageChance(){return this.level/(this.maxLevel*2);}
     getCriticalDamageFactor(){return this.level/this.maxLevel;}
+    getUpgradeCost(){return {coins:this.level*50+235,stone:this.level*10 + 50,wood:this.level*11 + 60}}
+    getStructureLevel(){return ~~((this.level/(this.maxLevel+1))*3)}
 }
 export class MageTowerAbilities extends TowerAbilities{
     getInterval(){return this.maxLevel*30 - this.level * 15}

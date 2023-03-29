@@ -30,7 +30,7 @@ const {
     nether = world.getDimension(MinecraftDimensionTypes.nether),
     theEnd = world.getDimension(MinecraftDimensionTypes.theEnd)
 assign(Object.prototype, {
-    formatXYZ() { return `§2X§8:§a${this.z} §4Y§8:§c${this.z} §tZ§8:§9${this.z}`; }
+    formatXYZ() { return `§2X§8:§q${this.z} §4Y§8:§c${this.z} §tZ§8:§9${this.z}`; }
 });
 assign(Object, {
     clone(object, newObject = create(getProto(object))) { return setProperties(newObject, getProperties(object)); },
