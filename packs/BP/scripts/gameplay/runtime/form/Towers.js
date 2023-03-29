@@ -1,6 +1,6 @@
 import { Block, MinecraftBlockTypes, Player, Vector } from "@minecraft/server";
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
-import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure, TowerUpgrades } from "resources";
+import { InfoMapProperties, MenuItemStacks, Textures, TowerTypes, TowerNames, TowerStructureDefinitions, TowerDefaultAbilities, TowerCost, TowerAbilityInformations, StructureSizes, MageTowerLevelStructure } from "resources";
 import { SquareParticlePropertiesBuilder, TowerElement,MenuFormData } from "utils";
 import { EventTypes, MainMenu, clearAction, defualtSlot, setAction, setItem } from "./default";
 
@@ -85,7 +85,7 @@ async function onTowerSelected(player, tower){
     text += `§hDamage: §a${a.getDamage(n.damage)}\n`;
     text += `§hLevel: §a${n.level}\n§r`;
     menu.body(text);
-    if(TowerUpgrades.canUpgrade(tower)) menu.addAction(()=>onUpgrade(player,tower),Texts.Upgrade);
+    if(false) menu.addAction(()=>onUpgrade(player,tower),Texts.Upgrade); ///////////////------------------------Here-----------
     menu.addAction(()=>onDelete(player,tower),"from.delete");
     menu.button('form.close');
     await menu.show(player);
@@ -108,7 +108,7 @@ async function onDelete(player,tower){
 /**@param {Player} player @param {TowerElement} tower */
 async function onUpgrade(player, tower){
     const menu = new MenuFormData();
-    for (const {action,content,cost} of TowerUpgrades.getMenuDataTemplate(tower)) {
+    for (const {action,content,cost} of []) {  ///////////////------------------------Here-----------
         menu.addAction(action,content +"\n" + cost);
     }
     menu.button('form.close');

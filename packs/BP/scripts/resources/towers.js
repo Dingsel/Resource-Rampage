@@ -94,41 +94,31 @@ export const TowerCost = {
     [TowerTypes.Mage]: 250,
     [TowerTypes.Archer]: 230
 }
-export class TowerUpgrades{
-    static getMenuDataTemplate(tower){
-        const actions = [];
-        const type = tower.get('type')??TowerTypes.Mage;
-        const data = this.getTowerData(tower);
-        const maxAbilities = TowerMaxAbilityDefinition[type];
-        const costs = TowerUpgradeCost[type];
-        for (const key of Object.keys(TowerUpgradableProperties[type])) {
-            if(data[key] < maxAbilities[key]) actions.push({action:()=>this.upgrade(tower,type,key),content:key,cost:data.level*costs[key]});
-        }
-        if(actions.length<1&&data.level < MaxTowerLevels[type]) actions.push({actions:()=>this.upgradeLevel(tower,type),content:"New Level",cost:data.level*2});
-        return actions;
-    }
-    static upgradeLevel(tower, towerType){
-        console.log('new level');
-    }
-    static upgrade(tower, towerType, property){
-        console.log('new upgrade');
-    }
-    static canUpgrade(tower){
-        const type = tower.get('type')??TowerTypes.Mage;
-        const {interval,damage,knockback,power,range,level} = this.getTowerData(tower);
-        const maxAbilities = TowerMaxAbilityDefinition[type];
-        return !(level == MaxTowerLevels[type]
-        && maxAbilities.interval == interval
-        && maxAbilities.damage == damage
-        && maxAbilities.knockback == knockback
-        && maxAbilities.power == power
-        && maxAbilities.range == range);
-    }
-    static maxAbilities(tower){
 
+export class TowerAbilities{
+    #level;
+    get level(){return this.#level};
+    set level(level){return this.#level = level};
+    get maxLevel(){return 9;}
+    constructor(level = 1){
+        this.#level = level;
     }
-    static getTowerData(tower){
-        const {location={x:0,y:0,z:0},damage,knockback,range,level=1,power,interval,type=TowerTypes.Mage} = Object.setPrototypeOf(tower.getData(),TowerDefaultAbilities[tower.get('type')??TowerTypes.Mage]);
-        return {location,damage,knockback,level,power,interval,range,type};
-    }
+    getInterval(){return 250;}
+    getDamage(){return 5;}
+    getRange(){return 15;}
+    getKnockback(){return 0.3; }
+    getPower(){return 1;}
+}
+export class MageTowerAbilities extends TowerAbilities{
+    getInterval(){return 300 - this.level * 15}
+    getDamage(){return this.level * 1.5;}
+    getRange(){return this.level * 3 + 5;}
+    getKnockback(){return this.level / this.maxLevel; }
+    getPower(){return 2*this.level/this.maxLevel;}
+}
+export class ArcherTowerAbilities extends TowerAbilities{
+    getInterval(){return 150 - this.level * 12}
+    getDamage(){return this.level * 3 + 10;}
+    getRange(){return this.level * 4 + 10;}
+    getKnockback(){return this.level / this.maxLevel; }
 }

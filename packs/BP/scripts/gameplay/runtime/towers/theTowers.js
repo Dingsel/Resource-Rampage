@@ -1,5 +1,5 @@
 import { EffectType, Entity, EntityDamageCause, EntityScaleComponent, MinecraftEffectTypes, Player, Vector } from "@minecraft/server";
-import { TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
+import { ArcherTowerAbilities, MageTowerAbilities, TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
 import { ImpulseParticlePropertiesBuilder, RadiusArea, TowerElement } from "utils";
 
 export async function InitTowers(){
@@ -13,29 +13,33 @@ async function onReload(){
     let towers = Towers.towers;
     for (const id of await global.session.getTowerIDsAsync()) {
         if(towers.has(id)) nMap.set(id,towers.get(id))
-        else{
-            const element = await global.database.getTowerAsync(id);
-            nMap.set(id,new Tower(element));
-        }
+        else{nMap.set(id,Tower.getTower(await global.database.getTowerAsync(id)));}
     }
     towers.clear();
     Towers.towers = nMap;
 }
 class Tower{
+    static getTower(element){
+        const type = element.get('type')??TowerTypes.Mage;
+        return new {
+            [TowerTypes.Mage]: MageTower,
+            [TowerTypes.Archer]: ArcherTower,
+        }[type](element);
+    }
     static TowerTypes = {};
-    #element;#safeArea;
+    static abilities = MageTowerAbilities;
+    #element;#safeArea;#abilities;
     /** @param {TowerElement} towerElement*/
-    constructor(towerElement,keep = false){
-        const type = towerElement.get('type');
-        if(type && !keep) return new Tower.TowerTypes[type](towerElement,true);
-        console.log("Loaded Tower: ", type);
+    constructor(towerElement){
         this.#element = towerElement;
         this.#safeArea = new RadiusArea(this.#element.get('location'),10);
         global.safeArea.add(this.#safeArea);
+        this.#abilities = new new.target.abilities(towerElement.get('level')??1);
         this.#onImpulse();
     }
     async #onImpulse(){
         const element = this.#element;
+        this.#abilities = new this.#abilities.constructor(this.level);
         if(element.isDisposed) return this.onDispose();
         setTimeout(()=>this.#onImpulse().catch(errorHandle),this.interval);
         await this.onImpulse();
@@ -45,14 +49,16 @@ class Tower{
     get level(){return this.#element.get('level')??1}
     get element(){return this.#element;}
     get safeArea(){return this.#safeArea;}
-    get interval(){return 20;}
+    get abilities(){return this.#abilities;}
+    get interval(){return this.abilities.getInterval();}
     async onImpulse(){}
     onDispose(){
         this.#element = undefined;
         global.safeArea.delete(this.#safeArea);
     }
 }
-Tower.TowerTypes[TowerTypes.Mage] = class IgniteTower extends Tower{
+class MageTower extends Tower{
+    static abilities = MageTowerAbilities;
     async onImpulse(){
         for (let i = 0; i < this.level; i++) {
             this.doImpulse().catch(errorHandle);
@@ -80,8 +86,8 @@ Tower.TowerTypes[TowerTypes.Mage] = class IgniteTower extends Tower{
         }
     }
 }
-
-Tower.TowerTypes[TowerTypes.Archer] = class ArcherTower extends Tower{
+class ArcherTower extends Tower{
+    static abilities = ArcherTowerAbilities;
     async onImpulse(){
         for (let i = 0; i < this.level; i++) {
             await this.doImpulse().catch(errorHandle);
@@ -119,6 +125,7 @@ Tower.TowerTypes[TowerTypes.Archer] = class ArcherTower extends Tower{
             arrow.applyImpulse(Vector.multiply(velocity,0.75));
             await nextTick;
         }
+        if(!e.isValidHandle) arrow.triggerEvent('dest:despawn')
     }
 }
 events.projectileHit.subscribe((ev)=>{
