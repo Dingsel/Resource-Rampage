@@ -68,7 +68,7 @@
                         "text": "#text",
                         "layer": 31,
                         "localize": false,
-                        "font_size": "extra_large",
+                        "font_scale_factor": 1.5,
                         "variables": [{
                             "requires": "(not $title_shadow)",
                             "$show_shadow": false
@@ -116,7 +116,7 @@
                         "font_type": "MinecraftTen",
                         "layer": 31,
                         "localize": false,
-                        "font_size": "extra_large",
+                        "font_scale_factor": 1.5,
                         "variables": [{
                             "requires": "$subtitle_initially_visible",
                             "$anim_type": 1.0
