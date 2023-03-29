@@ -17,7 +17,8 @@ declare module "@minecraft/server" {
         readonly viewBlock?: Block;
         readonly viewEntities: Entity[];
         readonly scores: { [key: string]: number };
-        readonly isValidHandle: boolean
+        readonly isValidHandle: boolean;
+        updateHealths(): void
     }
     interface Player {
         mainhand: ContainerSlot;

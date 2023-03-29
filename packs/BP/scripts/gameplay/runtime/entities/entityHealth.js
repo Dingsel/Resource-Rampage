@@ -1,4 +1,4 @@
-import { MolangVariableMap } from "@minecraft/server";
+import { Entity, MolangVariableMap } from "@minecraft/server";
 import { EntityKillReward, InfoMapProperties } from "resources";
 
 const map = new MolangVariableMap();
@@ -10,7 +10,7 @@ const getEntities = ovw.getEntities.bind(ovw);
 const getEntity = world.getEntity.bind(world)
 
 
-
+Entity.prototype.updateHealths = function(){updateName(this);}
 function updateName(entity) {
     const { typeId: type } = entity;
     if (!getEntities({ type, families: ['enemy'] }).length) return;
@@ -30,8 +30,8 @@ function updateName(entity) {
 events.entitySpawn.subscribe(ev => updateName(ev.entity));
 events.entityHurt.subscribe(ev => updateName(ev.hurtEntity));
 events.entityDie.subscribe(({ deadEntity: entity }) => {
-    const { location, typeId } = entity
-    if (/minecraft:|start_round/.test(typeId)) return;
+    const { location, typeId } = entity;
+    if (/minecraft:|start_round/.test(typeId) || typeId == "dest:arrow") return;
     entity.nameTag = "§8|".repeat(maxChars);
     overworld.spawnParticle("dest:coin", location, map);
     infoMap().relative(coins, EntityKillReward[typeId] ?? 1);

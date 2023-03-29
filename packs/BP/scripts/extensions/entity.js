@@ -5,6 +5,9 @@ const applyDamage = Entity.prototype.applyDamage, map = new MolangVariableMap(),
     { defineProperties, values } = Object, { from } = Array;
 
 Entity.prototype.cd = 0
+Object.assign(Entity.prototype,{
+    updateHealths(){}
+});
 defineProperties(Entity.prototype, {
     toString: { value() { return `[Entity: ${this.typeId}]`; } },
     inventory: { get() { return this.getComponent('inventory') } },

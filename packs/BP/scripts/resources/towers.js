@@ -21,7 +21,7 @@ export const TowerAbilityInformations = {
         getPower(p){return p + ((p - 1)* 0.5)}
     },
     [TowerTypes.Archer]:{
-        getInterval(i){return 60 - (i * 8)},
+        getInterval(i){return 30 - (i * 8)},
         getDamage(d){return d * 4},
         getRange(r){return r * 10 + 10},
         getKnockback(k){return k * 0.3},
