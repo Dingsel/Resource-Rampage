@@ -1,9 +1,10 @@
-import { CommandResult, ScoreboardIdentityType, ScoreboardObjective } from "@minecraft/server";
+import { ScoreboardIdentityType, ScoreboardObjective } from "@minecraft/server";
 
 const sets = new Map();
 const splitKey = '.\n$_';
 const matchRegex = /\.\n\$\_/g;
-const {scoreboard} = world;
+const {fakePlayer} = ScoreboardIdentityType;
+const [parse,stringify] = [JSON.parse.bind(JSON),JSON.stringify.bind(JSON)]
 
 
 export class PromseHandle{
@@ -32,20 +33,21 @@ export class PromseHandle{
 export class Database extends Map{
     /**@param {string} objective @returns {Database} */
     static createDatabase(name){
-        return this.getDatabase(scoreboard.getObjective(name)??scoreboard.addObjective(name,name));
+        return this.getDatabase(objectives(name));
     }
     /**@param {ScoreboardObjective} objective @returns {Database} */
     static getDatabase(objective){
         if(!objective instanceof ScoreboardObjective) throw new TypeError("First Argument must be type of ScoreboardObjective");
-        if(sets.has(objective.id)) return sets.get(objective.id);
+        const {id} = objective
+        if(sets.has(id)) return sets.get(id);
         const n = new Database(objective);
-        sets.set(objective.id,n);
+        sets.set(id,n);
         return n;
     }
     /**@param {Database} databse */
     static deleteDatabase(databse){
         if(sets.has(databse.id)) sets.delete(databse.id);
-        world.scoreboard.removeObjective(databse.objective);
+        objectives(databse.objective,true);
         return true;
     }
     /**
@@ -70,9 +72,9 @@ export class Database extends Map{
         this.#participants = new Map();
         this.#awaitHandles = new Map();
         for (const p of objective.getParticipants()) {
-            if(p.type == ScoreboardIdentityType.fakePlayer){
+            if(p.type == fakePlayer){
                 const [key,value] = p.displayName.split(splitKey);
-                const v = JSON.parse(value.replaceAll("\\\"","\""));
+                const v = parse(value.replaceAll("\\\"","\""));
                 super.set(key,v);
                 this.#participants.set(key,p);
                 this.#awaitHandles.set(key,new PromseHandle());
@@ -87,14 +89,15 @@ export class Database extends Map{
     async set(key, value) {
         if (value==undefined) throw new TypeError("Value must be defined");
         if (key.match(matchRegex)) throw new TypeError(`Database keys can't include "${splitKey}"`);
-        const build = key + splitKey + JSON.stringify(value).replaceAll(/"/g, '\\"');
+        const build = key + splitKey + stringify(value).replaceAll(/"/g, '\\"');
         if ((build.length + 1) > 32000) throw new Error(`Database setter to long... somehow`);
         let handle = this.#awaitHandles.get(key) ?? new PromseHandle();
         const handleKey = await handle.lock();
         if (this.has(key)) this.#objective.removeParticipant(this.#participants.get(key));
         await runCommand(`scoreboard players set "${build}" "${this.#id}" 0`);
-        const p = this.#objective.getParticipants().find(pa=>pa.displayName.startsWith(key + splitKey));
-        if(p == undefined) throw new Error("Value could be settet");
+        const keyId = key + splitKey;
+        const p = this.#objective.getParticipants().find(({displayName:n})=>n.startsWith(keyId));
+        if(p == undefined) throw new Error("Value couldn't be set!");
         this.#participants.set(key,p);
         super.set(key, value);
         this.#awaitHandles.set(key,handle);
@@ -114,8 +117,8 @@ export class Database extends Map{
         return super.delete(key);
     }
     clear() {
-        scoreboard.removeObjective(this.#objective);
-        this.#objective = scoreboard.addObjective(this.#id,this.#id);
+        objectives(this.#objective,true);
+        this.#objective = objectives(this.#id);
         this.#participants.clear();
         return super.clear();
     }
@@ -127,13 +130,4 @@ export class Database extends Map{
     getId(){return this.#id;}
     /**@returns {ScoreboardObjective} */
     getScoreboardObjective(){return this.#objective;}
-}
-/**
- * Run a command!
- * @param {string} cmd Command to run
- * @returns {Promise<CommandResult>} Whether or not the command errors, and command data
- * @example runCommand(`give @a diamond`)
- */
-function runCommand(cmd) {
-    return overworld.runCommandAsync(cmd);
 }

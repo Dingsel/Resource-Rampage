@@ -1,41 +1,45 @@
-import { world, Vector, EntityDamageCause } from "@minecraft/server"
+import { world, Vector, EntityDamageCause, Entity } from "@minecraft/server"
 import { spawnBoss } from "./boss";
 
-const dimension = world.getDimension("overworld")
-
+const { min, max, acos, atan2, PI } = Math, { values } = Object,
+    { add, multiply, subtract, one, zero, dot, up } = Vector,
+    ovw = world.getDimension("overworld"),
+    spawnEntity = ovw.spawnEntity.bind(ovw)
 //literally just the dot product
-function dot(a, b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
-}
+// function dot(a, b) {
+//     return a.x * b.x + a.y * b.y + a.z * b.z;
+// }
 
 //moves an entity via impulse when nearby, and via teleportaion when far away
 function moveTo(entity, position, position2) {
     entity.clearVelocity()
-    let ab = Vector.subtract(position, entity.location)
+    let ab = subtract(position, entity.location)
     if (ab.length() > 1.2) {
-        entity.teleport(position, dimension, 0, 0)
+        entity.teleport(position, ovw, 0, 0)
     } else {
-        entity.applyImpulse(Vector.multiply(ab, 1.2))
+        entity.applyImpulse(multiply(ab, 1.2))
     }
 }
 
 //rotates an entity to look in a vector direction
 function setLookingDir(entity, direction) {
-    direction = direction.normalized()
-    let xz = new Vector(direction.x, 0, direction.z).normalized()
-    let pitch = Math.acos(Math.min(Math.max(dot(direction, xz), -1), 1)) * 180 / Math.PI
-    let yaw = 90 + Math.atan2(xz.z, xz.x) * 180 / Math.PI
+    const {x,y,z} = direction.normalized()
+    let xz = new Vector(x, 0, z).normalized()
+    let pitch = acos(min(max(dot({x,y,z}, xz), -1), 1)) * 180 / PI
+    let yaw = 90 + atan2(xz.z, xz.x) * 180 / PI
     entity.setRotation(pitch, yaw)
 }
 
-//dimension.runCommandAsync("say " + Object.getOwnPropertyNames(Array.prototype))
+//runCommand"say " + Object.getOwnPropertyNames(Array.prototype))
 //get centipede parts
-let centipede_parts = dimension.getEntities({ tags: ["centipede"] })
+let centipede_parts = ovw.getEntities({ tags: ["centipede"] })
+let { length: partsLength } = centipede_parts
 
 //group loose centipede parts into centipedes
+/**@type {Entity[][]} */
 let centipedes = []
 let heads = []
-for (let i = 0; i < centipede_parts.length; i++) {
+for (let i = 0; i < partsLength; i++) {
     let headid = centipede_parts[i].getTags()[1]
     if (!heads.includes(headid)) {
         heads.push(headid)
@@ -46,24 +50,19 @@ for (let i = 0; i < centipede_parts.length; i++) {
 }
 
 //sort centipedes to go from head to tail
-for (let i = 0; i < centipedes.length; i++) {
+const { length: groupsLength } = centipedes
+for (let i = 0; i < groupsLength; i++) {
     centipedes[i].sort(function compareFn(a, b) {
-        let ia = parseInt(a.getTags()[2])
-        let ib = parseInt(b.getTags()[2])
-        if (ia < ib) {
-            return -1
-        }
-        if (ia > ib) {
-            return 1
-        }
-        return 0
+        return (parseInt(a.getTags()[2]) > b.getTags()[2]) ?
+            1 : -1
     })
 }
 
 //kills a centipede
 async function kill_centipede(centipedeidx) {
-    for (let i = 0; i < centipedes[centipedeidx].length; i++) {
-        centipedes[centipedeidx][i].kill()
+    const centipede = centipedes[centipedeidx]
+    for (let i = 0; i < centipede.length; i++) {
+        centipede[i].kill()
     }
     centipedes.pop(centipedeidx)
 }
@@ -71,18 +70,21 @@ async function kill_centipede(centipedeidx) {
 //spawns a centipede
 export function summonCentipede(length, position) {
     let centipede = []
-    for (let i = 0; i < length; i++) {
-        if (i == 0) {
-            centipede.push(dimension.spawnEntity("dest:centipede_head", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
-        } else if (i == length - 1) {
-            centipede.push(dimension.spawnEntity("dest:centipede_tail", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
-        } else {
-            centipede.push(dimension.spawnEntity("dest:centipede_body", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
+    const tailIndex = length - 1
+    for (let i = 0, location = add(position, { x: 0, y: 0, z: i * 3 });
+        i < length;
+        location = add(position, { x: 0, y: 0, z: ++i * 3 })
+    ) {
+        let typeId = "dest:centipede_body"
+        switch (i) {
+            case 0: typeId = "dest:centipede_head"; break;
+            case tailIndex: typeId = "dest:centipede_tail"; break;
         }
-        //centipede[i].runCommandAsync("tag @s add \"" + i + "\"")
-        centipede[i].addTag("centipede")
-        centipede[i].addTag(centipede[0].id + "")
-        centipede[i].addTag(i + "")
+        const limb = spawnEntity(typeId, location)
+        centipede.push(limb)
+        limb.addTag("centipede")
+        limb.addTag(centipede[0].id)
+        limb.addTag(i + "")
     }
     centipedes.push(centipede)
     return centipede
@@ -91,30 +93,35 @@ export function summonCentipede(length, position) {
 //shitty command interface to spawn centipede
 const chatCallback = world.events.beforeChat.subscribe((eventData) => {
     if (eventData.message == "$summon centipede") {
-        dimension.runCommandAsync("say centipede summoned")
+        runCommand("say centipede summoned")
         spawnBoss(eventData.sender.location, 10)
     } else if (eventData.message == "list centipedes") {
         for (let i = 0; i < centipedes.length; i++) {
             for (let j = 0; j < centipedes[i].length; j++) {
-                dimension.runCommandAsync("say \'" + centipedes[i][j].typeId + "\'")
+                runCommand("say \'" + centipedes[i][j].typeId + "\'")
             }
         }
     }
 });
 
 //applies damage to all in centipede when one is damaged
-const damageCallback = world.events.entityHurt.subscribe((eventData) => {
-    if (eventData.damageSource.cause != "none") {
-        for (let i = 0; i < centipedes.length; i++) {
-            let entity_idx = centipedes[i].findIndex(entity => entity.id == eventData.hurtEntity.id)
+const damageCallback = world.events.entityHurt.subscribe(async (eventData) => {
+    const { damageSource: { cause } } = eventData
+    if (cause != "none") {
+        const { damage, hurtEntity } = eventData
+        const { location, id } = hurtEntity
+        const { length: lenght_a } = centipedes
+        for (let i = 0, centipede = centipedes[i]; i < lenght_a; i++,centipede = centipedes[i]) {
+            let entity_idx = centipede.findIndex(entity => entity.id == id)
             if (entity_idx != -1) {
-                if (eventData.damageSource.cause == "suffocation") {
-                    moveTo(eventData.hurtEntity, Vector.add(eventData.hurtEntity.location, { x: 0, y: 1, z: 0 }))
+                const { length: lenght_b } = centipede
+                if (cause == "suffocation") {
+                    moveTo(hurtEntity, add(location, up))
                 }
-                for (let j = 0; j < centipedes[i].length; j++) {
+                for (let j = 0; j < lenght_b; j++) {
                     if (j != entity_idx) {
-                        //console.log("hurt, dmg: " + eventData.damage)
-                        centipedes[i][j].applyDamage(eventData.damage, { cause: "none" })
+                        //console.log("hurt, dmg: " + damage)
+                        centipede[j].applyDamage(damage, { cause:'none' })
                     }
                 }
             }
@@ -122,7 +129,6 @@ const damageCallback = world.events.entityHurt.subscribe((eventData) => {
     }
 })
 
-//run fabrik each tick
 setInterval(() => { updateCentipedes() }, 1)
 
 function updateCentipedes() {
@@ -130,30 +136,26 @@ function updateCentipedes() {
         updateCentipede(i)
     }
 }
-
 //the reaching part of fabrik
 //where se is a vector pointing from the head to the tail
 function reach(s, e) {
-    let d = Vector.subtract(e, s) //s-e (vector from s to e)
-    if (d == Vector.zero) {
-        d = Vector.one
-    }
-    return Vector.add(Vector.multiply(d.normalized(), 2.75), s)
+    let d = subtract(e, s) //s-e (vector from s to e)
+    if (`${values(d)}` !== `${values(zero)}`) d = one
+    return add(multiply(d.normalized(), 2.75), s)
 }
+
 
 function updateCentipede(idx) {
     let centipede = centipedes[idx]
-    for (let i = 0; i < centipede.length; i++) {
-        if (centipede[i].getComponent("minecraft:health").current <= 0) {
-            kill_centipede(idx)
-            return
-        } else {
-            if (i != 0) {
-                let newpos = Vector.add(centipede[i].location, { x: 0, y: -9.8 / 60, z: 0 })
-                newpos = reach(centipede[i - 1].location, newpos)
-                moveTo(centipede[i], newpos)
-                setLookingDir(centipede[i], Vector.subtract(centipede[i - 1].location, centipede[i].location))
-            }
+    const lenght_a = centipede.length
+    for (let i = 0; i < lenght_a; i++) {
+        const limb = centipede[i], { location, health } = limb
+        if (health <= 0 || !world.getEntity(limb.getTags()[1])) return kill_centipede(idx)
+        if (i != 0) {
+            let newpos = add(location, { x: 0, y: -9.8 / 60, z: 0 })
+            newpos = reach(centipede[i - 1].location, newpos)
+            moveTo(limb, newpos)
+            setLookingDir(limb, subtract(centipede[i - 1].location, location))
         }
     }
     centipedes[idx] = centipede

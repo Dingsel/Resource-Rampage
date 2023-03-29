@@ -6,7 +6,7 @@ import { buildWall } from "./thewalls";
 // Constants
 const menuId = "dest:building_gadged"
 //
-
+const {add,subtract} = Vector;
 class DbTowerEntry {
     /**
      * @param {towerTypes} type 
@@ -144,9 +144,9 @@ world.events.beforeItemUse.subscribe(async (event) => {
 
 function checkInterfearance(loc1, [s1, s2] = [1, 1]) {
     const structure = db.find(({ location, size: [s2_1, s2_2] }) => {
-        const maxLoc1 = Vector.add(loc1, { x: s1, y: 0, z: s2 })
+        const maxLoc1 = add(loc1, { x: s1, y: 0, z: s2 })
 
-        const maxLoc2 = Vector.add(location, { x: s2_1, y: 0, z: s2_2 })
+        const maxLoc2 = add(location, { x: s2_1, y: 0, z: s2_2 })
 
         return (
             loc1.x < maxLoc2.x &&
@@ -168,13 +168,14 @@ system.runInterval(() => {
         if (!player.selectedTower) return
         const block = player.viewBlock
         if (!block) return
-
-        const offset = player.selectedTower.baseRadius / 2
-        const structureStart = Vector.subtract(Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
-        const interfearing = !!checkInterfearance(structureStart, [player.selectedTower.baseRadius, player.selectedTower.baseRadius])
+        const {x,y,z} = block
+        const {selectedTower:{baseRadius}} = player
+        const offset = baseRadius / 2
+        const structureStart = subtract(add({x,y,z}, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
+        const interfearing = !!checkInterfearance(structureStart, [baseRadius, baseRadius])
         //console.warn(interfearing)
         const colour = interfearing ? { red: 255 / 255, green: 80 / 255, blue: 80 / 255, alpha: 1 } : { red: 80 / 255, green: 255 / 255, blue: 80 / 255, alpha: 1 }
-        player.dimension.spawnParticle("dest:square", Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(player.selectedTower.baseRadius / 2).setColor(colour).variableMap)
+        player.dimension.spawnParticle("dest:square", add({x,y,z}, { x: 0.50, y: 1.25, z: 0.50 }), builder.setRadius(baseRadius / 2).setColor(colour).variableMap)
     }
 })
 //
@@ -182,7 +183,8 @@ system.runInterval(() => {
 //build the Structure
 world.events.beforeItemUseOn.subscribe(async (event) => {
     const { item, source: player } = event
-    if (!(player instanceof Player) || !player.selectedTower || player.isBussy) return
+    const {selectedTower} = player
+    if (!(player instanceof Player) || !selectedTower || player.isBussy) return
     player.isBussy = true
     event.cancel = true
     const confirmForm = new MessageFormData()
@@ -195,13 +197,13 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
     if (!res.selection) { delete player.selectedTower; return }
     const block = player.viewBlock
     if (!block) { delete player.selectedTower; return }
-    const offset = player.selectedTower.baseRadius / 2
-    const structureStart = Vector.subtract(Vector.add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
+    const offset = selectedTower.baseRadius / 2
+    const structureStart = subtract(add(block.location, { x: 0.50, y: 1.25, z: 0.50 }), { x: offset, y: 0, z: offset })
     const { x, y, z } = structureStart
-    const structureId = Object.keys(player.selectedTower.structures)[0]
-    await player.dimension.runCommandAsync(`structure load ${structureId} ${x} ${y} ${z} 0_degrees none`)
+    const structureId = Object.keys(selectedTower.structures)[0]
+    await runCommand(`structure load "${structureId}" ${x} ${y} ${z} 0_degrees none`)
 
-    const { type, baseRadius, defaultStats } = player.selectedTower
+    const { type, baseRadius, defaultStats } = selectedTower
     db.push(new DbTowerEntry(type, structureStart, [baseRadius, baseRadius], defaultStats, 1, [0, 0, 0]))
     delete player.selectedTower
 })
@@ -263,7 +265,7 @@ world.events.beforeItemUseOn.subscribe(async (event) => {
             const size = tower.tower.structures[structureId]
             const prevSize = tower.tower.structures[prevId]
             const offset = { x: Math.abs((size[0] / 2) - (prevSize[0] / 2)), y: 0, z: Math.abs((size[1] / 2) - (prevSize[1] / 2)) }
-            const location = Vector.subtract(tower.towerEntry.location, offset)
+            const location = subtract(tower.towerEntry.location, offset)
             const { x, y, z } = location
             //const intercect = !!checkInterfearance(interacted, size)
             await player.runCommandAsync(`structure load ${structureId} ${x} ${y} ${z} 0_degrees none`)

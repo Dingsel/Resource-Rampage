@@ -16,11 +16,11 @@ export function asyncTimeout(ticks) {
 
 world.events.entityDie.subscribe(async (event) => {
     try {
-        const { deadEntity } = event
-        const dim = world.getDimension(deadEntity.dimension.id)
-        if (deadEntity.typeId != "dest:centipede_head") return
+        const { deadEntity } = event, { typeId, dimension:dim } = deadEntity
+        if (typeId != "dest:centipede_head") return
+        const tags = [deadEntity.getTags()[1]]
         const current = deadEntity.getDynamicProperty("length") ?? 0
-        const centipede_parts = dim.getEntities({ tags: ["centipede"] })
+        const centipede_parts = dim.getEntities({ tags })
 
         if (current > 3) {
             system.run(() => {
@@ -34,7 +34,7 @@ world.events.entityDie.subscribe(async (event) => {
             await asyncTimeout(2)
         }
     } catch (error) {
-        console.error(error)
+        errorHandle(error)
     }
 })
 
@@ -47,12 +47,13 @@ world.events.entityHurt.subscribe((event) => {
 
 
 
-const bossbar = new BossBarBuilder("Centipide")
+const bossbar = new BossBarBuilder("Centipede")
 
 system.runInterval(() => {
+    const fill = system.currentTick % 100
     for (const player of world.getPlayers()) {
         bossbar
-            .setFill(system.currentTick % 100)
+            .setFill(fill)
             .show(player)
     }
 })

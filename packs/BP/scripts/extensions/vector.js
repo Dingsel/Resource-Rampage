@@ -7,8 +7,8 @@ Object.defineProperties(Vector, {
     normalized:{value(loc){
         return this.from(loc).normalized();
     }},
-    dot:{value(a,b){
-        const{x,y,z}=this.multiply(a,b);return x+y+z;
+    dot:{value({x:ax,y:ay,z:az},{x:bx,y:by,z:bz}){
+        return ax * bx + ay * by + az * bz;
     }},
     equals:{value(l1,l2){return l1.x==l2.x&&l1.y==l2.y&&l1.z==l2.z}}
 });
