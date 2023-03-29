@@ -71,9 +71,9 @@ async function kill_centipede(centipedeidx) {
 export function summonCentipede(length, position) {
     let centipede = []
     const tailIndex = length - 1
-    for (let i = 0, location = add(position, { x: 0, y: 0, z: i * 3 });
+    for (let i = 0, location = add(position, { x: 0, y: 0, z: -(i * 3) });
         i < length;
-        location = add(position, { x: 0, y: 0, z: ++i * 3 })
+        location = add(position, { x: 0, y: 0, z: -(++i * 3) })
     ) {
         let typeId = "dest:centipede_body"
         switch (i) {

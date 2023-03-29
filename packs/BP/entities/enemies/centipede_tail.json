@@ -29,10 +29,7 @@
 					"centipede"
 				]
 			},
-			"minecraft:tick_world": {
-				"never_despawn": true,
-				"radius": 2
-			},
+
 			"minecraft:physics": {},
 			"minecraft:pushable": {
 				"is_pushable": true,
