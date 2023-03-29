@@ -71,7 +71,7 @@ system.events.gameInitialize.subscribe(() => {
     }, interval)
 });
 
-const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139'
+const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139\uE130\uE131\uE132\uE133\uE134'
 const shuffle = str => [...str].sort(()=>Math.random()-.5).join('');
 /** @param {ScreenDisplay} screen @param {playerInfo} playerInfo @param {otherInfo} info */
 async function setDisplay(screen,
