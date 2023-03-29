@@ -52,10 +52,7 @@
 			"minecraft:knockback_resistance": {
 				"value": 1.0
 			},
-			"minecraft:tick_world": {
-				"never_despawn": true,
-				"radius": 2
-			},
+
 			"minecraft:physics": {
 				"has_gravity": false
 			},

@@ -18,7 +18,7 @@
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"reselect_targets": true,
-				"within_radius": 1024.0,
+				"within_radius": 750.0,
 				"entity_types": [
 					{
 						"priority": 1,
@@ -31,7 +31,7 @@
 								}
 							]
 						},
-						"max_dist": 1024
+						"max_dist": 750
 					}
 				]
 			},
@@ -44,8 +44,8 @@
 				"avoid_damage_blocks": false
 			},
 			"minecraft:follow_range": {
-				"value": 1024,
-				"max": 1024
+				"value": 750,
+				"max": 750
 			},
 			"minecraft:behavior.melee_attack": {
 				"priority": 3
@@ -77,10 +77,7 @@
 					"tank"
 				]
 			},
-			"minecraft:tick_world": {
-				"never_despawn": true,
-				"radius": 2
-			},
+
 			"minecraft:physics": {},
 			"minecraft:pushable": {
 				"is_pushable": false,

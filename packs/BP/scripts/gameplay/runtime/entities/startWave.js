@@ -1,4 +1,5 @@
 import { ActionFormData } from "@minecraft/server-ui"
+import { asyncTimeout } from "../../centipede/boss"
 import { EnemySpawner } from "./waveSystem"
 
 const starterId = "dest:start_round"
@@ -20,13 +21,12 @@ world.events.worldInitialize.subscribe(() => {
             const res = await startRoundForm.show(player)
             if (res.canceled) return
             const wave = spawner.nextWave()
-
+            world.round++
             for (const [enemy, location] of wave.generateEnemies()) {
-                //console.warn(enemy, location.x)
+                await asyncTimeout(Math.max(20 - world.round - Math.floor(Math.random() * 5), 0))
                 world.overworld.runCommand(`summon ${enemy} ${location.x} ${location.y} ${location.z}`)
                 world.overworld.runCommand(`execute as @e[type=${enemy},x=${location.x},y=${location.y},z=${location.z},c=1] at @s run spreadplayers ~ ~ 30 31 @s`)
             }
-            world.round++
         } catch (error) {
             console.error(error, error.stack)
         }

@@ -72,11 +72,11 @@ system.events.gameInitialize.subscribe(() => {
 });
 
 const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139\uE130\uE131\uE139\uE130'
-const shuffle = str => [...str].sort(()=>Math.random()-.5).join('');
+const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 /** @param {ScreenDisplay} screen @param {playerInfo} playerInfo @param {otherInfo} info */
 async function setDisplay(screen,
     { ui, myTime: [myTime, name], tips },
-    { session, iMap: {coins:c, kills:k, level:lvl,stones:s,woods:w}, online, all, enemies, towers }
+    { session, iMap: { coins: c, kills: k, level: lvl, stones: s, woods: w }, online, all, enemies, towers }
 ) {
     const gold = '§p'
     const light_green = '§a'
@@ -85,7 +85,7 @@ async function setDisplay(screen,
 
     return await (async () =>
         screen.setActionBar([
-            , 
+            ,
             shuffle(separator),
             `§r\uE112 ` + u(c, 1, "") + ` ` + reset + `\uE110 ` + u(w, 1, "") + ` §r\uE111 ` + u(s, 1, ""),
             gold + `Wave: ` + u(lvl, 1, gold),

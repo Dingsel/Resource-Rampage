@@ -36,7 +36,10 @@ class Wave {
 	static enemies = [
 		new Mob("dest:ant", 20, 0),
 		new Mob("dest:pow_bug", 5, 3),
-		new Mob("dest:ladybug", 1, 10)
+		new Mob("dest:spit_bug", 3, 5),
+		new Mob("dest:ladybug", 1, 10),
+		new Mob("dest:crawler", 5, 13),
+		new Mob("dest:mosquito", 2, 15),
 		//new Mob("minecraft:skeleton", 1, 2)
 	]
 	/** @param {number} waveNumber */
@@ -49,13 +52,13 @@ class Wave {
 		const { enemyDirections, waveNumber } = this
 		const availableMobs = Wave.enemies.filter(({ minWave }) => minWave <= waveNumber)
 		const totalWeight = availableMobs.reduce((total, { weight }) => total + weight, 0);
-		const mobCount = waveNumber * 5;
+		const mobCount = Math.pow(waveNumber * 10, 1.25);
 		const { length } = availableMobs;
 		const directions = enemyDirections.length
 		//console.warn(mobCount)
 		for (let i = 0; i < mobCount; i++) {
 			let randomWeight = floor(random() * totalWeight);
-			for (let j = 0, mob=availableMobs[j]; j < length; mob = availableMobs[++j]) {
+			for (let j = 0, mob = availableMobs[j]; j < length; mob = availableMobs[++j]) {
 				randomWeight -= mob.weight;
 				if (randomWeight < 0) {
 					yield [mob.id, enemyDirections[randNum(0, directions)][1]];

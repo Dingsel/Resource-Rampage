@@ -16,7 +16,7 @@ export function asyncTimeout(ticks) {
 
 world.events.entityDie.subscribe(async (event) => {
     try {
-        const { deadEntity } = event, { typeId, dimension:dim } = deadEntity
+        const { deadEntity } = event, { typeId, dimension: dim } = deadEntity
         if (typeId != "dest:centipede_head") return
         const tags = [deadEntity.getTags()[1]]
         const current = deadEntity.getDynamicProperty("length") ?? 0
@@ -47,13 +47,13 @@ world.events.entityHurt.subscribe((event) => {
 
 
 
-const bossbar = new BossBarBuilder("Centipede")
+const bossbar = new BossBarBuilder(true)
 
 system.runInterval(() => {
-    const fill = system.currentTick % 100
     for (const player of world.getPlayers()) {
         bossbar
-            .setFill(fill)
+            .setFill(100)
+            .setSecondaryFill(currentTick % 100)
             .show(player)
     }
 })
