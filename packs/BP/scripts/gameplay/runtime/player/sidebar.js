@@ -71,7 +71,7 @@ system.events.gameInitialize.subscribe(() => {
     }, interval)
 });
 
-const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139\uE130\uE131\uE132\uE133\uE134'
+const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139\uE130\uE131\uE139\uE130'
 const shuffle = str => [...str].sort(()=>Math.random()-.5).join('');
 /** @param {ScreenDisplay} screen @param {playerInfo} playerInfo @param {otherInfo} info */
 async function setDisplay(screen,
@@ -87,7 +87,7 @@ async function setDisplay(screen,
         screen.setActionBar([
             , 
             shuffle(separator),
-            `§r\uE112 ` + u(c, 1, gold) + ` ` + reset + `\uE110 ` + u(w, 1, gold) + ` §r\uE111 ` + u(s, 1, gold),
+            `§r\uE112 ` + u(c, 1, "") + ` ` + reset + `\uE110 ` + u(w, 1, "") + ` §r\uE111 ` + u(s, 1, ""),
             gold + `Wave: ` + u(lvl, 1, gold),
             gold + `Enemies: ` + enemies,
             shuffle(separator),

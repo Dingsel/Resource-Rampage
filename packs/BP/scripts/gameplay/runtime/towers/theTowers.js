@@ -104,7 +104,7 @@ Tower.TowerTypes[TowerTypes.Archer] = class ArcherTower extends Tower{
                 arrow.setRotation(angles.y,angles.x);
                 arrow.applyImpulse(impulse);
                 await nextTick;
-                scale.value = 2.5;
+                scale.value = 2;
                 this.targetEntity(e,arrow).catch(errorHandle);
             } catch (error) {}
         }
