@@ -132,7 +132,7 @@ events.projectileHit.subscribe((ev)=>{
         delete projectile.damage;
         delete projectile.knockback;
         const {entity} = ev.getEntityHit()??{};
-        if(entity) {
+        if(entity && entity?.typeId != 'minecraft:player') {
             entity.health -= damage;
             entity.applyImpulse(Vector.multiply(Vector.subtract(entity.location,center).normalized(),impulse));
             entity.updateHealths();
