@@ -56,31 +56,31 @@ class Tower{
         this.#element = undefined;
         global.safeArea.delete(this.#safeArea);
     }
+    getDamage(){return this.#abilities.getDamage()*(Math.random() < this.#abilities.getCriticalDamageChance()?this.#abilities.getCriticalDamageFactor():1);}
 }
 class MageTower extends Tower{
     static abilities = MageTowerAbilities;
     async onImpulse(){
-        for (let i = 0; i < this.level; i++) {
+        for (let i = 0; i < this.level/3; i++) {
             this.doImpulse().catch(errorHandle);
-            await sleep(15);
+            await sleep(15/this.abilities.getPower());
         }
     }
-    async doImpulse(){let location = this.location;
-        const r = 20;
-        const p = 1;
-        const k = 1;
-        const d = 30;
+    async doImpulse(){let location = this.location; let abilities = this.abilities;
+        const r = abilities.getRange();
+        const p = abilities.getPower();
+        const k = abilities.getKnockback();
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
         overworld.spawnParticle('dest:ignite_impulse',  location ,new ImpulseParticlePropertiesBuilder(r,p).variableMap);
         for (const e of overworld.getEntities({location,maxDistance:r,excludeTypes:["player"]})) {
             try {
-                e.setOnFire(p*8);
-                const vec = Vector.subtract(e.location,location);
-                vec.y = 0;
+                const d = this.getDamage();
+                console.log(d);
+                e.health -= d;
+                e.setOnFire(p*12+5);
+                const vec = Vector.subtract(e.location,location);vec.y = 0;
                 const {x,z} = vec.normalized();
-                const vec2 = Vector.multiply({x,y:1,z},k);
-                e.applyDamage(d,{cause:EntityDamageCause.fire})
-                e.applyImpulse(vec2);
+                e.applyImpulse(Vector.multiply({x,y:1,z},k));
                 await nextTick;
             } catch (error) {}
         }
@@ -93,24 +93,23 @@ class ArcherTower extends Tower{
             await this.doImpulse().catch(errorHandle);
         }
     }
-    async doImpulse(){ let location = this.location;
-        const r = 20;
+    async doImpulse(){ let location = this.location, abilities = this.abilities;
+        const r = abilities.getRange();
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
         const loc2 = Vector.add(location,{x:0.5,y:10,z:0.5});
-        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,families:['enemy']})) {
+        for (const e of overworld.getEntities({location,maxDistance:abilities.getRange(),closest:abilities.getMaxTargets(),families:['enemy']})) {
             try {
                 const headLocation = e.getHeadLocation();
-                const arrow = overworld.spawnEntity("dest:arrow",loc2);
                 const x = headLocation.x - location.x, z = headLocation.z - location.z, l = (x**2 + z**2)**0.5;
-                arrow.addEffect(MinecraftEffectTypes.levitation,20);
-                const scale = arrow.getComponent(EntityScaleComponent.componentId);
-                arrow.damage = 25;
                 const impulse = {x:x/l,y:0.2,z:z/l};
                 const angles = anglesFromVector(impulse);
+                const arrow = overworld.spawnEntity("dest:arrow",loc2);
+                arrow.damage = this.getDamage();
+                arrow.knockback = {center:location,impulse:abilities.getKnockback()};
                 arrow.setRotation(angles.y,angles.x);
                 arrow.applyImpulse(impulse);
                 await nextTick;
-                scale.value = 2;
+                arrow.scale = 2;
                 this.targetEntity(e,arrow).catch(errorHandle);
             } catch (error) {}
         }
@@ -125,17 +124,24 @@ class ArcherTower extends Tower{
             arrow.applyImpulse(Vector.multiply(velocity,0.75));
             await nextTick;
         }
-        if(!e.isValidHandle) arrow.triggerEvent('dest:despawn')
+        if(!e.isValidHandle) {
+            delete arrow.damage;
+            delete arrow.knockback;
+            arrow.triggerEvent('dest:despawn');
+        }
     }
 }
 events.projectileHit.subscribe((ev)=>{
-    const {damage} = ev.projectile;
-    if(damage){
-        delete ev.projectile.damage;
-        const l = ev.getEntityHit();
-        if(!l) return;
-        l.entity.health -= damage;
-        l.entity.updateHealths();
+    const {projectile} = ev, {damage,knockback:{center,impulse} = {}} = projectile;
+    if(damage && center && impulse){
+        delete projectile.damage;
+        delete projectile.knockback;
+        const {entity} = ev.getEntityHit()??{};
+        if(entity) {
+            entity.health -= damage;
+            entity.applyImpulse(Vector.multiply(Vector.subtract(entity.location,center).normalized(),impulse));
+            entity.updateHealths();
+        }
     }
 })
 function anglesFromVector(vector) {

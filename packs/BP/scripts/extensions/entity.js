@@ -19,6 +19,7 @@ defineProperties(Entity.prototype, {
     viewEntities: { get() { return this.getEntitiesFromViewDirection({ maxDisatnce: 10 }); } },
     applyDamage: { value(amount, source) { applyDamage.call(this, amount, source); } },
     isValidHandle: {get(){ try { this.id; return true; } catch {return false;}}},
+    scale:{get(){return this.getComponent('scale').value},set(v){return this.getComponent('scale').value=v}},
     // cd:{value: 0,enumerable: true},
     scores: {
         get() {

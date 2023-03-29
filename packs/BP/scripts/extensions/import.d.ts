@@ -13,6 +13,7 @@ declare module "@minecraft/server" {
         readonly armor?: EntityEquipmentInventoryComponent;
         health: number;
         cd: number;
+        scale: number;
         readonly maxHealth?: number;
         readonly viewBlock?: Block;
         readonly viewEntities: Entity[];
