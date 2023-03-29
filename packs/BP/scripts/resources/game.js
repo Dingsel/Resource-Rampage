@@ -26,8 +26,9 @@ export const uiFormat = {
 export const centerLocation = Object.create({x:82,y:100,z:52});
 export const MenuItemNameTag = "§l§hMenu";
 export const CanDestroy = MinecraftBlockTypes.getAllBlockTypes().map(n=>n.id);
+export const HammerItemStack = new ItemStack("dest:hammer").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy)
 export const MenuItemStacks = {
     Menu: new ItemStack("dest:menu").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy),
-    TowerEditor: new ItemStack("dest:edit_pickaxe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy),
-    WallBuilder: new ItemStack("dest:edit_axe").setNameTag(MenuItemNameTag).setKeepOnDeath(true).setLockMode(ItemLockMode.slot).setCanDestroy(CanDestroy)
+    TowerEditor: HammerItemStack,
+    WallBuilder: HammerItemStack
 }

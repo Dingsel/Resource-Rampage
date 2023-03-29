@@ -8,7 +8,13 @@
         "is_summonable": true,
         "is_experimental": false
       },
-      "component_groups": {},
+      "component_groups": {
+        "dest:despawn": {
+            "minecraft:instant_despawn": {
+                "remove_child_entities": true
+            }
+        }
+      },
       "components": {
         "minecraft:collision_box": {
           "width": 0.25,
@@ -31,15 +37,17 @@
               "knockback": false,
               "semi_random_diff_damage": false,
               "destroy_on_hit": true
-            }
+            },
+            "remove_on_hit": {}
           },
           "hit_sound": "bow.hit",
-          "power": 1.6,
+          "power": 0.2,
           "uncertainty_base": 16,
           "uncertainty_multiplier": 4,
           "anchor": 1,
           "should_bounce": false,
-          "offset": [ 0, -0.1, 0 ]
+          "offset": [ 0, -0.5, 0 ],
+          "gravity": 0.01
         },
         "minecraft:physics": {},
         "minecraft:pushable": {
@@ -54,6 +62,14 @@
           }
         }
       },
-      "events": {}
+      "events": {
+        "dest:despawn": {
+            "add": {
+                "component_groups": [
+                    "dest:despawn"
+                ]
+            }
+        }
+      }
     }
   }

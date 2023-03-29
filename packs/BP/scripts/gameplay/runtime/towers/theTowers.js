@@ -1,4 +1,4 @@
-import { Entity, EntityDamageCause, Player, Vector } from "@minecraft/server";
+import { EffectType, Entity, EntityDamageCause, EntityScaleComponent, MinecraftEffectTypes, Player, Vector } from "@minecraft/server";
 import { TowerAbilityInformations, TowerDefaultAbilities, TowerTypes } from "resources";
 import { ImpulseParticlePropertiesBuilder, RadiusArea, TowerElement } from "utils";
 
@@ -96,11 +96,17 @@ class ArcherTower extends Tower{
         const d = ArcherTower.INFO.getDamage(damage);
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
         const loc2 = Vector.add(location,{x:0.5,y:10,z:0.5});
-        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,excludeTypes:["player","arrow","item"]})) {
+        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,excludeTypes:["player","dest:arrow","item"]})) {
             try {
                 const headLocation = e.getHeadLocation();
-                const arrow = overworld.spawnEntity("arrow",loc2);
+                const arrow = overworld.spawnEntity("dest:arrow",loc2);
                 const x = headLocation.x - location.x, z = headLocation.z - location.z, l = (x**2 + z**2)**0.5;
+                arrow.addEffect(MinecraftEffectTypes.invisibility,2);
+                const scale = arrow.getComponent(EntityScaleComponent.componentId);
+                console.log(scale.value);
+                scale.value = 0.5;
+                console.log(scale.value);
+                arrow.setRotation(30,40);
                 arrow.applyImpulse({x:x/l,y:0.2,z:z/l});
                 this.targetEntity(e,arrow,damage,knockback).catch(errorHandle);
                 await sleep(3);
@@ -112,15 +118,14 @@ class ArcherTower extends Tower{
         await sleep(5);
         while(e.isValidHandle && arrow.isValidHandle){
             const loc1 = Vector.subtract(Vector.add(e.getHeadLocation(),{x:0,y:0,z:0}),arrow.location).normalized();
-            const velocity = Vector.add(Vector.multiply(Vector.from(arrow.getVelocity()).normalized(),0.3),loc1).normalized();
+            const velocity = Vector.add(Vector.multiply(Vector.from(arrow.getVelocity()).normalized(),2),loc1).normalized();
             arrow.clearVelocity();
             arrow.applyImpulse(Vector.multiply(velocity,1.75));
             await nextTick;
         }
-        if(arrow.isValidHandle) arrow.kill();
+        if(arrow.isValidHandle) arrow.triggerEvent("dest:despawn");
     }
 }
-events.projectileHit.subscribe(async ({projectile})=>{ await nextTick; projectile.kill();})
 const contrusctors = {
     [TowerTypes.Mage]:IgniteTower,
     [TowerTypes.Archer]:ArcherTower

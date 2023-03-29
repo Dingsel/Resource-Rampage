@@ -11,6 +11,9 @@
 		"dest.menu" : {
 		 	"textures" : "textures/items/menu"
 		},
+		"dest.hammer":{
+		   "textures" : "textures/items/hammer"
+		},
 		"dest.edit_axe":{
 		   "textures" : "textures/items/worldedit_axe"
 		},
