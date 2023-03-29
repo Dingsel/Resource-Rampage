@@ -1,5 +1,6 @@
 import { Player } from "@minecraft/server"
 
+const { max, min, round } = Math
 export class BossBarBuilder {
     /** @private */
     string
@@ -39,10 +40,11 @@ export class BossBarBuilder {
     /**
      * @private
      */
-    update(){
-        const fill = Math.min(Math.max(0, this.fill), 100)
-        const fullChars = Math.round(this.chars * ((5 >= fill && fill != 0) ? 5 : fill) / 100)
-        const emptyChars = this.chars - fullChars
-        this.string =`boss.${"|".repeat(fullChars)}${",".repeat(emptyChars)}${this.name}`
+    update() {
+        let { name, chars, fill } = this
+        fill = min(max(0, fill), 100)
+        const fullChars = round(chars * ((5 >= fill && fill != 0) ? 5 : fill) / 100)
+        const emptyChars = chars - fullChars
+        this.string = `boss.${"|".repeat(fullChars)}${",".repeat(emptyChars)}${name}`
     }
 }

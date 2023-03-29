@@ -26,7 +26,7 @@ events.playerSpawn.subscribe(toolsReload);
 events.blockBreak.subscribe(async ({player})=>{
     const {armor,container} = player;
     await nextTick;
-    for(const key of Object.keys(items)){
+    for(const key in items){
         const itemStack = (key in EquipmentSlot)?armor.getEquipment(key):container.getItem(ToolSlots[key]);
         if((!itemStack) || itemStack?.damage == 0) continue;
         itemStack.damage = 0;
@@ -39,8 +39,7 @@ Player.prototype.playerInteraction = function(){
 /**@param {{player:Player}} */
 function toolsReload({player}){
     const {armor,container} = player;
-    for(const key of Object.keys(items)){
-        console.log(key);
+    for(const key in items){
         if(!items[key][0])continue;
         const itemStack = new ItemStack(items[key][0]).setLockMode(ItemLockMode.slot);
         if(key in modifiers) modifiers[key](itemStack);

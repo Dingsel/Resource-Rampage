@@ -1,14 +1,15 @@
-import { world } from "@minecraft/server"
 
-const spawnPoints = Object.entries({
+const { random, floor } = Math, { entries, assign } = Object
+
+const spawnPoints = entries({
 	"x+": { x: 260, y: 75, z: 95 },
 	"x-": { x: -120, y: 75, z: 28 },
 	"z+": { x: 120, y: 75, z: 275 },
 	"z-": { x: 70, y: 74, z: -100 }
-})
+});
 
 
-const randNum = (min, max) => Math.floor(Math.random() * (max - min)) + min
+const randNum = (min, max) => floor(random() * (max - min)) + min
 
 class Mob {
 	constructor(id, weight, minWave) {
@@ -45,17 +46,19 @@ class Wave {
 	}
 	/**@returns {[Mob, import("@minecraft/server").Vector3]} */
 	*generateEnemies() {
-		const availableMobs = Wave.enemies.filter((mob) => mob.minWave <= this.waveNumber)
-		const totalWeight = availableMobs.reduce((total, mob) => total + mob.weight, 0);
-		const mobCount = this.waveNumber * 5
+		const { enemyDirections, waveNumber } = this
+		const availableMobs = Wave.enemies.filter(({ minWave }) => minWave <= waveNumber)
+		const totalWeight = availableMobs.reduce((total, { weight }) => total + weight, 0);
+		const mobCount = waveNumber * 5;
+		const { length } = availableMobs;
+		const directions = enemyDirections.length
 		//console.warn(mobCount)
 		for (let i = 0; i < mobCount; i++) {
-			let randomWeight = Math.floor(Math.random() * totalWeight);
-			for (let j = 0; j < availableMobs.length; j++) {
-				randomWeight -= availableMobs[j].weight;
+			let randomWeight = floor(random() * totalWeight);
+			for (let j = 0, mob=availableMobs[j]; j < length; mob = availableMobs[++j]) {
+				randomWeight -= mob.weight;
 				if (randomWeight < 0) {
-
-					yield [availableMobs[j].id, this.enemyDirections[randNum(0, this.enemyDirections.length - 1)][1]];
+					yield [mob.id, enemyDirections[randNum(0, directions)][1]];
 					break;
 				}
 			}
@@ -64,9 +67,9 @@ class Wave {
 	/**@private */
 	directions() {
 		let from = []
-		const directions = Math.floor((this.waveNumber + 4) / 5)
+		const directions = floor((this.waveNumber + 4) / 5)
 		for (let i = 0; i < directions; i++) {
-			const randInt = Math.floor(Math.random() * 4)
+			const randInt = floor(random() * 4)
 			const v = spawnPoints[randInt]
 			//console.warn("Coming from " + v[0])
 			from.push(v)

@@ -41,7 +41,7 @@ export class TowerElement extends Element{
 export class IgniteTowerElement extends TowerElement{}
 export class GameDatabase extends ElementDatabase{
     static async Start(objective){
-        if(typeof objective == 'string') objective = scoreboard.getObjective(objective)??scoreboard.addObjective(objective,objective);
+        if(typeof objective == 'string') objective = objectives(objective);
         if(!objective instanceof ScoreboardObjective) throw new TypeError("Is not instanceof of ScoreboardObjective");
         return new GameDatabase(objective).init();
     }

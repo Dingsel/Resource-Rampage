@@ -21,15 +21,16 @@ defineProperties(Entity.prototype, {
         get() {
             const entity = this, { scoreboard: sbId } = this;
             return new Proxy({}, {
-                get(_, o) { try { return sbId.getScore(objectives[o]); } catch { return 0 } },
+                get(_, o) { try { return sbId.getScore(objectives(o)); } catch { return 0 } },
                 set(_, o, n) {
                     if (!sbId) return entity.runCommand(`scoreboard players set @s "${o}" ${n}`);
-                    return o = objectives[o] ?? (objectives[o] = o), scoreboard.setScore(o, sbId, n);
+                    return o = objectives(o), scoreboard.setScore(o, sbId, n);
                 }
             })
         }
     }
 });
+
 Object.assign(Player.prototype,{
     getGameMode() {return Object.getOwnPropertyNames(GameMode).find(gameMode => world.getPlayers({ name:this.name, gameMode }).length)??"defualt"},
     setGameMode(mode) {return this.runCommandAsync("gamemode " + mode);},

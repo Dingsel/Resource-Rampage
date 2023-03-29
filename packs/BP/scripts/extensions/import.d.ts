@@ -102,7 +102,7 @@ declare global {
     var nextTick: Promise;
     var currentTick: number;
     var run: PromiseConstructor['prototype']['then'];
-    var objectives: { [key: string]: mc.ScoreboardObjective };
+    var objectives: (key: string, remove?:boolean|undefined)=> mc.ScoreboardObjective ;
     var sleep: (delay: number) => Promise<void>;
     var tier: number
     interface Generator<T = unknown, TReturn = any, TNext = unknown> extends Iterator<T, TReturn, TNext> {

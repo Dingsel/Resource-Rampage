@@ -15,7 +15,7 @@ async function onReload(){
         if(towers.has(id)) nMap.set(id,towers.get(id))
         else{
             const element = await global.database.getTowerAsync(id);
-            console.log("load tower at: " + JSON.stringify(element.get('location')))
+            // console.log("load tower at: " + JSON.stringify(element.get('location')))
             nMap.set(id,new contrusctors[element.getTowerType()](element));
         }
     }
@@ -96,7 +96,7 @@ class ArcherTower extends Tower{
         const d = ArcherTower.INFO.getDamage(damage);
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
         const loc2 = Vector.add(location,{x:0.5,y:10,z:0.5});
-        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,excludeTypes:["player","dest:arrow","item"]})) {
+        for (const e of overworld.getEntities({location,maxDistance:r + 20,closest:1,families:['enemy']})) {
             try {
                 const headLocation = e.getHeadLocation();
                 const arrow = overworld.spawnEntity("dest:arrow",loc2);

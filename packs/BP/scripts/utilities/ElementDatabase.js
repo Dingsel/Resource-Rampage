@@ -29,7 +29,7 @@ export class DisposableHandle{
 export class ElementDatabase extends Database{
     #elements;
     constructor(objective){
-        if(typeof objective == 'string') objective = scoreboard.getObjective(objective)??scoreboard.addObjective(objective,objective);
+        if(typeof objective == 'string') objective = objectives(objective);
         if(!objective instanceof ScoreboardObjective) throw new TypeError("Is not instanceof of ScoreboardObjective");
         super(objective);
         this.#elements = new Map();

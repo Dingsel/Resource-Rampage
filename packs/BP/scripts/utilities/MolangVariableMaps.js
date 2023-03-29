@@ -1,4 +1,6 @@
 import { MolangVariableMap, Vector } from "@minecraft/server";
+
+const {create,assign} = Object,{one} = Vector;
 const v = "variable.";
 const Variables = {
     "sets":"sets",
@@ -16,20 +18,21 @@ export class DestParticlePropertiesBuilder extends DestParticleProperties{
     constructor(){
         super();
         this.speed = 1;
-        this.settings = Object.create(defualtRGBA);
-        this.color = Object.create(defualtRGBA);
-        this.var = Object.create(defualtRGBA);
+        this.settings = create(defualtRGBA);
+        this.color = create(defualtRGBA);
+        this.var = create(defualtRGBA);
     }
     get direction(){
         return this.#direction;
     }
-    #direction = new Vector(1,1,1);
+    #direction = one;
     getMolangVariableMap(){
+        const {speed,color,settings,var:_var,direction}=this
         return super.getMolangVariableMap()
-            .setSpeedAndDirection(v+Variables.sd,this.speed,this.#direction)
-            .setColorRGBA(v+Variables.color,this.color)
-            .setColorRGBA(v+Variables.sets,this.settings)
-            .setColorRGBA(v+Variables.var,this.var);
+            .setSpeedAndDirection(v+Variables.sd,speed,direction)
+            .setColorRGBA(v+Variables.color,color)
+            .setColorRGBA(v+Variables.sets,settings)
+            .setColorRGBA(v+Variables.var,_var);
     }
 }
 export class DefaultParticlePropertiesBuilder extends DestParticleProperties{
@@ -47,7 +50,7 @@ export class DefaultParticlePropertiesBuilder extends DestParticleProperties{
     #property;
     /**@param {import("@minecraft/server").Color} direction @returns {this}*/
     setColor({red=1,green=1,blue=1,alpha=1}){
-        Object.assign(this.#property.color,{red,green,blue,alpha});
+        assign(this.#property.color,{red,green,blue,alpha});
         return this;
     }
     /**@param {number} amount @returns {this}*/
@@ -102,9 +105,9 @@ export class SquareParticlePropertiesBuilder extends DefaultParticlePropertiesBu
 }
 
 const defualtRGBA = {red:1,green:1,blue:1,alpha:1};
-Object.assign(DestParticlePropertiesBuilder.prototype,{
+assign(DestParticlePropertiesBuilder.prototype,{
     speed:1,
-    settings: Object.create(defualtRGBA),
-    color: Object.create(defualtRGBA),
-    var: Object.create(defualtRGBA)
+    settings: create(defualtRGBA),
+    color: create(defualtRGBA),
+    var: create(defualtRGBA)
 });

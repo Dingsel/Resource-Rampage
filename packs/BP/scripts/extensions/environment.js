@@ -79,18 +79,15 @@ setProperties(globalThis, {
     nextTick: { get() { return new Promise(res => setTimeout(() => res(system.currentTick + 1))); } },
     currentTick: { get() { return system.currentTick; } },
     objectives: {
-        get() {
-            return new Proxy(scoreboard, {
-                get(sb, obj) { return sb.getObjective(obj) },
-                set(sb, obj, display) { return sb.addObjective(obj, display) }
-            })
+        value(obj, remove = false) {
+            return !remove ? scoreboard.getObjective(obj) ?? scoreboard.addObjective(obj, obj) : scoreboard.removeObjective(obj)
         }
     },
     tier: {
         get() {
             return (world.getDynamicProperty("tier") ?? 0)
         },
-        set(n){
+        set(n) {
             world.setDynamicProperty("tier", n)
         }
     }
@@ -122,7 +119,7 @@ assign(Number.prototype, {
             return nFix(n, place) + space + (Number.unitTypes[i] ?? "");
         }
     },
-    floor(){return ~~this},
+    floor() { return ~~this },
     toHHMMSS() { return new Date(this).toHHMMSS(); }
 });
 function nFix(num, place) {

@@ -40,13 +40,13 @@ export class ScoreboardMap extends Map{
     }
     /**@param {string} key @param {number?} score @returns {CommandResult}  */
     async addAsync(key, score = 0){
-        const n = await overworld.runCommandAsync(`scoreboard players add "${key.replaceAll('"','\\"')}" "$${this.#objective.id}" ${score}`);
+        const n = await runCommand(`scoreboard players add "${key.replaceAll('"','\\"')}" "$${this.#objective.id}" ${score}`);
         this.update();
         return n;
     }
     /**@param {string} key @param {number?} score @returns {CommandResult}  */
     addAsyncNoUpdate(key, score = 0){
-        return overworld.runCommandAsync(`scoreboard players add "${key.replaceAll('"','\\"')}" "${this.#objective.id}" ${score}`);
+        return runCommand(`scoreboard players add "${key.replaceAll('"','\\"')}" "${this.#objective.id}" ${score}`);
     }
     update(){
         this.clear();
