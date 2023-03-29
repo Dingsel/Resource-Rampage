@@ -27,11 +27,6 @@ function playerDate({ name }, pts = scoreboard.getParticipants()) {
         } rej()
     })
 };
-const wa = (a, b = 6) => {
-    const c = b ? stringify(a, 0, b) : a
-    a.stack ? console.warn(a.message, a.stack) : console.warn(c);;
-};
-
 
 system.events.gameInitialize.subscribe(() => {
     const objId = `"${obj.id}"`
@@ -76,42 +71,29 @@ system.events.gameInitialize.subscribe(() => {
     }, interval)
 });
 
-
-
-const { wood, stone, coin, colon } = {
-    wood: '\uE110', stone: '\uE111', coin: '\uE112', colon: '§8:§r '
-}
+const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139'
+const shuffle = str => [...str].sort(()=>Math.random()-.5).join('');
 /** @param {ScreenDisplay} screen @param {playerInfo} playerInfo @param {otherInfo} info */
 async function setDisplay(screen,
     { ui, myTime: [myTime, name], tips },
     { session, iMap: {coins:c, kills:k, level:lvl,stones:s,woods:w}, online, all, enemies, towers }
 ) {
-    const [a, b] = ui.split(',')
-    const mini = /§´/.test(a) ? '§´' : '';
-    const indent = mini + `§u-<(====: BAO JAM :====)>-`;
-    const indent2 = mini + `§u-<(====: Tips :====)>-`;
-    const ind2 = indent.replace(' BAO JAM ', '----');
-    const S = '§p'
+    const gold = '§p'
+    const light_green = '§a'
+    const dark_green = '§2'
+    const reset = '§r'
 
     return await (async () =>
         screen.setActionBar([
-            , indent,
-            `${S + b}Player${colon + a + name}`,
-            `${S + b}Playtime${colon + myTime}`,
-            ,
-            `${S + b}Online Players${colon}§a${online}§r/§2${all}`,
-            `${S + b}Session${colon + session.time}`,
-            , ind2,
-            `${S + b}Coin${c > 1 ? 's' : ''}${colon + u(c, 1, S)}${coin}`,
-            `${S + b}Wood${c > 1 ? 's' : ''}${colon + u(w, 1, S)}${wood}`,
-            `${S + b}Stone${c > 1 ? 's' : ''}${colon + u(s, 1, S)}${stone}`,
-            `${S + b}Kills${colon + u(k, 1, S)}`,
-            `${S + b}Level${colon + u(lvl, 1, S)}`,
-            , ind2,
-            `${S + b}Enemies${colon + enemies}`,
-            `${S + b}Towers${colon + towers}`
-            , indent2,
-            ...tips
+            , 
+            shuffle(separator),
+            `§r\uE112 ` + u(c, 1, gold) + ` ` + reset + `\uE110 ` + u(w, 1, gold) + ` §r\uE111 ` + u(s, 1, gold),
+            gold + `Wave: ` + u(lvl, 1, gold),
+            gold + `Enemies: ` + enemies,
+            shuffle(separator),
+            gold + `Game Time: ` + reset + session.time,
+            gold + `Online Players: ` + light_green + online + reset + `/` + dark_green + all,
+            shuffle(separator)
         ].join(n_))
     )()
 };
