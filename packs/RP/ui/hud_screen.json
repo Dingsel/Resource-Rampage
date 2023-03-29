@@ -31,6 +31,7 @@
                                 ],
                                 "text_alignment": "left",
                                 "text": "$actionbar_text",
+                                "font_scale_factor": 0.75,
                                 "layer": 1
                             }
                         }
