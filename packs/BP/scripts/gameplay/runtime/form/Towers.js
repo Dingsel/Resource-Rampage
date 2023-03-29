@@ -112,7 +112,6 @@ async function onDelete(player,tower){
 /**@param {Player} player @param {TowerElement} tower @param {TowerAbilities} abilities @param {keyof TowerTypes} type  @param {import("@minecraft/server").Vector3} location */
 async function onUpgrade(player, tower, abilities, type, location){ let ability2 = new abilities.constructor(abilities.level+1), {coins,stone,wood} = abilities.getUpgradeCost()
     let text = "";
-    console.log(location);
     text += `§hCost: §r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")} \n`;
     text += `§hInterval: §a${((ability2.getInterval() - abilities.getInterval())/20).toFixed(1)}§2s\n§r`;
     text += `§hRadius: §a+${(ability2.getRange() - abilities.getRange()).toFixed(1)} §2(blocks)\n `;
@@ -125,8 +124,6 @@ async function onUpgrade(player, tower, abilities, type, location){ let ability2
         await player.info('§4You dont have anouth materials, you need\n\n' + `§r\uE112${coins.unitFormat(2,"")} \uE100${wood.unitFormat(2,"")} \uE111${stone.unitFormat(2,"")} \n`);
     }else if(await player.confirm(text,"form.tower.upgrade.title")){
         await tower.set('level',ability2.level);
-        console.log(ability2.getStructureLevel());
-        console.log(location);
         await placeStructure(location,TowerStructureDefinitions[type][ability2.getStructureLevel()  ]);
         global.coins-=coins;
         global.stone-=stone;

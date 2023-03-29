@@ -75,7 +75,6 @@ class MageTower extends Tower{
         for (const e of overworld.getEntities({location,maxDistance:r,excludeTypes:["player"]})) {
             try {
                 const d = this.getDamage();
-                console.log(d);
                 e.health -= d;
                 e.setOnFire(p*12+5);
                 const vec = Vector.subtract(e.location,location);vec.y = 0;
@@ -88,11 +87,7 @@ class MageTower extends Tower{
 }
 class ArcherTower extends Tower{
     static abilities = ArcherTowerAbilities;
-    async onImpulse(){
-        for (let i = 0; i < this.level; i++) {
-            await this.doImpulse().catch(errorHandle);
-        }
-    }
+    async onImpulse(){await this.doImpulse().catch(errorHandle);}
     async doImpulse(){ let location = this.location, abilities = this.abilities;
         const r = abilities.getRange();
         location = Vector.add(location,{x:0.5,y:0.2,z:0.5});
