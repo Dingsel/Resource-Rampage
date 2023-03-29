@@ -1,5 +1,7 @@
 {
     "namespace": "hud",
+    "$schema": "https://kalmemarq.github.io/Bugrock-JSON-UI-Schemas/ui.schema.json",
+    
     "hud_actionbar_text": {
         "type": "panel",
         "offset": [
@@ -36,5 +38,200 @@
                 }
             }
         ]
-    }
+    },
+
+    "hud_title_text": {
+        "type": "stack_panel",
+        "orientation": "vertical",
+        "offset": [0, -19],
+        "layer": 1,
+        "alpha": "@hud.anim_actionbar_text_alpha_out",
+        "propagate_alpha": true,
+        "controls": [{
+            "title_frame": {
+              "ignored": "((not (($title_text - 'boss.') = $title_text))",
+                "type": "panel",
+                "size": ["100%", "100%cm"],
+                "controls": [{
+                    "title_background": {
+                        "type": "image",
+                        "size": ["100%sm + 30px", "100%sm + 6px"],
+                        "texture": "textures/ui/hud_tip_text_background",
+                        "alpha": "@hud.anim_title_background_alpha_in"
+                    }
+                }, {
+                    "title": {
+                        "type": "label",
+                        "anchor_from": "top_middle",
+                        "anchor_to": "top_middle",
+                        "color": "$title_command_text_color",
+                        "text": "#text",
+                        "layer": 31,
+                        "localize": false,
+                        "font_size": "extra_large",
+                        "variables": [{
+                            "requires": "(not $title_shadow)",
+                            "$show_shadow": false
+                        }, {
+                            "requires": "$title_shadow",
+                            "$show_shadow": true
+                        }],
+                        "shadow": "$show_shadow",
+                        "text_alignment": "center",
+                        "offset": [0, 6],
+                        "bindings": [{
+                            "binding_name": "#hud_title_text_string",
+                            "binding_name_override": "#text",
+                            "binding_type": "global"
+                        }]
+                    }
+                }]
+            }
+        }, {
+             "subtitle_frame": {
+                "type": "panel",
+                "size": ["100%", "100%cm"],
+                "controls": [{
+                    "subtitle_background": {
+                        "type": "image",
+                        "size": ["100%sm + 20px", "100%sm + 5px"],
+                        "offset": [0, 16],
+                        "texture": "textures/ui/hud_tip_text_background",
+                        "variables": [{
+                            "requires": "$subtitle_initially_visible",
+                            "$subtitle_bg": "@hud.anim_title_background_alpha_in"
+                        }, {
+                            "requires": "(not $subtitle_initially_visible)",
+                            "$subtitle_bg": "@hud.anim_subtitle_background_alpha_in"
+                        }],
+                        "alpha": "$subtitle_bg"
+                    }
+                }, {
+                    "subtitle": {
+                        "type": "label",
+                        "anchor_from": "top_middle",
+                        "anchor_to": "top_middle",
+                        "color": "$title_command_text_color",
+                        "text": "#text",
+                        "font_type": "MinecraftTen",
+                        "layer": 31,
+                        "localize": false,
+                        "font_size": "extra_large",
+                        "variables": [{
+                            "requires": "$subtitle_initially_visible",
+                            "$anim_type": 1.0
+                        }, {
+                            "requires": "(not $subtitle_initially_visible)",
+                            "$anim_type": "@hud.anim_subtitle_text_alpha_in"
+                        }, {
+                            "requires": "(not $title_shadow)",
+                            "$show_shadow": false
+                        }, {
+                            "requires": "$title_shadow",
+                            "$show_shadow": true
+                        }],
+                        "shadow": "$show_shadow",
+                        "alpha": "$anim_type",
+                        "text_alignment": "center",
+                        "offset": [1, 19],
+                        "bindings": [{
+                            "binding_name": "#hud_subtitle_text_string",
+                            "binding_name_override": "#text",
+                            "binding_type": "global"
+                        }]
+                    }
+                }]
+            }
+        }]
+    },
+
+    "custom_bar": {
+        "type": "image",
+        "visible": "(not (($title_text - 'boss.') = $title_text)",
+        "size": [  150, 5 ],
+        "texture": "textures/ui/empty_progress_bar",
+        "offset": [0, 4],
+        "color": [0.6,0.36,0.77],
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "controls": [
+            {
+            "filledbar": {
+                "type": "image",
+                "size": [ "100%c", 5 ],
+                "offset": [0,0],
+                "max_size": [150,5],
+                "color": [0.87,0.69,0.17],
+                "texture": "textures/ui/filled_progress_bar",
+                "anchor_from": "center",
+                "anchor_to": "center",
+                "controls": [
+                  {
+                    "chars": {
+                      "type": "label",
+                      "anchor_from": "center",
+                      "anchor_to": "center",
+                      "layer": 31,
+                      "text": "((%.150s * ($title_text - 'boss.')) - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ','  - ','  - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' - ',' )",
+                      "alpha": 0,
+                      "font_scale_factor": 0.5
+                    }
+                  }
+                ]
+            }
+              },
+              {
+                "filledbar": {
+                    "type": "image",
+                    "size": [ "100%c+12px", "100%c" ],
+                    "offset": [0,15],
+                    "texture": "textures/ui/background",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "alpha": 0.6,
+                    "controls": [
+                        {
+                            "text": {
+                                "type": "label",
+                                "anchor_from": "center",
+                                "anchor_to": "center",
+                                "layer": 31,
+                                "offset": [0, -1.5],
+                                "text": "($title_text - (%.155s * $title_text))",
+                                "alpha": 1,
+                                "font_type": "MinecraftTen",
+                                "font_scale_factor": 1.5
+                              }
+                          }
+                    ]
+                }
+                  }
+        ]
+      },
+
+    "custom_bar_factory": {
+        "type": "panel",
+        "factory": {
+          "name": "hud_title_text_factory",
+          "control_ids": {
+            "hud_title_text": "custom_bar@hud.custom_bar"
+          }
+        }
+      },
+
+      "hud_content": {
+        "type": "panel",
+        "$hud_size": [ "100%", "100%" ],
+        "$hud_player_rend_desktop_offset|default": [ 15, 15 ],
+        "variables": [
+          { "requires": "($is_holographic and not $is_living_room_mode)", "$hud_player_rend_desktop_offset": [ 100, 50 ] },
+          { "requires": "($compress_hud_width)", "$hud_size": [ "90%", "100%" ] }
+        ],
+        "size": "$hud_size",
+        "controls": [
+          { "root_panel@hud.root_panel": {} },
+          { "custom_bar_factory@hud.custom_bar_factory": {} },
+          { "camera_renderer@camera_renderer": {} }
+        ]
+      }
 }

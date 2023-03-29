@@ -1,0 +1,6 @@
+//This JSON was modified by AgentMindStorm (@agentms_). Please do not use this document without permission.
+{
+  "play_button": {
+    "$button_text": "howtoplay.category.play"
+  }
+}

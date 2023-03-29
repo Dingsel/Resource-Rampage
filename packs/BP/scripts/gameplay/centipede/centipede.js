@@ -73,11 +73,11 @@ export function summonCentipede(length, position) {
     let centipede = []
     for (let i = 0; i < length; i++) {
         if (i == 0) {
-            centipede.push(dimension.spawnEntity("dest:centipede_head", Vector.add(position, { x: 0, y: 0, z: i })))
+            centipede.push(dimension.spawnEntity("dest:centipede_head", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
         } else if (i == length - 1) {
-            centipede.push(dimension.spawnEntity("dest:centipede_tail", Vector.add(position, { x: 0, y: 0, z: i })))
+            centipede.push(dimension.spawnEntity("dest:centipede_tail", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
         } else {
-            centipede.push(dimension.spawnEntity("dest:centipede_body", Vector.add(position, { x: 0, y: 0, z: i })))
+            centipede.push(dimension.spawnEntity("dest:centipede_body", Vector.add(position, { x: 0, y: 0, z: i * 3 })))
         }
         //centipede[i].runCommandAsync("tag @s add \"" + i + "\"")
         centipede[i].addTag("centipede")

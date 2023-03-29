@@ -1,9 +1,10 @@
+import { BossBarBuilder } from "../runtime/bossbar";
 import { summonCentipede } from "./centipede";
 
 export function spawnBoss(location, length) {
     const centipede = summonCentipede(length, location)
     const head = centipede[0]
-    head?.setDynamicProperty("length", length - 1)
+    head.setDynamicProperty("length", length - 1)
 }
 
 
@@ -29,10 +30,28 @@ world.events.entityDie.subscribe(async (event) => {
         const locations = centipede_parts.map(x => x.location)
 
         for (const location of locations) {
-            dim.createExplosion(location, 1)
-            await asyncTimeout(3)
+            dim.createExplosion(location, 1, { breaksBlocks: false })
+            await asyncTimeout(2)
         }
     } catch (error) {
         console.error(error)
+    }
+})
+
+
+world.events.entityHurt.subscribe((event) => {
+    const { hurtEntity } = event
+    if (hurtEntity.typeId != "dest:centipede_head") return
+    const length = hurtEntity.getDynamicProperty("length")
+})
+
+
+
+const bossbar = new BossBarBuilder("Centipide")
+
+system.runInterval(() => {
+    for (const player of world.getPlayers()) {
+        bossbar.setFill(system.currentTick % 100)
+        bossbar.show(player)
     }
 })

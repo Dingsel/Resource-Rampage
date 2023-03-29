@@ -32,5 +32,6 @@ world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
 
     const bossDef = new DynamicPropertiesDefinition()
     bossDef.defineNumber("length")
+    bossDef.defineString("boundBar", 50)
     propertyRegistry.registerEntityTypeDynamicProperties(bossDef, EntityTypes.get("dest:centipede_head"))
 })

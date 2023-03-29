@@ -1,0 +1,5 @@
+{
+  "play_or_create_stack_bedrock/create_or_play_button": {
+    "$button_text": "howtoplay.category.play"
+  }
+}
