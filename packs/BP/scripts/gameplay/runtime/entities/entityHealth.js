@@ -36,9 +36,9 @@ events.entityDie.subscribe(({ deadEntity: entity,damageSource }) => {
     if (/minecraft:|start_round/.test(typeId) || typeId == "dest:arrow") return;
     entity.nameTag = empty.repeat(maxChars);
     overworld.spawnParticle("dest:coin", location, map);
-    infoMap().relative(coins, EntityKillReward[typeId] ?? 1);
+    infoMap().relative(coins, EntityKillReward[typeId] ?? 2);
     if(damageSource.damagingEntity instanceof Player){
-        damageSource.damagingEntity.blueXp += (EntityKillReward[typeId] ?? 1)*3.3;
+        damageSource.damagingEntity.blueXp += (EntityKillReward[typeId] ?? 1)*3.58;
     }
     if (!/centipede_(body|tail)/.test(typeId)) infoMap().relative(kills, 1);
 });

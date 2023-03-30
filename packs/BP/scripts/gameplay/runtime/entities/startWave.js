@@ -23,13 +23,13 @@ world.events.worldInitialize.subscribe(() => {
             if (res.canceled) return
             switch (res.selection) {
                 case 0: {
-                    if (world.round == 10) {
-                        spawnBoss({ x: 260, y: 75, z: 95 }, 10)
+                    if (world.round && world.round % 10 == 0) {
+                        spawnBoss({ x: 260, y: 75, z: 95 }, world.round/2)
                     }
                     const wave = spawner.nextWave()
                     world.round++
                     for (const [enemy, location] of wave.generateEnemies()) {
-                        await asyncTimeout(Math.max(100 - (world.round * 3) - Math.floor(Math.random() * 5), 0))
+                        await sleep(10);
                         world.overworld.runCommand(`summon ${enemy} ${location.x} ${location.y} ${location.z}`)
                         world.overworld.runCommand(`execute as @e[type=${enemy},x=${location.x},y=${location.y},z=${location.z},c=1] at @s run spreadplayers ~ ~ 30 31 @s`)
                     }
