@@ -1,5 +1,14 @@
-export * from './camera.js';
+import { MinecraftEntityTypes, DynamicPropertiesDefinition } from '@minecraft/server';
+import { PlayerDynamicProperties } from 'resources';
+
+export * from './default.js';
 export * from './sidebar.js';
-export * from './onJoin.js';
-export * from './inventory.js';
-export * from './onbreak.js';
+
+events.worldInitialize.subscribe((ev)=>{
+    const propertyDefinition = new DynamicPropertiesDefinition();
+    for (const key of Object.getOwnPropertyNames(PlayerDynamicProperties)){
+        console.warn(PlayerDynamicProperties[key],key);
+        propertyDefinition.defineNumber(PlayerDynamicProperties[key]);
+    }
+    ev.propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinition,MinecraftEntityTypes.player)
+});

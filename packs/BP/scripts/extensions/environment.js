@@ -68,7 +68,7 @@ assign(globalThis, {
     runCommand: ovw.runCommandAsync.bind(ovw),
     sleep: (n) => new Promise(res => setTimeout(res, n)),
     errorHandle: er => console.error(er?.name ?? er, er?.message ?? '', er?.stack ?? ""),
-    system, world, events,
+    system, world, events,scoreboard,
     worldInitialized: new Promise(res => events.worldInitialize.subscribe(res)), overworld, nether, theEnd,
     gameInitialized: new Promise(res => system.events.gameInitialize.subscribe(res))
 });

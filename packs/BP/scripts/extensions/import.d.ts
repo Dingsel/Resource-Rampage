@@ -32,6 +32,11 @@ declare module "@minecraft/server" {
         sendTip(message: string, timeout?: number): void
         getTips(): ({content:string,timeout:number})[]
         setTips(tips: ({content:string,timeout:number})[]): void
+        blueXp: number;
+        armorLevel: number;
+        swordLevel: number;
+        toolsLevel: number;
+        shieldLevel: number;
     }
     interface World {
         readonly overworld: Dimension;
@@ -103,6 +108,7 @@ declare global {
     var theEnd: mc.Dimension;
     var nextTick: Promise;
     var currentTick: number;
+    var scoreboard: Scoreboard
     var run: PromiseConstructor['prototype']['then'];
     var objectives: (key: string, remove?:boolean|undefined)=> mc.ScoreboardObjective ;
     var sleep: (delay: number) => Promise<void>;
@@ -270,7 +276,8 @@ declare global {
     }
     interface Number {
         unitFormat(place?: number, space?: string,exponent:?number,component?:number): string,
-        floor(): number
+        floor(): number,
+        toHHMMSS(): string
     }
     interface Array<T> {
         readonly randomElement: T,

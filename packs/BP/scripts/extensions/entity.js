@@ -1,5 +1,6 @@
 import { Entity, Player, MolangVariableMap, GameMode } from '@minecraft/server';
 import { ActionFormData, MessageFormData } from '@minecraft/server-ui';
+import { PlayerDynamicProperties } from 'resources';
 
 const applyDamage = Entity.prototype.applyDamage, map = new MolangVariableMap(), { scoreboard } = world,
     { defineProperties, values } = Object, { from } = Array;
@@ -61,13 +62,33 @@ Object.assign(Player.prototype,{
         this[_tips].push({content:message,timeout});
     },
     getTips(){return this[_tips]??[];},
-    setTips(tips){if(Array.isArray(tips)) this[_tips] = tips;}
+    setTips(tips){if(Array.isArray(tips)) this[_tips] = tips;},
 });
 defineProperties(Player.prototype, {
     toString:{value() { return `[Player: ${this.name}]`;}},
     mainhand: {
         get() { return this.armor.getEquipmentSlot("mainhand"); },
         set(s) { this.armor.setEquipment("mainhand", s); return s; }
+    },
+    blueXp: {
+        get(){return this.getDynamicProperty(PlayerDynamicProperties.BlueXp)??0},
+        set(v){return this.setDynamicProperty(PlayerDynamicProperties.BlueXp,v)}
+    },
+    armorLevel: {
+        get(){return this.getDynamicProperty(PlayerDynamicProperties.Armor)??0},
+        set(v){return this.setDynamicProperty(PlayerDynamicProperties.Armor,v)}
+    },
+    swordLevel: {
+        get(){return this.getDynamicProperty(PlayerDynamicProperties.Sword)??0},
+        set(v){return this.setDynamicProperty(PlayerDynamicProperties.Sword,v)}
+    },
+    toolsLevel: {
+        get(){return this.getDynamicProperty(PlayerDynamicProperties.Tools)??0},
+        set(v){return this.setDynamicProperty(PlayerDynamicProperties.Tools,v)}
+    },
+    shieldLevel: {
+        get(){return this.getDynamicProperty(PlayerDynamicProperties.Shield)??0},
+        set(v){return this.setDynamicProperty(PlayerDynamicProperties.Shield,v)}
     },
     isOnline:{get(){return this[isJoined];}},
 });
