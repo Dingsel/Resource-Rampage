@@ -10,7 +10,6 @@
         ],
         "anchor_from": "right_middle",
         "anchor_to": "right_middle",
-        "alpha": 1,
         "controls": [
             {
                 "sidebar": {

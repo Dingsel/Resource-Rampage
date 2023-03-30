@@ -1,10 +1,15 @@
+import { Vector } from "@minecraft/server";
 import { BossBarBuilder } from "../runtime/bossbar";
 import { summonCentipede } from "./centipede";
+
+let fill = 0
+const bossbar = new BossBarBuilder(false)
 
 export function spawnBoss(location, length) {
     const centipede = summonCentipede(length, location)
     const head = centipede[0]
     head.setDynamicProperty("length", length - 1)
+    bossbar.useSecondary = true
 }
 
 
@@ -26,6 +31,8 @@ world.events.entityDie.subscribe(async (event) => {
             system.run(() => {
                 spawnBoss(deadEntity.location, current - 1)
             })
+        }else{
+            bossbar.useSecondary = false
         }
         const locations = centipede_parts.map(x => x.location)
 
@@ -42,18 +49,31 @@ world.events.entityDie.subscribe(async (event) => {
 world.events.entityHurt.subscribe((event) => {
     const { hurtEntity } = event
     if (hurtEntity.typeId != "dest:centipede_head") return
-    const length = hurtEntity.getDynamicProperty("length")
+    let stage = hurtEntity.getDynamicProperty("length") - 2
+    const MaxHealth = hurtEntity.maxHealth * 7
+    const MaxHealthStage = hurtEntity.maxHealth * stage
+    const health = MaxHealthStage - (hurtEntity.maxHealth - hurtEntity.health )
+    fill = health / MaxHealth * 100
 })
 
 
-
-const bossbar = new BossBarBuilder(true)
 
 system.runInterval(() => {
     for (const player of world.getPlayers()) {
         bossbar
             .setFill(100)
-            .setSecondaryFill(currentTick % 100)
+            .setSecondaryFill(fill)
             .show(player)
+    }
+})
+
+
+system.runInterval(() => {
+    for (const head of world.overworld.getEntities({ type: "dest:centipede_head" })) {
+        const players = head.dimension.getEntities({ type: "player", maxDistance: 30, location: head.location })
+        for (const player of players) {
+            console.warn()
+            player.runCommandAsync(`camerashake add @s ${(30 - Math.abs(Vector.distance(player.location, head.location))) * 0.0008} 0.1 rotational`)
+        }
     }
 })

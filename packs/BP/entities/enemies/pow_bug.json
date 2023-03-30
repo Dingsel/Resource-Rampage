@@ -33,7 +33,8 @@
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"reselect_targets": true,
-				"within_radius": 750.0,
+				"within_radius": 350.0,
+				"scan_interval": 200,
 				"entity_types": [
 					{
 						"priority": 1,
@@ -46,7 +47,7 @@
 								}
 							]
 						},
-						"max_dist": 750
+						"max_dist": 350
 					},
 					{
 						"priority": 0,
@@ -81,8 +82,8 @@
 				"avoid_damage_blocks": false
 			},
 			"minecraft:follow_range": {
-				"value": 750,
-				"max": 750
+				"value": 350,
+				"max": 350
 			},
 			"minecraft:behavior.melee_attack": {
 				"priority": 3

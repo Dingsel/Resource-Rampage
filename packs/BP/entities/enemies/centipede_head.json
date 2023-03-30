@@ -14,7 +14,8 @@
 		"components": {
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
-				"within_radius": 750.0,
+				"within_radius": 350.0,
+				"scan_interval": 200,
 				"entity_types": [
 					{
 						"filters": {
@@ -31,7 +32,7 @@
 								}
 							]
 						},
-						"max_dist": 750
+						"max_dist": 350
 					}
 				]
 			},
@@ -47,8 +48,8 @@
 				"avoid_damage_blocks": false
 			},
 			"minecraft:follow_range": {
-				"value": 750,
-				"max": 750
+				"value": 350,
+				"max": 350
 			},
 			"minecraft:movement": {
 				"value": 0.35

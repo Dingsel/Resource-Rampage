@@ -46,7 +46,6 @@ export class BossBarBuilder {
         const emptyChars = chars - fullChars
 
         if (useSecondary) {
-
             fill2 = min(max(0, fill2), 100)
             const fullChars2 = round(chars * ((5 >= fill2 && fill2 != 0) ? 5 : fill2) / 100)
             const emptyChars2 = chars - fullChars

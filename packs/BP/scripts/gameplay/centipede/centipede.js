@@ -101,6 +101,11 @@ const chatCallback = world.events.beforeChat.subscribe((eventData) => {
                 runCommand("say \'" + centipedes[i][j].typeId + "\'")
             }
         }
+    } else if (eventData.message == "$resource +") {
+        global.coins = Math.floor((1+Math.random())*100000)           
+        global.stone = Math.floor((1+Math.random())*100000)          
+        global.wood = Math.floor((1+Math.random())*100000)        
+        world.sendMessage("Resources updated")
     }
 });
 
