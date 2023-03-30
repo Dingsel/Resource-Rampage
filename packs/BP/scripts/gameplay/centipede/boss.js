@@ -31,7 +31,7 @@ world.events.entityDie.subscribe(async (event) => {
             system.run(() => {
                 spawnBoss(deadEntity.location, current - 1)
             })
-        }else{
+        } else {
             bossbar.useSecondary = false
         }
         const locations = centipede_parts.map(x => x.location)
@@ -52,7 +52,7 @@ world.events.entityHurt.subscribe((event) => {
     let stage = hurtEntity.getDynamicProperty("length") - 2
     const MaxHealth = hurtEntity.maxHealth * 7
     const MaxHealthStage = hurtEntity.maxHealth * stage
-    const health = MaxHealthStage - (hurtEntity.maxHealth - hurtEntity.health )
+    const health = MaxHealthStage - (hurtEntity.maxHealth - hurtEntity.health)
     fill = health / MaxHealth * 100
 })
 
@@ -70,10 +70,22 @@ system.runInterval(() => {
 
 system.runInterval(() => {
     for (const head of world.overworld.getEntities({ type: "dest:centipede_head" })) {
+        const { x, y, z } = head.getVelocity()
+        const length = new Vector(x, y, z).length()
+        if (length < 0.1) return;
         const players = head.dimension.getEntities({ type: "player", maxDistance: 30, location: head.location })
         for (const player of players) {
-            console.warn()
             player.runCommandAsync(`camerashake add @s ${(30 - Math.abs(Vector.distance(player.location, head.location))) * 0.0008} 0.1 rotational`)
         }
     }
 })
+
+system.runInterval(async () => {
+    for (const head of world.overworld.getEntities({ type: "dest:centipede_body" })) {
+        const { x, y, z } = head.getVelocity()
+        const length = new Vector(x, y, z).length()
+        if (length < 0.1) return;
+        world.playSound("dig.stone", { pitch: 2, location: head.getHeadLocation(), volume: 2 })
+        await asyncTimeout(1)
+    }
+}, 5)

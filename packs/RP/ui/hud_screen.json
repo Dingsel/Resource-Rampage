@@ -3,17 +3,13 @@
     "$schema": "https://kalmemarq.github.io/Bugrock-JSON-UI-Schemas/ui.schema.json",
     
     "hud_actionbar_text": {
-        "type": "panel",
-        "offset": [
-            0,
-            -25
-        ],
-        "anchor_from": "right_middle",
-        "anchor_to": "right_middle",
-        "controls": [
-            {
-                "sidebar": {
                     "type": "image",
+                    "offset": [
+                        0,
+                        -25
+                    ],
+                    "anchor_from": "right_middle",
+                    "anchor_to": "right_middle",
                     "size": [
                         "100%c + 10px",
                         "100%c"
@@ -22,7 +18,7 @@
                     "alpha": 0.8,
                     "controls": [
                         {
-                            "title": {
+                            "text": {
                                 "type": "label",
                                 "offset": [
                                     0,
@@ -35,9 +31,6 @@
                             }
                         }
                     ]
-                }
-            }
-        ]
     },
 
     "hud_title_text": {

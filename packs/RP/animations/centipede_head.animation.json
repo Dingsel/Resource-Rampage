@@ -25,7 +25,7 @@
 			}
 		},
 		"animation.centipede_head.swing": {
-			"anim_time_update": "q.modified_distance_moved*0.25",
+			"anim_time_update": "q.modified_distance_moved*0.08",
 			"loop": true,
 			"bones": {
 				"root": {
