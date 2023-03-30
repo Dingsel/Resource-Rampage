@@ -1,5 +1,5 @@
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui"
-import { asyncTimeout } from "../../centipede/boss"
+import { asyncTimeout, spawnBoss } from "../../centipede/boss"
 import { EnemySpawner } from "./waveSystem"
 
 const starterId = "dest:start_round"
@@ -23,6 +23,9 @@ world.events.worldInitialize.subscribe(() => {
             if (res.canceled) return
             switch (res.selection) {
                 case 0: {
+                    if (world.round == 10) {
+                        spawnBoss({ x: 260, y: 75, z: 95 }, 10)
+                    }
                     const wave = spawner.nextWave()
                     world.round++
                     for (const [enemy, location] of wave.generateEnemies()) {
