@@ -122,7 +122,7 @@ export class MageTowerAbilities extends TowerAbilities{
 }
 export class ArcherTowerAbilities extends TowerAbilities{
     getInterval(){return (this.maxLevel - this.level) * 15 + 10}
-    getDamage(){return this.level * 2 + 10;}
+    getDamage(){return this.level * 1.75 + 5;}
     getRange(){return this.level * 4 + 10;}
     getKnockback(){return super.getKnockback(); }
     getMaxTargets(){return ~~(this.level / 3) + 1}
