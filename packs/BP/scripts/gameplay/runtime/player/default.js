@@ -2,7 +2,7 @@ import {
     GameMode, MinecraftEffectTypes, Player,Vector,
     EquipmentSlot, ItemStack, ItemLockMode, MinecraftBlockTypes 
  } from "@minecraft/server";
-import { InfoMapProperties, InventoryItems, ItemModifiers, MenuItemStacks, ToolSlot, ToolSlots } from "resources";
+import { InfoMapProperties, InventoryItems, ItemModifiers, MenuItemStacks, PlayerDynamicProperties, ToolSlot, ToolSlots } from "resources";
 import { deathScreen } from "utils";
 
 const { config: { 
@@ -80,6 +80,7 @@ async function onDie(player){
 }
 /**@param {Player} player @param {keyof Interactions} interaction */
 async function onInteract(player,interaction){
+    await nextTick;
     for (const slot of FixInteraction[interaction]) await Fix(player,slot);
 }
 async function onBlockBreak(player,block,permutation){

@@ -1,4 +1,4 @@
-import { Entity, MolangVariableMap } from "@minecraft/server";
+import { Entity, MolangVariableMap, Player } from "@minecraft/server";
 import { EntityKillReward, InfoMapProperties } from "resources";
 
 const map = new MolangVariableMap();
@@ -31,11 +31,14 @@ function updateName(entity) {
 
 events.entitySpawn.subscribe(ev => ev.entity.updateHealths());
 events.entityHurt.subscribe(ev => ev.hurtEntity.updateHealths());
-events.entityDie.subscribe(({ deadEntity: entity }) => {
+events.entityDie.subscribe(({ deadEntity: entity,damageSource }) => {
     const { location, typeId } = entity;
     if (/minecraft:|start_round/.test(typeId) || typeId == "dest:arrow") return;
     entity.nameTag = empty.repeat(maxChars);
     overworld.spawnParticle("dest:coin", location, map);
     infoMap().relative(coins, EntityKillReward[typeId] ?? 1);
+    if(damageSource.damagingEntity instanceof Player){
+        damageSource.damagingEntity.blueXp += (EntityKillReward[typeId] ?? 1)*3.3;
+    }
     if (!/centipede_(body|tail)/.test(typeId)) infoMap().relative(kills, 1);
 });

@@ -12,6 +12,7 @@ export class MenuFormData extends ActionFormData{
     addAction(action,content,icon = undefined){
         this.#actions.push(action??(()=>undefined));
         this.button(...[content,icon]);
+        return this;
     }
     async show(player){
         const {output,canceled} = await super.show(player);

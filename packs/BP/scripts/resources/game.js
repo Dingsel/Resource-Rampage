@@ -1,7 +1,9 @@
 import { EquipmentSlot, ItemLockMode, ItemStack, MinecraftBlockTypes, MinecraftItemTypes } from "@minecraft/server";
 
 export const EntityKillReward = {
-    "dest:centipede_head": 3
+    "dest:centipede_head": 50,
+    "dest:battlepillar":5,
+    "dest:ladybug":3
 }
 export const InfoMapProperties = {
     coins: "coins",

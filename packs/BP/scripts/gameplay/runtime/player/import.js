@@ -9,5 +9,6 @@ events.worldInitialize.subscribe((ev)=>{
     for (const key of Object.getOwnPropertyNames(PlayerDynamicProperties)){
         propertyDefinition.defineNumber(PlayerDynamicProperties[key]);
     }
-    ev.propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinition,MinecraftEntityTypes.player)
+    ev.propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinition,MinecraftEntityTypes.player);
+    //for (const p of world.getPlayers()) for (const prop of Object.getOwnPropertyNames(PlayerDynamicProperties)) p.setDynamicProperty(PlayerDynamicProperties[prop],0);
 });

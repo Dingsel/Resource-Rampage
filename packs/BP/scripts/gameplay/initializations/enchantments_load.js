@@ -26,6 +26,7 @@ export async function loadEnchantments() {
     for (const e of entities){
         e.triggerEvent("dest:despawn");
     }
+    for (const key of Object.getOwnPropertyNames(Enchantment.Custom)) await (Enchantment.Custom[key][1] = new Enchantment(Enchantment.Custom[key][2].type,1))
     return Enchantment.Custom;
 }; 
 const promise = loadEnchantments();

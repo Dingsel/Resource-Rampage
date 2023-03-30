@@ -1,3 +1,4 @@
+import { Player } from "@minecraft/server";
 import { InfoMapProperties } from "resources";
 
 
@@ -11,15 +12,19 @@ system.events.gameInitialize.subscribe(()=>{
     setInterval(onInterval,15);
 });
 async function onInterval(){
-    const text = getSidebar();
-    for (const p of world.getPlayers()) await p.onScreenDisplay.setActionBar(text);
+    for (const p of world.getPlayers()) {
+        await nextTick;
+        p.onScreenDisplay.setActionBar(getSidebar(p));
+    }
 }
-function getSidebar(){const {coins,stone,session,wood,infoMap} = global;
+/**@param {Player} player */
+function getSidebar(player){const {coins,stone,session,wood,infoMap} = global;
     return [,
         shuffle(separator),
         `§r\uE112 ${coins.unitFormat()} §r\uE110 ${wood.unitFormat()} §r\uE111 ${stone.unitFormat()}`,
         g + `Wave: ` + infoMap.get(InfoMapProperties.level),
         g + `Enemies: ` + overworld.getEntities({families:["enemy"]}).length,
+        g + `Blue XP: §9` + player.blueXp.toFixed(1) + "§r",
         shuffle(separator),
         g + `Game Time: ` + r + session.time.toHHMMSS(),
         g + `Online Players: §a${world.getAllPlayers().length}/§2${obj.getParticipants().length}`,

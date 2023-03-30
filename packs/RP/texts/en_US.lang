@@ -23,9 +23,11 @@ construction.progress=§hConstruction is still in progress...
 construction.started=§aConstruction of your wall has start...
 construction.done=§aConstruction of your wall has finish...
 
-%selection.cantBuild.message=§cYou cant select position here, you are too close to buildings
+%selection.cantBuild.message=§tYou cant select position here, you are too close to buildings
 
-form.tools.title=§hYour Informations & Abilities
+form.tools_abilities.title=§tYour Informations & Abilities
+form.ability.title=§tAbilities
+form.tools.title=§tTools
 
 form.wallBuild.dropdown=§hSelect Wall Level
 form.pickTower.title=§tSelect Tower To Build
