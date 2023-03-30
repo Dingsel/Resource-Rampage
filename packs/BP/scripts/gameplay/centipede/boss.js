@@ -22,7 +22,7 @@ export function asyncTimeout(ticks) {
 world.events.entityDie.subscribe(async (event) => {
     try {
         const { deadEntity } = event, { typeId, dimension: dim } = deadEntity
-        if (typeId != "dest:centipede_head") return
+        if (typeId != "dest:centipede_head" || !deadEntity.hasTag('centipede')) return
         const tags = [deadEntity.getTags()[1]]
         const current = deadEntity.getDynamicProperty("length") ?? 0
         const centipede_parts = dim.getEntities({ tags })

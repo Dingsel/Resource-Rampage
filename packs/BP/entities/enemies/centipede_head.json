@@ -21,12 +21,9 @@
 				"attack_once": false,
 				"hit_delay_pct": 1,
 				"random_stop_interval": 0,
-				"reach_multiplier": 1.4,
-				"require_complete_path": true,
-				"track_target": true
+				"reach_multiplier": 1.4
 			},
 			"minecraft:behavior.nearest_attackable_target": {
-				"priority": 1,
 				"within_radius": 350.0,
 				"scan_interval": 200,
 				"entity_types": [
@@ -86,7 +83,6 @@
 					"centipede"
 				]
 			},
-
 			"minecraft:physics": {},
 			"minecraft:pushable": {
 				"is_pushable": false,

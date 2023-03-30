@@ -4,7 +4,8 @@ import { spawnBoss } from "./boss";
 const { min, max, acos, floor, random, atan2, PI } = Math, { values } = Object,
     { add, multiply, subtract, one, zero, dot, up } = Vector,
     ovw = world.getDimension("overworld"),
-    spawnEntity = ovw.spawnEntity.bind(ovw)
+    spawnEntity = ovw.spawnEntity.bind(ovw),
+    getEntity = world.getEntity.bind(world);
 //literally just the dot product
 // function dot(a, b) {
 //     return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -21,15 +22,6 @@ system.events.gameInitialize.subscribe(async() => {
         } else {
             entity.applyImpulse(multiply(ab, 1.2))
         }
-    }
-
-    //rotates an entity to look in a vector direction
-    function setLookingDir(entity, direction) {
-        const { x, y, z } = direction.normalized()
-        let xz = new Vector(x, 0, z).normalized()
-        let pitch = acos(min(max(dot({ x, y, z }, xz), -1), 1)) * 180 / PI
-        let yaw = 90 + atan2(xz.z, xz.x) * 180 / PI
-        entity.setRotation(pitch, yaw)
     }
 
     //runCommand"say " + Object.getOwnPropertyNames(Array.prototype))
@@ -141,7 +133,7 @@ system.events.gameInitialize.subscribe(async() => {
     async function updateCentipedes() {
         const {length} = centipedes;
         for (let i = 0; i < length; i++) {
-            (await nextTick), updateCentipede(i)
+            await updateCentipede(i)
         }
     }
     //the reaching part of fabrik
@@ -153,12 +145,13 @@ system.events.gameInitialize.subscribe(async() => {
     }
 
 
-    function updateCentipede(idx) {
+    async function updateCentipede(idx) {
         let centipede = centipedes[idx]
         const lenght_a = centipede.length
         for (let i = 0; i < lenght_a; i++) {
+            await nextTick
             const limb = centipede[i], { location, health } = limb
-            if (health <= 0 || !world.getEntity(limb.getTags()[1])) return kill_centipede(idx)
+            if (health <= 0 || !getEntity(limb.getTags()[1])) return kill_centipede(idx)
             if (i != 0) {
                 const {location:locb} = centipede[i - 1]
                 let newpos = add(location, { x: 0, y: -9.8 / 60, z: 0 })
@@ -168,5 +161,15 @@ system.events.gameInitialize.subscribe(async() => {
             }
         }
         centipedes[idx] = centipede
+    }
+
+    //rotates an entity to look in a vector direction
+    /**@param {import('@minecraft/server').Entity} entity */
+    function setLookingDir(entity, direction) {
+        const { x, y, z } = direction.normalized()
+        let xz = new Vector(x, 0, z).normalized()
+        let pitch = acos(min(max(dot({ x, y, z }, xz), -1), 1)) * 180 / PI
+        let yaw = 90 + atan2(xz.z, xz.x) * 180 / PI
+        entity.setRotation(pitch, yaw)
     }
 })
