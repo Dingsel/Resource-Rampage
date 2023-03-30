@@ -64,7 +64,6 @@ async function onInitSpawn(player){
 }
 async function onSpawn(player){
     player.scale = 0.7;
-    player.teleportFacing(spawnPoint,overworld,spawnPoint);
     player.addEffect(MinecraftEffectTypes.saturation,99999999,255,false);
     InitInventory(player).catch(errorHandle);
     RunCommands(player, SpawnCommands);
@@ -77,6 +76,7 @@ async function onDie(player){
         if(player.health > 0) break;
         player.teleportFacing(loc,overworld,spawnPoint);
     }
+    player.teleportFacing(spawnPoint,overworld,spawnPoint);
 }
 /**@param {Player} player @param {keyof Interactions} interaction */
 async function onInteract(player,interaction){

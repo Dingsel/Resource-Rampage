@@ -11,8 +11,14 @@
 			"minecraft:knockback_resistance": {
 				"value": 0.75
 			},
+			"minecraft:behavior.delayed_attack":{
+				"attack_duration": 0.8,
+				"attack_once": false,
+				"hit_delay_pct": 1,
+				"random_stop_interval": 0,
+				"reach_multiplier": 1.2
+			},
  			"minecraft:behavior.nearest_attackable_target": {
-				"priority": 1,
 				"reselect_targets": true,
 				"within_radius": 256.0,
 				"scan_interval": 200,

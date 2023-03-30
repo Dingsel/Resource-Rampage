@@ -1,5 +1,5 @@
 {
-	"format_version": "1.8.0",
+	"format_version": "1.10.0",
 	"minecraft:client_entity": {
 		"description": {
 			"identifier": "dest:battlepillar",
@@ -14,22 +14,26 @@
 			},
 			"animations": {
 				"walk": "animation.battlepillar.walk",
+				"breathe": "animation.battlepillar.breathe",
 				"twitch": "animation.battlepillar.twitch",
 				"attack": "animation.battlepillar.charge",
-				"claws": "animation.battlepillar.claws",
-				"breathe": "animation.battlepillar.breathe"
+				"claws": "animation.battlepillar.claws"
 			},
-			"render_controllers": [
-				"controller.render.default"
-			],
 			"spawn_egg": {
 				"base_color": "#4c7e29",
 				"overlay_color": "#153a1a"
 			},
-			"animation_controllers": [
-				{
-					"walk": "controller.animation.enemy.animate"
-				}
+			"scripts": {
+				"animate": [
+					{"walk":"q.ground_speed > 0.1"},
+					"breathe",
+					"twitch",
+					"attack",
+					"claws"
+				]
+			},
+			"render_controllers": [
+				"controller.render.default"
 			]
 		}
 	}
