@@ -25,6 +25,7 @@ construction.done=§aConstruction of your wall has finish...
 
 %selection.cantBuild.message=§cYou cant select position here, you are too close to buildings
 
+form.tools.title=§hYour Informations & Abilities
 
 form.wallBuild.dropdown=§hSelect Wall Level
 form.pickTower.title=§tSelect Tower To Build

@@ -1,6 +1,6 @@
+import './abilities.js';
 import './Towers.js';
 import './wallBuilder.js';
-import './ui_settings.js';
 import {EventTypes, IsBusy, MainMenu, SetBusy, ValidItemStack, runAction, setDefaultAction} from './default.js';
 import { MenuFormData } from 'utils.js';
 
