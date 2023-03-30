@@ -1,0 +1,189 @@
+{
+	"format_version": "1.17.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "dest:battlepillar",
+			"is_summonable": true,
+			"is_spawnable": true
+		},
+		"components": {
+			"minecraft:behavior.nearest_attackable_target": {
+				"priority": 1,
+				"reselect_targets": true,
+				"within_radius": 350.0,
+				"scan_interval": 200,
+				"entity_types": [
+					{
+						"priority": 1,
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "objective"
+								}
+							]
+						},
+						"max_dist": 350
+					},
+					{
+						"priority": 0,
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								}
+							]
+						},
+						"max_dist": 15
+					}
+				]
+			},
+			"minecraft:tick_world": {
+				"never_despawn": true,
+				"radius": 2
+			},
+			"minecraft:attack": {
+				"damage": 1
+			},
+			"minecraft:behavior.delayed_attack": {
+				"attack_duration": 0.6,
+				"attack_once": false,
+				"hit_delay_pct": 0.8,
+				"random_stop_interval": 0,
+				"reach_multiplier": 1.7,
+				"require_complete_path": true,
+				"track_target": false
+			},
+			"minecraft:navigation.walk": {
+				"can_path_over_water": true,
+				"avoid_water": true,
+				"avoid_damage_blocks": false
+			},
+			"minecraft:follow_range": {
+				"value": 350,
+				"max": 350
+			},
+			"minecraft:behavior.melee_attack": {
+				"priority": 3
+			},
+			"minecraft:collision_box": {
+				"width": 2.5,
+				"height": 2.0
+			},
+			"minecraft:health": {
+				"value": 500
+			},
+			"minecraft:movement": {
+				"value": 0.15
+			},
+			"minecraft:movement.basic": {},
+			"minecraft:jump.static": {},
+			"minecraft:can_climb": {},
+			"minecraft:scale": {},
+			"minecraft:is_hidden_when_invisible": {},
+			"minecraft:type_family": {
+				"family": [
+					"enemy",
+					"battlepillar"
+				]
+			},
+			"minecraft:physics": {},
+			"minecraft:pushable": {
+				"is_pushable": true,
+				"is_pushable_by_piston": true
+			},
+			"minecraft:damage_sensor": {
+				"triggers": [
+					{
+						"cause": "all",
+						"deals_damage": true,
+						"on_damage": {
+							"event": "dest:show_name_tag"
+						}
+					}
+				]
+			}
+		},
+		"component_groups": {
+			"dest:despawn": {
+				"minecraft:instant_despawn": {}
+			},
+			"dest:show_name_tag": {
+				"minecraft:nameable": {
+					"always_show": true,
+					"allow_name_tag_renaming": false
+				},
+				"minecraft:timer": {
+					"time": 5,
+					"looping": false,
+					"time_down_event": {
+						"event": "dest:hide_name_tag",
+						"target": "self"
+					}
+				}
+			},
+			"dest:hide_name_tag": {
+				"minecraft:nameable": {
+					"always_show": false,
+					"allow_name_tag_renaming": false
+				}
+			}
+		},
+		"events": {
+			"minecraft:entity_spawned": {
+				"add": {
+					"component_groups": [
+						"dest:show_name_tag"
+					]
+				}
+			},
+			"dest:show_name_tag": {
+				"sequence": [
+					{
+						"remove": {
+							"component_groups": [
+								"dest:show_name_tag"
+							]
+						}
+					},
+					{
+						"remove": {
+							"component_groups": [
+								"dest:hide_name_tag"
+							]
+						}
+					},
+					{
+						"add": {
+							"component_groups": [
+								"dest:show_name_tag"
+							]
+						}
+					}
+				]
+			},
+			"dest:hide_name_tag": {
+				"remove": {
+					"component_groups": [
+						"dest:show_name_tag"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dest:hide_name_tag"
+					]
+				}
+			},
+			"dest:despawn": {
+				"add": {
+					"component_groups": [
+						"dest:despawn"
+					]
+				}
+			}
+		}
+	}
+}
