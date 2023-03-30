@@ -192,21 +192,17 @@
 		},
 		"animation.battlepillar.breathe": {
 			"loop": true,
-			"animation_length": 1,
+			"animation_length": 720.66667,
 			"bones": {
 				"tail": {
-					"scale": {
-						"0.0": [1.05, 1.05, 1],
-						"0.125": [1, 1, 1],
-						"0.5": [1, 1, 1],
-						"0.9167": [1, 1.05, 1],
-						"1.0": [1.05, 1.05, 1]
-					}
+					"scale": ["(math.sin(q.anim_time*180)+60)*0.016", "(math.sin(q.anim_time*180)+20)*0.05", 1]
 				}
 			}
 		},
 		"animation.battlepillar.claws": {
+			"anim_time_update": "q.is_delayed_attacking*0.08",
 			"animation_length": 0.25,
+			"loop": "hold_on_last_frame",
 			"bones": {
 				"claws": {
 					"position": {
@@ -219,6 +215,7 @@
 		},
 		"animation.battlepillar.twitch": {
 			"animation_length": 0.75,
+			"loop": true,
 			"bones": {
 				"r": {
 					"rotation": {
@@ -241,7 +238,9 @@
 			}
 		},
 		"animation.battlepillar.charge": {
+			"anim_time_update": "q.is_delayed_attacking*0.08",
 			"animation_length": 0.625,
+			"loop": "hold_on_last_frame",
 			"bones": {
 				"body": {
 					"position": {
@@ -258,7 +257,10 @@
 					},
 					"position": {
 						"0.5": [0, 0, 0],
-						"0.5417": {"pre": [0, 0, 0], "post": [0, 0, -2]},
+						"0.5417": {
+							"pre": [0, 0, 0],
+							"post": [0, 0, -2]
+						},
 						"0.625": [0, 0, 0]
 					}
 				},
