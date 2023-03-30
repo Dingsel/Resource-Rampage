@@ -52,7 +52,7 @@ class Wave {
 		const { enemyDirections, waveNumber } = this
 		const availableMobs = Wave.enemies.filter(({ minWave }) => minWave <= waveNumber)
 		const totalWeight = availableMobs.reduce((total, { weight }) => total + weight, 0);
-		const mobCount = Math.pow(waveNumber * 10, 1.25);
+		const mobCount = Math.pow(waveNumber * 10, 1.15);
 		const { length } = availableMobs;
 		const directions = enemyDirections.length
 		//console.warn(mobCount)

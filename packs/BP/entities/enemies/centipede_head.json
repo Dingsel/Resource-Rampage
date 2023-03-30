@@ -24,7 +24,7 @@
 				"reach_multiplier": 1.4
 			},
 			"minecraft:behavior.nearest_attackable_target": {
-				"within_radius": 350.0,
+				"within_radius": 256.0,
 				"scan_interval": 200,
 				"entity_types": [
 					{
@@ -42,7 +42,7 @@
 								}
 							]
 						},
-						"max_dist": 350
+						"max_dist": 256
 					}
 				]
 			},
@@ -60,8 +60,8 @@
 				"can_path_over_water": true
 			},
 			"minecraft:follow_range": {
-				"value": 350,
-				"max": 350
+				"value": 256,
+				"max": 256
 			},
 			"minecraft:movement": {
 				"value": 0.35

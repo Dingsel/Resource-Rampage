@@ -35,7 +35,6 @@ defineProperties(Entity.prototype, {
         }
     }
 });
-
 Object.assign(Player.prototype,{
     getGameMode() {return Object.getOwnPropertyNames(GameMode).find(gameMode => world.getPlayers({ name:this.name, gameMode }).length)??"defualt"},
     setGameMode(mode) {return this.runCommandAsync("gamemode " + mode);},

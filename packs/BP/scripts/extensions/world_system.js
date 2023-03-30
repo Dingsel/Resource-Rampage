@@ -21,7 +21,8 @@ setProperties(World.prototype, {
         }
     },
     db: { get() { return db; }, set(val) { db = val; } },
-    round: { get() { return this.getDynamicProperty("round") ?? 0 }, set(n) { this.setDynamicProperty("round", n) } }
+    round: { get() { return this.getDynamicProperty("round") ?? 0 }, set(n) { this.setDynamicProperty("round", n) } },
+    hp: { get() { return this.getDynamicProperty("hp") ?? 0 }, set(n) { this.setDynamicProperty("hp", n) } }
 });
 
 setProperties(Dimension.prototype, {

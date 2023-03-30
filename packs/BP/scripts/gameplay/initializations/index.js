@@ -28,6 +28,13 @@ world.events.worldInitialize.subscribe(({ propertyRegistry }) => {
     const def = new DynamicPropertiesDefinition()
     def.defineNumber("round")
     def.defineNumber("tier")
+
+    def.defineNumber("health")
+    def.defineNumber("defence")
+    def.defineNumber("forge")
+    def.defineBoolean("load")
+    def.defineNumber("hp")
+
     propertyRegistry.registerWorldDynamicProperties(def)
 
     const bossDef = new DynamicPropertiesDefinition()

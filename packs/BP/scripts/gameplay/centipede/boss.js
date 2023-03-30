@@ -60,7 +60,7 @@ world.events.entityHurt.subscribe((event) => {
 system.runInterval(() => {
     for (const player of world.getPlayers()) {
         bossbar
-            .setFill(100)
+            .setFill(world.hp)
             .setSecondaryFill(fill)
             .show(player)
     }
