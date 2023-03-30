@@ -34,7 +34,7 @@
 			}
 		},
 		"animation.centipede_head.bite": {
-			"anim_time_update": "q.is_delayed_attacking*0.1",
+			"anim_time_update": "q.is_delayed_attacking*0.08",
 			"loop": true,
 			"animation_length": 0.33333,
 			"bones": {
