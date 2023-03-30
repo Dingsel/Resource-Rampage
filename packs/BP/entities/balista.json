@@ -14,6 +14,18 @@
             }
         },
         "components": {
+            "minecraft:shooter": {
+                "def": "minecraft:arrow"
+            },
+            "minecraft:behavior.ranged_attack": {
+                "attack_interval": 1,
+                "attack_radius": 32,
+                "burst_interval": 0,
+                "burst_shots": 3,
+                "ranged_fov": 360,
+                "target_in_sight_time": 0,
+                "attack_radius_min": 0
+            },
             "minecraft:knockback_resistance": {
                 "value": 1
             },
