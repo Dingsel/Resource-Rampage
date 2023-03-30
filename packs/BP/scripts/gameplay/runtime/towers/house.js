@@ -65,7 +65,7 @@ let lost;
 
 system.runInterval(() => {
     const objective = world.overworld.getEntities({ type: "dest:objective" })[0]
-    for (const mob of world.overworld.getEntities({ location: objective?.location, maxDistance: 25 })) {
+    for (const mob of world.overworld.getEntities({ location: objective?.location, maxDistance: 25, families: ["enemy"] })) {
         world.hp -= 1
         mob.applyDamage(2)
         if (0 >= world.hp && !lost) {
