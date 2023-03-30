@@ -28,9 +28,8 @@ world.events.entityDie.subscribe(async (event) => {
         const centipede_parts = dim.getEntities({ tags })
 
         if (current > 3) {
-            system.run(() => {
-                spawnBoss(deadEntity.location, current - 1)
-            })
+            await asyncTimeout(2)
+            spawnBoss(deadEntity.location, current - 1)
         } else {
             bossbar.useSecondary = false
         }

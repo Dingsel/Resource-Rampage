@@ -11,7 +11,7 @@
 			"minecraft:knockback_resistance": {
 				"value": 0.75
 			},
-			"minecraft:behavior.nearest_attackable_target": {
+ 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"reselect_targets": true,
 				"within_radius": 350.0,
@@ -29,6 +29,19 @@
 							]
 						},
 						"max_dist": 350
+					},
+					{
+						"priority": 0,
+						"filters": {
+							"all_of": [
+								{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								}
+							]
+						},
+						"max_dist": 15
 					}
 				]
 			},
