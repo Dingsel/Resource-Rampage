@@ -115,15 +115,15 @@ export class TowerAbilities{
 export class MageTowerAbilities extends TowerAbilities{
     getInterval(){return this.maxLevel*35 - this.level * 15}
     getDamage(){return this.level;}
-    getRange(){return this.level * 3 + 5;}
+    getRange(){return this.level * 2.5 + 5;}
     getKnockback(){return super.getKnockback() / 1.5; }
     getPower(){return 2*this.level/this.maxLevel;}
     getCriticalDamageFactor(){return super.getCriticalDamageFactor() + 1;}
 }
 export class ArcherTowerAbilities extends TowerAbilities{
     getInterval(){return (this.maxLevel - this.level) * 15 + 10}
-    getDamage(){return this.level * 1.75 + 5;}
-    getRange(){return this.level * 4 + 10;}
+    getDamage(){return this.level * 1.5 + 7;}
+    getRange(){return this.level * 3.5 + 10;}
     getKnockback(){return super.getKnockback(); }
     getMaxTargets(){return ~~(this.level / 3) + 1}
     getCriticalDamageFactor(){return super.getCriticalDamageFactor()*2 + 1;}

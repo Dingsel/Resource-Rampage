@@ -14,7 +14,7 @@ for (const p of world.getPlayers()) {
 events.playerSpawn.subscribe(async ({ player, initialSpawn }) => {
     if (!initialSpawn) return;
     const { container, name } = player
-    player.teleportFacing(default_spawn_point, overworld, centerLocation);
+    player.teleportFacing(default_spawn_point, overworld, default_spawn_point);
     container.setItem(8, MenuItemStacks.Menu);
     player.getComponent(scale).value = 0.8;
     await player.setGameMode(defualt_game_mode);

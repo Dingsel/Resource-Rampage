@@ -2,7 +2,7 @@ import { GameMode, MinecraftEffectTypes, MinecraftEntityTypes,Player,Vector } fr
 import { centerLocation } from "resources";
 
 
-const center = centerLocation;
+const center = global.config.default_spawn_point;
 events.playerSpawn.subscribe(({player})=>shield(player));
 events.entityDie.subscribe(async ({ deadEntity }) => {
     deadEntity.runCommandAsync('fog @s push dest:death_fog fog');
@@ -37,7 +37,7 @@ async function shield(player, ticks = 20){
 
 function* deathScreen(r=175,angle = 15){
     angle *= 1 + Math.random()*3;
-    while(true) for (let loc of MovingPath(r * (Math.random()+0.5),angle * 15,angle,Math.random()*360,(Math.random()-0.5)/20,(Math.random()>=0.5)?1:-1).offSet(Vector.add(center,{x:0,y:Math.random()*20,z:0}))) yield loc;
+    while(true) for (let loc of MovingPath(r * (Math.random()+0.5),angle * 15,angle,Math.random()*360,(Math.random()-0.5)/20,(Math.random()>=0.5)?1:-1).offSet(Vector.add(center,{x:0,y:Math.random()*20 + 10,z:0}))) yield loc;
 }
 
 function* MovingPath(radius = 30, steps = 1,angle = 360, offset=0, motion=0, direction = 1){
