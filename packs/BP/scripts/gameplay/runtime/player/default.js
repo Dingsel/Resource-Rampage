@@ -1,8 +1,8 @@
 import { 
-    GameMode, MinecraftEffectTypes, MinecraftEntityTypes,Player,Vector,
-    EquipmentSlot, MinecraftItemTypes, Container, EntityEquipmentInventoryComponent as ArmorComponent, ItemStack, ItemLockMode, MinecraftBlockTypes, EntityEquipmentInventoryComponent 
+    GameMode, MinecraftEffectTypes, Player,Vector,
+    EquipmentSlot, ItemStack, ItemLockMode, MinecraftBlockTypes 
  } from "@minecraft/server";
-import { InfoMapProperties, InventoryItems, MenuItemStacks, ToolSlot, ToolSlots } from "resources";
+import { InfoMapProperties, InventoryItems, ItemModifiers, MenuItemStacks, ToolSlot, ToolSlots } from "resources";
 import { deathScreen } from "utils";
 
 const { config: { 
@@ -19,7 +19,7 @@ const SpawnCommands = [
     "fog @s push dest:custom_fog test",
 ]
 const DieCommands = [
-    "gamemode " + GameMode.adventure,
+    "gamemode " + GameMode.spectator,
     "inputpermission set @s camera disabled",
     "inputpermission set @s movement disabled",
     "fog @s push dest:death_fog fog"
@@ -63,10 +63,9 @@ async function onInitSpawn(player){
     await player.runCommandAsync(`scoreboard players set @s ${obj.id} 0`);
 }
 async function onSpawn(player){
-    player.scale = 0.8;
-    player.teleportFacing(spawnPoint,overworld,spawnPoint);
+    player.scale = 0.7;
     player.addEffect(MinecraftEffectTypes.saturation,99999999,255,false);
-    InitInventory(player);
+    InitInventory(player).catch(errorHandle);
     RunCommands(player, SpawnCommands);
     await shield(player,120);
 }
@@ -77,6 +76,7 @@ async function onDie(player){
         if(player.health > 0) break;
         player.teleportFacing(loc,overworld,spawnPoint);
     }
+    player.teleportFacing(spawnPoint,overworld,spawnPoint);
 }
 /**@param {Player} player @param {keyof Interactions} interaction */
 async function onInteract(player,interaction){
@@ -93,13 +93,14 @@ async function onBlockBreak(player,block,permutation){
 }
 
 
-async function InitInventory(player){
-    const {container} = player;
+export async function InitInventory(player){
+    const {container,armor} = player;
     container.setItem(8,MenuItemStacks.Menu);
     for (const key of Object.getOwnPropertyNames(InventoryItems)) {
-        if(!InventoryItems[key][0])continue;
-        const itemStack = new ItemStack(items[key][0]).setLockMode(ItemLockMode.slot);
-        if(key in modifiers) modifiers[key](itemStack);
+        await nextTick;
+        if(!InventoryItems[key][player[InventoryLevels[key]]])continue;
+        const itemStack = new ItemStack(InventoryItems[key][player[InventoryLevels[key]]]).setLockMode(ItemLockMode.slot);
+        if(key in ItemModifiers) ItemModifiers[key](itemStack);
         if(key in EquipmentSlot){
             const {enchantments} = armor.getEquipment(key)??{};
             if(enchantments) itemStack.enchantments = enchantments;
@@ -134,13 +135,14 @@ function Fix(player,slot){
         container.setItem(slot,item);
     }
 }
+function onPlayer({player, initialSpawn}){
+    if (initialSpawn) onInitSpawn(player).catch(errorHandle);
+    onSpawn(player).catch(errorHandle);
+}
 const EntityEventOptions = {entityTypes:["minecraft:player"]};
 async function RunCommands(target, commands){for (const cmd of commands) target.runCommandAsync(cmd);}
 events.blockBreak.subscribe(({player,block,brokenBlockPermutation:permutation})=>onBlockBreak(player,block,permutation).catch(errorHandle));
 events.entityHit.subscribe(({hitEntity,entity})=>hitEntity?onInteract(entity,Interactions.hit).catch(errorHandle):null,EntityEventOptions);
 events.entityHurt.subscribe(({hurtEntity})=>onInteract(hurtEntity,Interactions.hurt).catch(errorHandle),EntityEventOptions);
 events.entityDie.subscribe(({ deadEntity }) =>onDie(deadEntity).catch(errorHandle), EntityEventOptions);
-events.playerSpawn.subscribe(({ player, initialSpawn }) => {
-    if (initialSpawn) onInitSpawn(player).catch(errorHandle);
-    onSpawn(player).catch(errorHandle);
-});
+events.playerSpawn.subscribe(onPlayer);
