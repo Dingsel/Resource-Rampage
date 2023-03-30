@@ -9,30 +9,32 @@ const { overworld: ovw } = world;
 const getEntities = ovw.getEntities.bind(ovw);
 const getEntity = world.getEntity.bind(world)
 
-
-Entity.prototype.updateHealths = function(){updateName(this);}
+const { full, empty } = { full: '\uE113', empty: '\uE114' }
+Entity.prototype.updateHealths = function () { updateName(this); }
+/**@param {import('@minecraft/server').Entity} entity*/
 function updateName(entity) {
-    const { typeId: type } = entity;
+    let { typeId: type } = entity;
     if (!getEntities({ type, families: ['enemy'] }).length) return;
-    if (/centipede_(body|tail)/.test(type) && entity.hasTag('centipede')) {
-        const tag = entity.getTags()[1];
-        const head = getEntity(tag);
-        const { health, maxHealth } = head
-        const fullChars = maxChars - ~~((health > 0 ? health : 0.01) / maxHealth * maxChars);
-        return getEntities({ tags: [tag] }).forEach(limb => {
-            return limb.nameTag = "§4|".repeat(maxChars - fullChars) + "§8|".repeat(fullChars);
-        })
+    let entities = [entity], nameTag = e => {
+        if (!e) return empty.repeat(maxChars);
+        const {current:health,value:maxHealth} = e.getComponent('health'),
+        fullChars = maxChars - ~~((health > 0 ? health : 0)
+        / maxHealth * maxChars);
+        return full.repeat(maxChars - fullChars) + empty.repeat(fullChars)
     }
-    const {current:health,value:maxHealth} = entity.getComponent('health') ??{}
-    const fullChars = maxChars - ~~((health > 0 ? health : 0) / maxHealth * maxChars);
-    entity.nameTag = "§4|".repeat(maxChars - fullChars) + "§8|".repeat(fullChars);
+    if (/centipede_(body|tail)/.test(type) && entity.hasTag('centipede')) {
+        const tag = entity.getTags()[1], head = getEntity(tag);
+        nameTag = nameTag(head), entities = getEntities({ tags: [tag] });
+    } else nameTag = nameTag(entity);
+    for (const e of entities) e.nameTag = nameTag;
 }
-events.entitySpawn.subscribe(ev => updateName(ev.entity));
-events.entityHurt.subscribe(ev => updateName(ev.hurtEntity));
+
+events.entitySpawn.subscribe(ev => ev.entity.updateHealths());
+events.entityHurt.subscribe(ev => ev.hurtEntity.updateHealths());
 events.entityDie.subscribe(({ deadEntity: entity }) => {
     const { location, typeId } = entity;
     if (/minecraft:|start_round/.test(typeId) || typeId == "dest:arrow") return;
-    entity.nameTag = "§8|".repeat(maxChars);
+    entity.nameTag = empty.repeat(maxChars);
     overworld.spawnParticle("dest:coin", location, map);
     infoMap().relative(coins, EntityKillReward[typeId] ?? 1);
     if (!/centipede_(body|tail)/.test(typeId)) infoMap().relative(kills, 1);

@@ -6,10 +6,10 @@
 				"default": {
 					"transitions": [
 						{
-							"walk": "q.ground_speed > 0.1 && !q.vertical_speed && q.is_alive"
+							"attack": "q.is_delayed_attacking && q.has_target && q.is_alive"
 						},
 						{
-							"attack": "q.is_delayed_attacking && q.has_target && q.is_alive"
+							"walk": "q.ground_speed > 0.1 && !q.vertical_speed && q.is_alive"
 						}
 					],
 					"blend_transition": 0.1
@@ -20,10 +20,10 @@
 					],
 					"transitions": [
 						{
-							"default": "q.ground_speed <= 0.01 || q.vertical_speed || !q.is_alive"
+							"attack": "q.is_delayed_attacking && q.has_target"
 						},
 						{
-							"attack": "q.is_delayed_attacking && q.has_target"
+							"default": "q.ground_speed <= 0.01 || q.vertical_speed || !q.is_alive"
 						}
 					],
 					"blend_transition": 0.1

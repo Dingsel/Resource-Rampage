@@ -12,6 +12,15 @@
 			}
 		},
 		"components": {
+			"minecraft:behavior.delayed_attack":{
+				"attack_duration": 0.4,
+				"attack_once": false,
+				"hit_delay_pct": 1,
+				"random_stop_interval": 0,
+				"reach_multiplier": 1.4,
+				"require_complete_path": true,
+				"track_target": true
+			},
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
 				"within_radius": 350.0,
@@ -39,13 +48,18 @@
 			"minecraft:attack": {
 				"damage": 5
 			},
+			"minecraft:underwater_movement": {
+			  "value": 0.2
+			},
 			"minecraft:movement.basic": {},
 			"minecraft:jump.static": {},
 			"minecraft:can_climb": {},
-			"minecraft:navigation.walk": {
-				"can_path_over_water": true,
-				"avoid_water": true,
-				"avoid_damage_blocks": false
+			"minecraft:floats_in_liquid": {},
+			"minecraft:navigation.climb": {
+				"is_amphibious": true,
+				"can_swim": true,
+				"can_jump": true,
+				"can_path_over_water": true
 			},
 			"minecraft:follow_range": {
 				"value": 350,

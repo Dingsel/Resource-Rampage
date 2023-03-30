@@ -54,11 +54,11 @@
 				"damage": 1
 			},
 			"minecraft:behavior.delayed_attack":{
-				"attack_duration": 0.58333,
+				"attack_duration": 0.6,
 				"attack_once": false,
 				"hit_delay_pct": 0.8,
 				"random_stop_interval": 0,
-				"reach_multiplier": 1.5,
+				"reach_multiplier": 1.7,
 				"require_complete_path": true,
 				"track_target": false
 			},
