@@ -23,8 +23,11 @@ const ToolSlots = {
 const pickaxeCanDestroy = ["minecraft:stone"];
 const axeCanDestroy = ["wood",...MinecraftBlockTypes.getAllBlockTypes().filter(n=>n.id.includes('log')).map(n=>n.id)];
 events.playerSpawn.subscribe(toolsReload);
-events.blockBreak.subscribe(async ({player})=>{
-    const {armor,container} = player;
+events.blockBreak.subscribe(({player})=>player.playerInteraction());
+events.entityHit.subscribe(({entity})=>entity.playerInteraction(),{entityTypes:["minecraft:player"]});
+
+Player.prototype.playerInteraction = async function(){
+    const {armor,container} = this;
     await nextTick;
     for(const key in items){
         const itemStack = (key in EquipmentSlot)?armor.getEquipment(key):container.getItem(ToolSlots[key]);
@@ -32,9 +35,6 @@ events.blockBreak.subscribe(async ({player})=>{
         itemStack.damage = 0;
         (key in EquipmentSlot)?armor.setEquipment(key,itemStack):container.setItem(ToolSlots[key],itemStack);
     }
-})
-Player.prototype.playerInteraction = function(){
-    toolsReload({player:this});
 }
 /**@param {{player:Player}} */
 function toolsReload({player}){
@@ -64,9 +64,6 @@ const modifiers = {
         itemStack.setCanDestroy(axeCanDestroy)
     }
 }
-
-
-
 const items = {
     [EquipmentSlot.head]:[
         MinecraftItemTypes.leatherHelmet,

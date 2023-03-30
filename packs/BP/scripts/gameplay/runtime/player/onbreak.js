@@ -8,4 +8,7 @@ events.blockBreak.subscribe(async ({brokenBlockPermutation,player,block})=>{
     block.setType(MinecraftBlockTypes.invisibleBedrock);
     await sleep(180);
     block.setPermutation(brokenBlockPermutation);
-})
+});
+events.entityHit.subscribe(async ()=>{
+
+});
