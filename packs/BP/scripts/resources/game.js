@@ -60,11 +60,11 @@ export const AxeCanDestroy = ["wood",...MinecraftBlockTypes.getAllBlockTypes().f
 export const ItemModifiers = {
     /**@param {ItemStack} itemStack */
     [ToolSlot.pickaxe](itemStack){
-        itemStack.setCanDestroy(pickaxeCanDestroy)
+        itemStack.setCanDestroy(PickaxeCanDestroy)
     },
     /**@param {ItemStack} itemStack */
     [ToolSlot.axe](itemStack){
-        itemStack.setCanDestroy(axeCanDestroy)
+        itemStack.setCanDestroy(AxeCanDestroy)
     }
 }
 export const InventoryItems = {

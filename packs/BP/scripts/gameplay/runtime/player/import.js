@@ -7,7 +7,6 @@ export * from './sidebar.js';
 events.worldInitialize.subscribe((ev)=>{
     const propertyDefinition = new DynamicPropertiesDefinition();
     for (const key of Object.getOwnPropertyNames(PlayerDynamicProperties)){
-        console.warn(PlayerDynamicProperties[key],key);
         propertyDefinition.defineNumber(PlayerDynamicProperties[key]);
     }
     ev.propertyRegistry.registerEntityTypeDynamicProperties(propertyDefinition,MinecraftEntityTypes.player)
