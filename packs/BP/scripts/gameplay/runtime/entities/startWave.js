@@ -29,7 +29,7 @@ world.events.worldInitialize.subscribe(() => {
                     const wave = spawner.nextWave()
                     world.round++
                     for (const [enemy, location] of wave.generateEnemies()) {
-                        await sleep(10);
+                        await sleep(15);
                         world.overworld.runCommand(`summon ${enemy} ${location.x} ${location.y} ${location.z}`)
                         world.overworld.runCommand(`execute as @e[type=${enemy},x=${location.x},y=${location.y},z=${location.z},c=1] at @s run spreadplayers ~ ~ 30 31 @s`)
                     }
