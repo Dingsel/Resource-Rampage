@@ -53,6 +53,15 @@
 			"minecraft:attack": {
 				"damage": 1
 			},
+			"minecraft:behavior.delayed_attack":{
+				"attack_duration": 0.58333,
+				"attack_once": false,
+				"hit_delay_pct": 0.8,
+				"random_stop_interval": 0,
+				"reach_multiplier": 1.5,
+				"require_complete_path": true,
+				"track_target": false
+			},
 			"minecraft:navigation.walk": {
 				"can_path_over_water": true,
 				"avoid_water": true,

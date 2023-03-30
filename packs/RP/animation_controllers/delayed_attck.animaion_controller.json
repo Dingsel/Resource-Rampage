@@ -1,0 +1,45 @@
+{
+	"format_version": "1.19.0",
+	"animation_controllers": {
+		"controller.animation.enemy.animate": {
+			"states": {
+				"default": {
+					"transitions": [
+						{
+							"walk": "q.ground_speed > 0.1 && !q.vertical_speed && q.is_alive"
+						},
+						{
+							"attack": "q.is_delayed_attacking && q.has_target && q.is_alive"
+						}
+					],
+					"blend_transition": 0.1
+				},
+				"walk": {
+					"animations": [
+						"walk"
+					],
+					"transitions": [
+						{
+							"default": "q.ground_speed <= 0.01 || q.vertical_speed || !q.is_alive"
+						},
+						{
+							"attack": "q.is_delayed_attacking && q.has_target"
+						}
+					],
+					"blend_transition": 0.1
+				},
+				"attack":{
+					"animations":[
+						"attack"
+					],
+					"transitions":[
+						{
+							"default": "q.all_animations_finished || !q.is_alive"
+						}
+					],
+					"blend_transition":0.3
+			   }
+			}
+		}
+	}
+}

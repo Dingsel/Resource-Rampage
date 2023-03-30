@@ -118,6 +118,7 @@
 			}
 		},
 		"animation.ant.bite": {
+			"loop": "hold_on_last_frame",
 			"animation_length": 0.58333,
 			"bones": {
 				"thorax": {
