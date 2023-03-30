@@ -40,7 +40,7 @@
 			"dest:despawn": {
 				"add": {
 					"component_groups": [
-						"despawn"
+						"dest:despawn"
 					]
 				}
 			}

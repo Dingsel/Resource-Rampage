@@ -6,11 +6,6 @@
 			"is_summonable": true,
 			"is_spawnable": true
 		},
-		"component_groups": {
-			"dest:despawn": {
-				"minecraft:instant_despawn": {}
-			}
-		},
 		"components": {
 			"minecraft:behavior.nearest_attackable_target": {
 				"priority": 1,
@@ -53,7 +48,7 @@
 			"minecraft:attack": {
 				"damage": 1
 			},
-			"minecraft:behavior.delayed_attack":{
+			"minecraft:behavior.delayed_attack": {
 				"attack_duration": 0.6,
 				"attack_once": false,
 				"hit_delay_pct": 0.8,
@@ -89,24 +84,99 @@
 			"minecraft:can_climb": {},
 			"minecraft:scale": {},
 			"minecraft:is_hidden_when_invisible": {},
-			"minecraft:nameable": {
-				"always_show": true,
-				"allow_name_tag_renaming": false
-			},
 			"minecraft:type_family": {
 				"family": [
 					"enemy",
 					"pawn"
 				]
 			},
-
 			"minecraft:physics": {},
 			"minecraft:pushable": {
 				"is_pushable": true,
 				"is_pushable_by_piston": true
+			},
+			"minecraft:damage_sensor": {
+				"triggers": [
+					{
+						"cause": "all",
+						"deals_damage": true,
+						"on_damage": {
+							"event": "dest:show_name_tag"
+						}
+					}
+				]
+			}
+		},
+		"component_groups": {
+			"dest:despawn": {
+				"minecraft:instant_despawn": {}
+			},
+			"dest:show_name_tag": {
+				"minecraft:nameable": {
+					"always_show": true,
+					"allow_name_tag_renaming": false
+				},
+				"minecraft:timer": {
+					"time": 5,
+					"looping": false,
+					"time_down_event": {
+						"event": "dest:hide_name_tag",
+						"target": "self"
+					}
+				}
+			},
+			"dest:hide_name_tag": {
+				"minecraft:nameable": {
+					"always_show": false,
+					"allow_name_tag_renaming": false
+				}
 			}
 		},
 		"events": {
+			"minecraft:entity_spawned": {
+				"add": {
+					"component_groups": [
+						"dest:show_name_tag"
+					]
+				}
+			},
+			"dest:show_name_tag": {
+				"sequence": [
+					{
+						"remove": {
+							"component_groups": [
+								"dest:show_name_tag"
+							]
+						}
+					},
+					{
+						"remove": {
+							"component_groups": [
+								"dest:hide_name_tag"
+							]
+						}
+					},
+					{
+						"add": {
+							"component_groups": [
+								"dest:show_name_tag"
+							]
+						}
+					}
+				]
+			},
+			"dest:hide_name_tag": {
+				"remove": {
+					"component_groups": [
+						"dest:show_name_tag"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"dest:hide_name_tag"
+					]
+				}
+			},
 			"dest:despawn": {
 				"add": {
 					"component_groups": [

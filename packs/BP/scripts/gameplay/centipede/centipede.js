@@ -1,7 +1,7 @@
 import { world, Vector, EntityDamageCause, Entity } from "@minecraft/server"
 import { spawnBoss } from "./boss";
 
-const { min, max, acos, atan2, PI } = Math, { values } = Object,
+const { min, max, acos, floor, random, atan2, PI } = Math, { values } = Object,
     { add, multiply, subtract, one, zero, dot, up } = Vector,
     ovw = world.getDimension("overworld"),
     spawnEntity = ovw.spawnEntity.bind(ovw)
@@ -104,9 +104,9 @@ system.events.gameInitialize.subscribe(async() => {
                 }
             }
         } else if (eventData.message == "$resource +") {
-            global.coins = Math.floor((1 + Math.random()) * 100000)
-            global.stone = Math.floor((1 + Math.random()) * 100000)
-            global.wood = Math.floor((1 + Math.random()) * 100000)
+            global.coins = floor((1 + random()) * 100000)
+            global.stone = floor((1 + random()) * 100000)
+            global.wood = floor((1 + random()) * 100000)
             world.sendMessage("Resources updated")
         }
     });
@@ -138,9 +138,10 @@ system.events.gameInitialize.subscribe(async() => {
 
     setInterval(() => { updateCentipedes() }, 1)
 
-    function updateCentipedes() {
-        for (let i = 0; i < centipedes.length; i++) {
-            updateCentipede(i)
+    async function updateCentipedes() {
+        const {length} = centipedes;
+        for (let i = 0; i < length; i++) {
+            (await nextTick), updateCentipede(i)
         }
     }
     //the reaching part of fabrik
@@ -159,10 +160,11 @@ system.events.gameInitialize.subscribe(async() => {
             const limb = centipede[i], { location, health } = limb
             if (health <= 0 || !world.getEntity(limb.getTags()[1])) return kill_centipede(idx)
             if (i != 0) {
+                const {location:locb} = centipede[i - 1]
                 let newpos = add(location, { x: 0, y: -9.8 / 60, z: 0 })
-                newpos = reach(centipede[i - 1].location, newpos)
+                newpos = reach(locb, newpos)
                 moveTo(limb, newpos)
-                setLookingDir(limb, subtract(centipede[i - 1].location, location))
+                setLookingDir(limb, subtract(locb, location))
             }
         }
         centipedes[idx] = centipede
