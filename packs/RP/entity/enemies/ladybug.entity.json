@@ -13,7 +13,8 @@
 				"default": "geometry.ladybug"
 			},
 			"animations": {
-				"walk": "animation.ladybug.walk"
+				"walk": "animation.ladybug.walk",
+				"attack": "animation.ladybug.ram"
 			},
 			"render_controllers": [
 				"controller.render.default"
@@ -24,7 +25,7 @@
 			},
 			"animation_controllers": [
 				{
-					"walk": "controller.animation.enemy.walk"
+					"walk": "controller.animation.enemy.animate"
 				}
 			]
 		}

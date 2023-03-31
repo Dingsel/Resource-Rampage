@@ -131,6 +131,7 @@
 			}
 		},
 		"animation.ladybug.ram": {
+			"loop": "hold_on_last_frame",
 			"animation_length": 0.83333,
 			"bones": {
 				"body": {
