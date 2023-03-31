@@ -1,4 +1,4 @@
-import { Player } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 import { InfoMapProperties } from "resources";
 
 
@@ -22,7 +22,7 @@ function getSidebar(player){const {coins,stone,session,wood,infoMap} = global;
     return [,
         shuffle(separator),
         `§r\uE112 ${coins.unitFormat()} §r\uE110 ${wood.unitFormat()} §r\uE111 ${stone.unitFormat()}`,
-        g + `Wave: ` + infoMap.get(InfoMapProperties.level),
+        g + `Wave: ` + world.round,
         g + `Enemies: ` + overworld.getEntities({families:["enemy"]}).length,
         g + `Blue XP: §9` + player.blueXp.toFixed(1) + "§r",
         shuffle(separator),
