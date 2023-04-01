@@ -61,7 +61,7 @@ world.events.playerSpawn.subscribe(async (event) => {
     world.setDynamicProperty("load", true)
 })
 
-let lost;
+let lost
 
 system.runInterval(() => {
     const objective = world.overworld.getEntities({ type: "dest:objective" })[0]
