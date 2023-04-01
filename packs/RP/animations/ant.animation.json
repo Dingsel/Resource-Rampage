@@ -3,6 +3,7 @@
 	"animations": {
 		"animation.ant.walk": {
 			"loop": true,
+			"anim_time_update": "q.modified_distance_moved",
 			"animation_length": 1.5,
 			"bones": {
 				"thorax": {
