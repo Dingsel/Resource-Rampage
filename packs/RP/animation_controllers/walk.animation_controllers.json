@@ -7,7 +7,7 @@
 					"blend_transition": 0.2,
 					"transitions": [
 						{
-							"walking": "q.modified_move_speed > 0.05 || !q.is_on_ground"
+							"walking": "q.modified_move_speed > 0.01 || !q.is_on_ground"
 						}
 					]
 				},
@@ -18,7 +18,7 @@
 					],
 					"transitions": [
 						{
-							"default": "q.modified_move_speed <= 0.05 && q.is_on_ground"
+							"default": "q.modified_move_speed <= 0.01 && q.is_on_ground"
 						}
 					]
 				}
