@@ -1,4 +1,4 @@
-import { Entity, Player, MolangVariableMap, GameMode } from '@minecraft/server';
+import { Entity, Player, MolangVariableMap, GameMode, Container } from '@minecraft/server';
 import { ActionFormData, MessageFormData } from '@minecraft/server-ui';
 import { PlayerDynamicProperties } from 'resources';
 
@@ -9,6 +9,9 @@ Entity.prototype.cd = 0
 Object.assign(Entity.prototype,{
     updateHealths(){}
 });
+Container.prototype[Symbol.iterator] = function*(){
+    for (let i = 0; i < this.emptySlotsCount; i++) yield this.getSlot(i);
+}
 defineProperties(Entity.prototype, {
     toString: { value() { return `[Entity: ${this.typeId}]`; } },
     inventory: { get() { return this.getComponent('inventory') } },

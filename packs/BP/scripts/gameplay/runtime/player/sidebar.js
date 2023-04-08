@@ -1,5 +1,4 @@
 import { Player, world } from "@minecraft/server";
-import { InfoMapProperties } from "resources";
 
 
 const separator = '\uE130\uE131\uE132\uE133\uE134\uE135\uE136\uE137\uE138\uE139\uE130\uE131\uE139\uE130\uE134\uE132';
@@ -12,7 +11,7 @@ system.events.gameInitialize.subscribe(()=>{
     setInterval(onInterval,15);
 });
 async function onInterval(){
-    for (const p of world.getPlayers()) {
+    for (const p of world.getPlayers({tags:["runtime"]})) {
         await nextTick;
         p.onScreenDisplay.setActionBar(getSidebar(p));
     }

@@ -21,6 +21,9 @@ declare module "@minecraft/server" {
         readonly isValidHandle: boolean;
         updateHealths(): void
     }
+    interface Container extends IterableIterator<ContainerSlot>{
+        [Symbol.iterator](): Generator<ContainerSlot>
+    }
     interface Player {
         mainhand: ContainerSlot;
         getGameMode(): GameMode;

@@ -3,6 +3,7 @@ import { PlayerDynamicProperties } from 'resources';
 
 export * from './default.js';
 export * from './sidebar.js';
+//export * from './gameStart.js';
 
 events.worldInitialize.subscribe((ev)=>{
     const propertyDefinition = new DynamicPropertiesDefinition();
