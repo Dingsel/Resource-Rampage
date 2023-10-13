@@ -1,3 +1,6 @@
+# New Reposetory
+This Is The Original Project developed for the Bedrock Addons 10k Addon Jam. The Project Has Been Continued [In A New Reposetory](https://github.com/Bedrock-Addons-Development/INSECT-TITANS).
+
 # Resource Rampage
 World Donwload link: [Resource Rampage.mcworld](https://github.com/Dingsel/Resource-Rampage/releases/download/Hot-Fix-v0.3/INSECT.TITANS.mcworld)
 
